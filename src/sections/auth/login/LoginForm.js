@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 // @mui
 import { Link, Stack, IconButton, InputAdornment, TextField, Checkbox } from '@mui/material';
@@ -8,13 +9,14 @@ import Iconify from '../../../components/iconify';
 
 // ----------------------------------------------------------------------
 
-export default function LoginForm() {
+export default function LoginForm({setToken}) {
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClick = () => {
-    navigate('/dashboard', { replace: true });
+    setToken('1234')
+    navigate('/', { replace: true });
   };
 
   return (
@@ -51,3 +53,7 @@ export default function LoginForm() {
     </>
   );
 }
+
+LoginForm.propTypes = {
+  setToken: PropTypes.func.isRequired
+};

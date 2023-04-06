@@ -1,23 +1,17 @@
 import { useState, useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 
-export default function ProtectedLayout() {
+export default function ProtectedLayout({token}) {
     const navigate = useNavigate();
-    const isAuthenticated = false;
-
     useEffect(() => {
-      if(!isAuthenticated) {
-        console.log("Protegida")
+      if(!token) {
         navigate('/login', { replace: true });
       }
-    }, []);
-
-    
+    }, [token]);
 
     
     return (
       <>
-        Pagina Protegida
         <Outlet />
       </>
     );

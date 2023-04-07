@@ -7,7 +7,7 @@ const initialState = {
 
 const useAuthStore = create(
   persist(
-    (set, get) => ({
+    (set) => ({
       ...initialState,
       setCurrentUser: (token) => set((_) => ({ currentUser: token })),
       resetCurrentUser: () => set(initialState),

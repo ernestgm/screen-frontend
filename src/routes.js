@@ -10,14 +10,10 @@ import Page404 from './pages/Page404';
 import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
 import ProtectedLayout from './layouts/protected/ProtectedLayout';
-import useToken from './hooks/auth/useToken';
 
 // ----------------------------------------------------------------------
 
 export default function Router() {
-  const { token, setToken } = useToken();
-
-  console.log(token);
   const routes = useRoutes([
     {
       path: '/dashboard',

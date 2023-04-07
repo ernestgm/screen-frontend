@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import useAuthStore from '../../zustand/useAuthStore';
 
-export default function ProtectedLayout({ token }) {
+export default function ProtectedLayout(props) {
   const navigate = useNavigate();
   const { currentUser } = useAuthStore((state) => state);
 

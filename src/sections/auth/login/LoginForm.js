@@ -1,21 +1,22 @@
 import { useState } from 'react';
-import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 // @mui
 import { Link, Stack, IconButton, InputAdornment, TextField, Checkbox } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // components
 import Iconify from '../../../components/iconify';
+import useAuthStore from '../../../zustand/useAuthStore';
 
 // ----------------------------------------------------------------------
 
-export default function LoginForm({setToken}) {
+export default function LoginForm(props) {
   const navigate = useNavigate();
+  const { setCurrentUser } = useAuthStore((state) => state);
 
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClick = () => {
-    setToken('1234')
+    setCurrentUser('1234');
     navigate('/', { replace: true });
   };
 
@@ -53,7 +54,3 @@ export default function LoginForm({setToken}) {
     </>
   );
 }
-
-LoginForm.propTypes = {
-  setToken: PropTypes.func.isRequired
-};

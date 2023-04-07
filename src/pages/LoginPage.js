@@ -40,7 +40,7 @@ const StyledContent = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function LoginPage({setToken}) {
+export default function LoginPage(props) {
   const mdUp = useResponsive('up', 'md');
 
   return (
@@ -98,7 +98,7 @@ export default function LoginPage({setToken}) {
               </Typography>
             </Divider>
 
-            <LoginForm setToken={setToken} />
+            <LoginForm />
           </StyledContent>
         </Container>
       </StyledRoot>

@@ -10,19 +10,20 @@ import Page404 from './pages/Page404';
 import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
 import ProtectedLayout from './layouts/protected/ProtectedLayout';
-import useToken from './hooks/auth/useToken'
+import useToken from './hooks/auth/useToken';
 
 // ----------------------------------------------------------------------
 
 export default function Router() {
   const { token, setToken } = useToken();
 
-  console.log(token)
+  console.log(token);
   const routes = useRoutes([
     {
       path: '/dashboard',
-      element: <ProtectedLayout token={token} />,
-      children: [{
+      element: <ProtectedLayout />,
+      children: [
+        {
           element: <DashboardLayout />,
           children: [
             { element: <Navigate to="/dashboard/app" />, index: true },
@@ -31,12 +32,12 @@ export default function Router() {
             { path: 'products', element: <ProductsPage /> },
             { path: 'blog', element: <BlogPage /> },
           ],
-        }
-      ]
+        },
+      ],
     },
     {
       path: 'login',
-      element: <LoginPage setToken={setToken} />,
+      element: <LoginPage />,
     },
     {
       path: '*',

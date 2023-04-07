@@ -1,18 +1,20 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
+import useAuthStore from '../../zustand/useAuthStore';
 
-export default function ProtectedLayout({token}) {
-    const navigate = useNavigate();
-    useEffect(() => {
-      if(!token) {
-        navigate('/login', { replace: true });
-      }
-    }, [token]);
+export default function ProtectedLayout({ token }) {
+  const navigate = useNavigate();
+  const { currentUser } = useAuthStore((state) => state);
 
-    
-    return (
-      <>
-        <Outlet />
-      </>
-    );
+  useEffect(() => {
+    if (!currentUser) {
+      navigate('/login', { replace: true });
+    }
+  }, []);
+
+  return (
+    <>
+      <Outlet />
+    </>
+  );
 }

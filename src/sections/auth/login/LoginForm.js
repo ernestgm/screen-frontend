@@ -6,16 +6,18 @@ import { LoadingButton } from '@mui/lab';
 // components
 import Iconify from '../../../components/iconify';
 import useAuthStore from '../../../zustand/useAuthStore';
-
+import ApiHandler from "../../../utils/handlers/ApiHandler";
 // ----------------------------------------------------------------------
 
 export default function LoginForm(props) {
   const navigate = useNavigate();
-  const { setCurrentUser } = useAuthStore((state) => state);
+  const { currentUser, setCurrentUser } = useAuthStore((state) => state);
 
   const [showPassword, setShowPassword] = useState(false);
+  const api = new ApiHandler(currentUser)
 
   const handleClick = () => {
+    api.__get('/');
     setCurrentUser('1234');
     navigate('/', { replace: true });
   };

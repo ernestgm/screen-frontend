@@ -6,6 +6,7 @@ import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton, Popover 
 import { useNavigate } from 'react-router-dom';
 import account from '../../../_mock/account';
 import useAuthStore from '../../../zustand/useAuthStore';
+import ApiHandler from '../../../utils/handlers/ApiHandler';
 
 // ----------------------------------------------------------------------
 
@@ -29,7 +30,7 @@ const MENU_OPTIONS = [
 export default function AccountPopover() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(null);
-  const { resetCurrentUser } = useAuthStore((state) => state);
+  const { currentUser, resetCurrentUser } = useAuthStore((state) => state);
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -39,7 +40,11 @@ export default function AccountPopover() {
     setOpen(null);
   };
 
+  const api = new ApiHandler(currentUser)
+
   const handleLogout = () => {
+    api.__get('/');
+  
     setOpen(null);
     resetCurrentUser();
     navigate('/');

@@ -1,4 +1,5 @@
-import { Navigate, useRoutes } from 'react-router-dom';
+import {useEffect} from "react";
+import {Navigate, useNavigate, useRoutes} from 'react-router-dom';
 // layouts
 import DashboardLayout from './layouts/dashboard';
 import SimpleLayout from './layouts/simple';
@@ -10,6 +11,8 @@ import Page404 from './pages/Page404';
 import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
 import ProtectedLayout from './layouts/protected/ProtectedLayout';
+import useAuthStore from "./zustand/useAuthStore";
+import useApiHandlerStore from "./zustand/useApiHandlerStore";
 
 // ----------------------------------------------------------------------
 

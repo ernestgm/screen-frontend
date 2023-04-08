@@ -32,6 +32,7 @@ import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
 import USERLIST from '../_mock/user';
 import ApiHandler from "../utils/handlers/ApiHandler";
 import useAuthStore from "../zustand/useAuthStore";
+import useApiHandlerStore from "../zustand/useApiHandlerStore";
 
 // ----------------------------------------------------------------------
 
@@ -93,9 +94,9 @@ export default function UserPage() {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const { currentUser } = useAuthStore((state) => state);
 
-  const api = new ApiHandler(currentUser)
+
+  const api = useApiHandlerStore((state) => state)
 
   const getUsers = async () => {
     const response = await api.__get('/users')
@@ -123,7 +124,7 @@ export default function UserPage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.name);
+      const newSelecteds = users.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -159,7 +160,7 @@ export default function UserPage() {
     setFilterName(event.target.value);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users.length) : 0;
 
   const filteredUsers = applySortFilter(users, getComparator(order, orderBy), filterName);
 
@@ -167,7 +168,7 @@ export default function UserPage() {
 
   useEffect(() => {
     getUsers()
-  }, [getUsers]);
+  }, []);
 
   return (
     <>
@@ -195,15 +196,14 @@ export default function UserPage() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={USERLIST.length}
+                  rowCount={users.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
                   {users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    // eslint-disable-next-line camelcase
-                    const { id, name, lastname, email, created_at, update_at } = row;
+                    const { id, name, lastname, email } = row;
                     const selectedUser = selected.indexOf(name) !== -1;
 
                     return (
@@ -221,15 +221,11 @@ export default function UserPage() {
                           </Stack>
                         </TableCell>
 
-                        <TableCell align="left">{name}</TableCell>
-
                         <TableCell align="left">{lastname}</TableCell>
 
                         <TableCell align="left">{email}</TableCell>
 
-                        <TableCell align="left">{created_at}</TableCell>
-
-                        <TableCell align="left">{update_at}</TableCell>
+                        <TableCell align="left">{email}</TableCell>
 
                         <TableCell align="right">
                           <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
@@ -276,7 +272,7 @@ export default function UserPage() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={USERLIST.length}
+            count={users.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

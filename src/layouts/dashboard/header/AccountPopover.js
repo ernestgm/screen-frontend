@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import account from '../../../_mock/account';
 import useAuthStore from '../../../zustand/useAuthStore';
 import ApiHandler from '../../../utils/handlers/ApiHandler';
+import useApiHandlerStore from "../../../zustand/useApiHandlerStore";
 
 // ----------------------------------------------------------------------
 
@@ -33,7 +34,7 @@ const MENU_OPTIONS = [
 export default function AccountPopover() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(null);
-  const { currentUser, resetCurrentUser } = useAuthStore((state) => state);
+  const { resetCurrentUser } = useAuthStore((state) => state);
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -44,10 +45,7 @@ export default function AccountPopover() {
     setOpen(null);
   };
 
-
-
-
-  const api = new ApiHandler(currentUser)
+  const api = useApiHandlerStore((state) => state)
 
   const handleLogout = async e => {
     e.preventDefault()

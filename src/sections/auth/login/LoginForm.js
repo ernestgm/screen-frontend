@@ -15,22 +15,41 @@ export default function LoginForm(props) {
 
   const [showPassword, setShowPassword] = useState(false);
   const api = new ApiHandler(currentUser)
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
 
-  const handleClick = () => {
-    api.__get('/');
-    setCurrentUser('1234');
-    navigate('/', { replace: true });
+  const handleClick = async e => {
+    e.preventDefault();
+
+    const formData = {
+        'email': email,
+        'password': password
+    }
+
+    const userData = await api.__post('/login', formData)
+        .then(data => data.json());
+
+      console.log(userData);
+    if (userData.success) {
+        setCurrentUser(userData.success.token)
+        navigate('/', { replace: true });
+    }
   };
 
   return (
     <>
       <Stack spacing={3}>
-        <TextField name="email" label="Email address" />
+        <TextField
+            name="email"
+            label="Email address"
+            onChange={e => setEmail(e.target.value)}
+        />
 
         <TextField
           name="password"
           label="Password"
           type={showPassword ? 'text' : 'password'}
+          onChange={e => setPassword(e.target.value)}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">

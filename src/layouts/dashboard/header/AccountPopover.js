@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, } from 'react';
 // @mui
 import { alpha } from '@mui/material/styles';
 import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton, Popover } from '@mui/material';
@@ -13,14 +13,17 @@ import ApiHandler from '../../../utils/handlers/ApiHandler';
 const MENU_OPTIONS = [
   {
     label: 'Home',
+    tag: 'home',
     icon: 'eva:home-fill',
   },
   {
     label: 'Profile',
+    tag: 'profile',
     icon: 'eva:person-fill',
   },
   {
     label: 'Settings',
+    tag: 'setting',
     icon: 'eva:settings-2-fill',
   },
 ];
@@ -36,18 +39,34 @@ export default function AccountPopover() {
     setOpen(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleClose = (e) => {
+    console.log(e)
     setOpen(null);
   };
 
+
+
+
   const api = new ApiHandler(currentUser)
 
-  const handleLogout = () => {
-    api.__get('/');
-  
-    setOpen(null);
-    resetCurrentUser();
-    navigate('/');
+  const handleLogout = async e => {
+    e.preventDefault()
+    const response = await api.__post('/logout')
+        .then(data => data.json());
+
+    if (response.success) {
+      setOpen(null);
+      resetCurrentUser();
+      navigate('/');
+    }
+  };
+
+  const handleListItemClick = async (tag) => {
+    if (tag === 'home') {
+      const response = await api.__get('/users')
+          .then(data => data.json());
+      console.log(response)
+    }
   };
 
   return (
@@ -104,7 +123,10 @@ export default function AccountPopover() {
 
         <Stack sx={{ p: 1 }}>
           {MENU_OPTIONS.map((option) => (
-            <MenuItem key={option.label} onClick={handleClose}>
+            <MenuItem
+                key={option.label}
+                onClick={() => handleListItemClick(option.tag)}
+            >
               {option.label}
             </MenuItem>
           ))}

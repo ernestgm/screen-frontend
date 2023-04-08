@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 // @mui
 import {
   Card,
@@ -30,16 +30,19 @@ import Scrollbar from '../components/scrollbar';
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
 // mock
 import USERLIST from '../_mock/user';
+import ApiHandler from "../utils/handlers/ApiHandler";
+import useAuthStore from "../zustand/useAuthStore";
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', alignRight: false },
-  { id: 'company', label: 'Company', alignRight: false },
-  { id: 'role', label: 'Role', alignRight: false },
-  { id: 'isVerified', label: 'Verified', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
-  { id: '' },
+  { id: 'lastname', label: 'Lastname', alignRight: false },
+  { id: 'email', label: 'Email', alignRight: false },
+  // { id: 'role', label: 'Role', alignRight: false },
+  { id: 'created_at', label: 'Create At', alignRight: false },
+  { id: 'updated_at', label: 'Update At', alignRight: false },
+  // { id: '' },
 ];
 
 // ----------------------------------------------------------------------
@@ -74,6 +77,8 @@ function applySortFilter(array, comparator, query) {
 }
 
 export default function UserPage() {
+  const [users, setUsers] = useState([]);
+
   const [open, setOpen] = useState(null);
 
   const [page, setPage] = useState(0);
@@ -87,6 +92,20 @@ export default function UserPage() {
   const [filterName, setFilterName] = useState('');
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const { currentUser } = useAuthStore((state) => state);
+
+  const api = new ApiHandler(currentUser)
+
+  const getUsers = async () => {
+    const response = await api.__get('/users')
+        .then(data => data.json());
+
+    if (response.length > 0) {
+      console.log(response);
+      setUsers(response);
+    }
+  };
 
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
@@ -142,9 +161,13 @@ export default function UserPage() {
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
 
-  const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
+  const filteredUsers = applySortFilter(users, getComparator(order, orderBy), filterName);
 
   const isNotFound = !filteredUsers.length && !!filterName;
+
+  useEffect(() => {
+    getUsers()
+  }, [getUsers]);
 
   return (
     <>
@@ -178,8 +201,9 @@ export default function UserPage() {
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, name, role, status, company, avatarUrl, isVerified } = row;
+                  {users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                    // eslint-disable-next-line camelcase
+                    const { id, name, lastname, email, created_at, update_at } = row;
                     const selectedUser = selected.indexOf(name) !== -1;
 
                     return (
@@ -190,22 +214,22 @@ export default function UserPage() {
 
                         <TableCell component="th" scope="row" padding="none">
                           <Stack direction="row" alignItems="center" spacing={2}>
-                            <Avatar alt={name} src={avatarUrl} />
+                            <Avatar alt={name} src='/assets/images/avatars/avatar_1.jpg' />
                             <Typography variant="subtitle2" noWrap>
                               {name}
                             </Typography>
                           </Stack>
                         </TableCell>
 
-                        <TableCell align="left">{company}</TableCell>
+                        <TableCell align="left">{name}</TableCell>
 
-                        <TableCell align="left">{role}</TableCell>
+                        <TableCell align="left">{lastname}</TableCell>
 
-                        <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell>
+                        <TableCell align="left">{email}</TableCell>
 
-                        <TableCell align="left">
-                          <Label color={(status === 'banned' && 'error') || 'success'}>{sentenceCase(status)}</Label>
-                        </TableCell>
+                        <TableCell align="left">{created_at}</TableCell>
+
+                        <TableCell align="left">{update_at}</TableCell>
 
                         <TableCell align="right">
                           <IconButton size="large" color="inherit" onClick={handleOpenMenu}>

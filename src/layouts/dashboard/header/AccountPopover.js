@@ -45,7 +45,7 @@ export default function AccountPopover() {
     setOpen(null);
   };
 
-  const api = useApiHandlerStore((state) => state)
+  const {api} = useApiHandlerStore((state) => state)
 
   const handleLogout = async e => {
     e.preventDefault()

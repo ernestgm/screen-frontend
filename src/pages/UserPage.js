@@ -96,14 +96,13 @@ export default function UserPage() {
 
 
 
-  const api = useApiHandlerStore((state) => state)
+  const {api, setApiToken} = useApiHandlerStore((state) => state)
 
   const getUsers = async () => {
     const response = await api.__get('/users')
         .then(data => data.json());
 
     if (response.length > 0) {
-      console.log(response);
       setUsers(response);
     }
   };

@@ -96,7 +96,7 @@ export default function UserPage() {
 
 
 
-  const {api, setApiToken} = useApiHandlerStore((state) => state)
+  const {api} = useApiHandlerStore((state) => state)
 
   const getUsers = async () => {
     const response = await api.__get('/users')

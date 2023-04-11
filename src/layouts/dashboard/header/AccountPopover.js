@@ -4,10 +4,9 @@ import { alpha } from '@mui/material/styles';
 import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton, Popover } from '@mui/material';
 // mocks_
 import { useNavigate } from 'react-router-dom';
-import account from '../../../_mock/account';
 import useAuthStore from '../../../zustand/useAuthStore';
-import ApiHandler from '../../../utils/handlers/ApiHandler';
 import useApiHandlerStore from "../../../zustand/useApiHandlerStore";
+import useAccontHandlerStore from "../../../zustand/useAccontHandlerStore";
 
 // ----------------------------------------------------------------------
 
@@ -34,7 +33,9 @@ const MENU_OPTIONS = [
 export default function AccountPopover() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(null);
-  const { resetCurrentUser } = useAuthStore((state) => state);
+  const { resetCurrentUser, userAccount } = useAuthStore((state) => state);
+  const { account } = useAccontHandlerStore((state) => state);
+  const {api} = useApiHandlerStore((state) => state)
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -45,7 +46,7 @@ export default function AccountPopover() {
     setOpen(null);
   };
 
-  const {api} = useApiHandlerStore((state) => state)
+
 
   const handleLogout = async e => {
     e.preventDefault()
@@ -61,6 +62,7 @@ export default function AccountPopover() {
 
   const handleListItemClick = async (tag) => {
     if (tag === 'home') {
+      userAccount()
       const response = await api.__get('/users')
           .then(data => data.json());
       console.log(response)

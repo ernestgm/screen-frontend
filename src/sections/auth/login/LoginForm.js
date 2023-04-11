@@ -32,7 +32,7 @@ export default function LoginForm(props) {
 
         console.log(userData);
         if (userData.success) {
-            setCurrentUser(userData.success.token)
+            setCurrentUser(userData.success)
             navigate('/', {replace: true});
         }
     };

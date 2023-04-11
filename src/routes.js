@@ -13,6 +13,7 @@ import DashboardAppPage from './pages/DashboardAppPage';
 import ProtectedLayout from './layouts/protected/ProtectedLayout';
 import useAuthStore from "./zustand/useAuthStore";
 import useApiHandlerStore from "./zustand/useApiHandlerStore";
+import CreateUserPage from "./pages/user/CreateUserPage";
 
 // ----------------------------------------------------------------------
 
@@ -28,6 +29,7 @@ export default function Router() {
             { element: <Navigate to="/dashboard/app" />, index: true },
             { path: 'app', element: <DashboardAppPage /> },
             { path: 'user', element: <UserPage /> },
+            { path: 'user/create', element: <CreateUserPage /> },
             { path: 'products', element: <ProductsPage /> },
             { path: 'blog', element: <BlogPage /> },
           ],

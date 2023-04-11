@@ -2,13 +2,13 @@ import useAuthStore from "../../zustand/useAuthStore";
 import API_CONFIG from '../../config/config';
 
 class ApiHanler {
-    setCurrentUser(value) {
-        this._currentUser = value;
+    setUserToken(value) {
+        this._token = value;
         return this;
     }
 
-    constructor(currentUser){
-        this._currentUser = currentUser;
+    constructor(token){
+        this._token = token;
     }
 
     // eslint-disable-next-line class-methods-use-this
@@ -17,8 +17,8 @@ class ApiHanler {
             "Content-Type": "application/json",
             "Accept": "application/json"
         }
-        if (this._currentUser) {
-            _header.Authorization = `Bearer ${ this._currentUser}`;
+        if (this._token) {
+            _header.Authorization = `Bearer ${ this._token}`;
         }
         return fetch(API_CONFIG.baseURL+path, {
               method: _method,

@@ -6,20 +6,21 @@ import {LoadingButton} from '@mui/lab';
 // components
 import Iconify from '../../../components/iconify';
 import useAuthStore from '../../../zustand/useAuthStore';
-import ApiHandler from "../../../utils/handlers/ApiHandler";
 import useApiHandlerStore from "../../../zustand/useApiHandlerStore";
+import useGlobalMessageStore from "../../../zustand/useGlobalMessageStore";
 // ----------------------------------------------------------------------
 
-export default function LoginForm(props) {
+export default function LoginForm() {
     const navigate = useNavigate();
-    const {currentUser, setCurrentUser} = useAuthStore((state) => state);
+    const {setCurrentUser} = useAuthStore((state) => state);
 
     const [showPassword, setShowPassword] = useState(false);
     const {api} = useApiHandlerStore((state) => state)
+    const {showMessage} = useGlobalMessageStore((state) => state)
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
 
-    const handleClick = async e => {
+    const handleClick = async (e) => {
         e.preventDefault();
 
         const formData = {
@@ -27,11 +28,16 @@ export default function LoginForm(props) {
             'password': password
         }
 
-        const userData = await api.__post('/login', formData)
-            .then(data => data.json());
+        const userData = await api.__post('/login', formData, (msg) => {
+            showMessage({
+                openAlert: false,
+                openSnackbar: true,
+                message: msg,
+                type: 'error'
+            })
+        });
 
-        console.log(userData);
-        if (userData.success) {
+        if (userData) {
             setCurrentUser(userData.success)
             navigate('/', {replace: true});
         }

@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import useAuthStore from '../../../zustand/useAuthStore';
 import useApiHandlerStore from "../../../zustand/useApiHandlerStore";
 import useAccontHandlerStore from "../../../zustand/useAccontHandlerStore";
+import useGlobalMessageStore from "../../../zustand/useGlobalMessageStore";
 
 // ----------------------------------------------------------------------
 
@@ -36,6 +37,8 @@ export default function AccountPopover() {
   const { resetCurrentUser, userAccount } = useAuthStore((state) => state);
   const { account } = useAccontHandlerStore((state) => state);
   const {api} = useApiHandlerStore((state) => state)
+  const {showMessage} = useGlobalMessageStore((state) => state)
+
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -48,12 +51,17 @@ export default function AccountPopover() {
 
 
 
-  const handleLogout = async e => {
+  const handleLogout = async (e) => {
     e.preventDefault()
-    const response = await api.__post('/logout')
-        .then(data => data.json());
-
-    if (response.success) {
+    const response = await api.__post('/logout', null, (msg) => {
+      showMessage({
+        openAlert: false,
+        openSnackbar: true,
+        message: msg,
+        type: 'error'
+      })
+    });
+    if (response) {
       setOpen(null);
       resetCurrentUser();
       navigate('/');
@@ -63,8 +71,7 @@ export default function AccountPopover() {
   const handleListItemClick = async (tag) => {
     if (tag === 'home') {
       userAccount()
-      const response = await api.__get('/users')
-          .then(data => data.json());
+      const response = await api.__get('/users');
       console.log(response)
     }
   };

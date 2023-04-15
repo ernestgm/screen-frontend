@@ -101,32 +101,32 @@ export default function UserPage() {
     const { showMessage } = useGlobalMessageStore((state) => state)
 
     const getUsers = async () => {
-        const response = await api.__get('/users')
-            .then(data => data.json())
-            .catch(error => {
-                showMessage({
-                    openAlert: false,
-                    openSnackbar: true,
-                    message: error.message,
-                    type: 'error'}
-                )
-            });
+        const response = await api.__get('/users', (msg) => {
+            showMessage({
+                openAlert: false,
+                openSnackbar: true,
+                message: msg,
+                type: 'error'
+            })
+        })
 
-        if (response.success) {
+        if (response) {
             setUsers(Object.values(response.data));
         }
     };
 
-    const handleDeleteSelected = async () => {
-        const ids = { 'ids': selected };
+    const deleteUsers = async (ids) => {
+        const data = { 'ids': ids };
+        const response = await api.__delete('/users', data, (msg) => {
+            showMessage({
+                openAlert: false,
+                openSnackbar: true,
+                message: msg,
+                type: 'error'
+            })
+        })
 
-        const response = await api.__delete('/users', ids)
-            .then(data => data.json())
-            .catch(error => {
-                console.log(error)
-            });
-
-        if (response.success) {
+        if (response) {
             showMessage({
                 openAlert: true,
                 openSnackbar: false,
@@ -137,6 +137,11 @@ export default function UserPage() {
             setSelected([]);
         }
     }
+
+    const handleDeleteSelected = () => {
+        deleteUsers(selected)
+    }
+
 
     const handleOpenMenu = (event) => {
         setOpen(event.currentTarget);
@@ -199,6 +204,16 @@ export default function UserPage() {
     const filteredUsers = applySortFilter(users, getComparator(order, orderBy), filterName);
 
     const isNotFound = !filteredUsers.length && !!filterName;
+
+    const handleEditItemClick = (item) => {
+        handleCloseMenu()
+        navigate(`/dashboard/user/edit/${item.id}`, {replace: true})
+    }
+
+    const handleDeleteItemClick = (item) => {
+        handleCloseMenu()
+        deleteUsers([item.id])
+    }
 
     useEffect(() => {
         getUsers()
@@ -267,7 +282,7 @@ export default function UserPage() {
                                                 <TableCell align="left">{formatDate(row.updated_at)}</TableCell>
 
                                                 <TableCell align="right">
-                                                    <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
+                                                    <IconButton id={id} size="large" color="inherit" onClick={handleOpenMenu}>
                                                         <Iconify icon={'eva:more-vertical-fill'}/>
                                                     </IconButton>
                                                 </TableCell>
@@ -338,12 +353,12 @@ export default function UserPage() {
                     },
                 }}
             >
-                <MenuItem>
+                <MenuItem onClick={() => handleEditItemClick(open)}>
                     <Iconify icon={'eva:edit-fill'} sx={{mr: 2}}/>
                     Edit
                 </MenuItem>
 
-                <MenuItem sx={{color: 'error.main'}}>
+                <MenuItem onClick={() => handleDeleteItemClick(open)} sx={{color: 'error.main'}}>
                     <Iconify icon={'eva:trash-2-outline'} sx={{mr: 2}}/>
                     Delete
                 </MenuItem>

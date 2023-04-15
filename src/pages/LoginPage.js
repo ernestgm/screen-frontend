@@ -12,6 +12,7 @@ import Iconify from '../components/iconify';
 // sections
 import { LoginForm } from '../sections/auth/login';
 import useAuthStore from '../zustand/useAuthStore';
+import GlobalNotification from "../components/snackbar";
 
 // ----------------------------------------------------------------------
 
@@ -57,9 +58,9 @@ export default function LoginPage(props) {
   return (
     <>
       <Helmet>
-        <title> Login | Minimal UI </title>
+        <title> Login | EScreen </title>
       </Helmet>
-
+      <GlobalNotification/>
       <StyledRoot>
         <Logo
           sx={{

@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 // @mui
 import {Helmet} from 'react-helmet-async';
 import {
@@ -32,10 +32,11 @@ import useGlobalMessageStore from "../../zustand/useGlobalMessageStore";
 // ----------------------------------------------------------------------
 
 export default function CreateUserPage() {
+    const { id } = useParams();
     const navigate = useNavigate();
     const {api} = useApiHandlerStore((state) => state)
-  const { showMessage } = useGlobalMessageStore((state) => state)
-    const [errors, setErrors] = useState({});
+    const { showMessage } = useGlobalMessageStore((state) => state)
+    const [validator, setValidator] = useState({});
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
@@ -44,6 +45,7 @@ export default function CreateUserPage() {
         password: '',
         c_password: ''
     });
+    const [cpasword, setCPassword] = useState('')
 
     const handleChange = (event) => {
         const {name, value} = event.target;
@@ -54,37 +56,75 @@ export default function CreateUserPage() {
 
         if (name === 'email') {
             if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(value)) {
-                errors.email = 'The Email is invalid';
+                validator.email = 'The Email is invalid';
             } else {
-                errors.email = null;
+                validator.email = null;
             }
         }
     };
 
-    const handleSubmit = async e => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        let response;
+        if (id) {
+            response = await api.__update(`/user/${id}`, formData, (msg) => {
+                showMessage({
+                    openAlert: false,
+                    openSnackbar: true,
+                    message: msg,
+                    type: 'error'
+                })
+            });
+        } else {
+            response = await api.__post('/user', formData, (msg) => {
+                showMessage({
+                    openAlert: false,
+                    openSnackbar: true,
+                    message: msg,
+                    type: 'error'
+                })
+            });
+        }
 
+        if (response) {
+            if (response.success) {
+                showMessage({
+                    openAlert: false,
+                    openSnackbar: true,
+                    message: 'Added a new user',
+                    type: 'success'
+                })
+                navigate('/dashboard/user')
+            } else {
+                setValidator(response && response.data)
+            }
+        }
+    };
 
-        const response = await api.__post('/user', formData)
-            .then(data => data.json());
-
-        if (response.success) {
+    const getUser = async () => {
+        const response = await api.__get(`/user/${id}`, null, (msg) => {
             showMessage({
                 openAlert: false,
                 openSnackbar: true,
-                message: 'Added a new user',
-                type: 'success'
+                message: msg,
+                type: 'error'
             })
-            navigate('/dashboard/user')
-        } else {
-            setErrors(response.data)
+        });
+        if (response) {
+            response.data.c_password = response.data.password
+            setFormData(response.data)
+            console.log(response)
         }
-    };
+    }
+
+    useEffect(() => {
+        getUser()
+    }, [])
 
     return (
         <>
             <Helmet>
-                <title> Create User | EScreens </title>
+                <title> { id ? 'User edit' : 'Create User' }  | EScreens </title>
             </Helmet>
 
             <Container>
@@ -93,34 +133,34 @@ export default function CreateUserPage() {
                         <BackButton path="/dashboard/user"/>
                     </Stack>
                     <Typography variant="h4" gutterBottom>
-                        New User
+                        { id ? 'User edit' : 'Create User' }
                     </Typography>
                 </Stack>
                 <Card>
                     <Stack spacing={3} justifyContent="space-between" mb={5} sx={{my: 2}}>
                         <TextField
                             name="name"
-                            error={errors.name && true}
+                            error={validator.name && true}
                             value={formData.name}
                             onChange={handleChange}
                             label="Name"
-                            helperText={errors.name}
+                            helperText={validator.name}
                         />
                         <TextField
                             name="lastname"
                             label="Lastname"
                             value={formData.lastname}
                             onChange={handleChange}
-                            error={errors.lastname && true}
-                            helperText={errors.lastname}
+                            error={validator.lastname && true}
+                            helperText={validator.lastname}
                         />
                         <TextField
                             name="email"
                             label="Email"
                             value={formData.email}
                             onChange={handleChange}
-                            error={errors.email && true}
-                            helperText={errors.email}
+                            error={validator.email && true}
+                            helperText={validator.email}
                         />
                         <TextField
                             name="password"
@@ -128,8 +168,8 @@ export default function CreateUserPage() {
                             value={formData.password}
                             type={showPassword ? 'text' : 'password'}
                             onChange={handleChange}
-                            error={errors.password && true}
-                            helperText={errors.password}
+                            error={validator.password && true}
+                            helperText={validator.password}
                             InputProps={{
                                 endAdornment: (
                                     <InputAdornment position="end">
@@ -146,8 +186,8 @@ export default function CreateUserPage() {
                             value={formData.c_password}
                             type={showPassword ? 'text' : 'password'}
                             onChange={handleChange}
-                            error={errors.c_password && true}
-                            helperText={errors.c_password}
+                            error={validator.c_password && true}
+                            helperText={validator.c_password}
                             InputProps={{
                                 endAdornment: (
                                     <InputAdornment position="end">

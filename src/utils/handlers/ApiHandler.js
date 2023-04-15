@@ -42,12 +42,12 @@ class ApiHanler {
         return this.#__base(path, 'POST', data)
     }
   
-    __delete(path) {
-        return this.#__base(path, 'DELETE')
+    __delete(path, data) {
+        return this.#__base(path, 'DELETE', data)
     }
   
     __update(path, data) {
-        return this.#__base(path, 'UPDATE')
+        return this.#__base(path, 'UPDATE', data)
     }
 }
 

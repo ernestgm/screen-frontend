@@ -21,31 +21,29 @@ import {
     Typography,
     IconButton,
     TableContainer,
-    TablePagination,
+    TablePagination, Collapse, Alert,
 } from '@mui/material';
 // components
-import Label from '../components/label';
-import Iconify from '../components/iconify';
-import Scrollbar from '../components/scrollbar';
+import Label from '../../components/label';
+import Iconify from '../../components/iconify';
+import Scrollbar from '../../components/scrollbar';
 // sections
-import {UserListHead, UserListToolbar} from '../sections/@dashboard/user';
-// mock
-import USERLIST from '../_mock/user';
-import ApiHandler from "../utils/handlers/ApiHandler";
-import useAuthStore from "../zustand/useAuthStore";
-import useApiHandlerStore from "../zustand/useApiHandlerStore";
+import {UserListHead, UserListToolbar} from '../../sections/@dashboard/user';
+import useApiHandlerStore from "../../zustand/useApiHandlerStore";
+import {formatDate} from "../../utils/formatTime";
+import AlertMessage from "../../components/alert";
+import useGlobalMessageStore from "../../zustand/useGlobalMessageStore";
 
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
     {id: 'name', label: 'Name', alignRight: false},
-    {id: 'lastname', label: 'Lastname', alignRight: false},
     {id: 'email', label: 'Email', alignRight: false},
     // { id: 'role', label: 'Role', alignRight: false },
     {id: 'created_at', label: 'Create At', alignRight: false},
     {id: 'updated_at', label: 'Update At', alignRight: false},
-    // { id: '' },
+    { id: 'actions', label: 'Actions' },
 ];
 
 // ----------------------------------------------------------------------
@@ -100,15 +98,45 @@ export default function UserPage() {
 
 
     const {api} = useApiHandlerStore((state) => state)
+    const { showMessage } = useGlobalMessageStore((state) => state)
 
     const getUsers = async () => {
         const response = await api.__get('/users')
-            .then(data => data.json());
+            .then(data => data.json())
+            .catch(error => {
+                showMessage({
+                    openAlert: false,
+                    openSnackbar: true,
+                    message: error.message,
+                    type: 'error'}
+                )
+            });
 
-        if (response.length > 0) {
-            setUsers(response);
+        if (response.success) {
+            setUsers(Object.values(response.data));
         }
     };
+
+    const handleDeleteSelected = async () => {
+        const ids = { 'ids': selected };
+
+        const response = await api.__delete('/users', ids)
+            .then(data => data.json())
+            .catch(error => {
+                console.log(error)
+            });
+
+        if (response.success) {
+            showMessage({
+                openAlert: true,
+                openSnackbar: false,
+                message: response.message,
+                type: 'success'}
+            )
+            getUsers();
+            setSelected([]);
+        }
+    }
 
     const handleOpenMenu = (event) => {
         setOpen(event.currentTarget);
@@ -126,18 +154,18 @@ export default function UserPage() {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelecteds = users.map((n) => n.name);
+            const newSelecteds = users.map((n) => n.id);
             setSelected(newSelecteds);
             return;
         }
         setSelected([]);
     };
 
-    const handleClick = (event, name) => {
-        const selectedIndex = selected.indexOf(name);
+    const handleClick = (event, id) => {
+        const selectedIndex = selected.indexOf(id);
         let newSelected = [];
         if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, name);
+            newSelected = newSelected.concat(selected, id);
         } else if (selectedIndex === 0) {
             newSelected = newSelected.concat(selected.slice(1));
         } else if (selectedIndex === selected.length - 1) {
@@ -179,10 +207,11 @@ export default function UserPage() {
     return (
         <>
             <Helmet>
-                <title> User | Minimal UI </title>
+                <title> User | EScreen </title>
             </Helmet>
 
             <Container>
+
                 <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
                     <Typography variant="h4" gutterBottom>
                         User
@@ -195,7 +224,7 @@ export default function UserPage() {
 
                 <Card>
                     <UserListToolbar numSelected={selected.length} filterName={filterName}
-                                     onFilterName={handleFilterByName}/>
+                                     onFilterName={handleFilterByName} onDeleteSelect={handleDeleteSelected}/>
 
                     <Scrollbar>
                         <TableContainer sx={{minWidth: 800}}>
@@ -204,38 +233,38 @@ export default function UserPage() {
                                     order={order}
                                     orderBy={orderBy}
                                     headLabel={TABLE_HEAD}
-                                    rowCount={users.length}
+                                    rowCount={filteredUsers.length}
                                     numSelected={selected.length}
                                     onRequestSort={handleRequestSort}
                                     onSelectAllClick={handleSelectAllClick}
                                 />
                                 <TableBody>
-                                    {users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                                    {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                                         const {id, name, lastname, email} = row;
-                                        const selectedUser = selected.indexOf(name) !== -1;
+                                        const selectedUser = selected.indexOf(id) !== -1;
 
                                         return (
                                             <TableRow hover key={id} tabIndex={-1} role="checkbox"
                                                       selected={selectedUser}>
                                                 <TableCell padding="checkbox">
                                                     <Checkbox checked={selectedUser}
-                                                              onChange={(event) => handleClick(event, name)}/>
+                                                              onChange={(event) => handleClick(event, id)}/>
                                                 </TableCell>
 
                                                 <TableCell component="th" scope="row" padding="none">
                                                     <Stack direction="row" alignItems="center" spacing={2}>
                                                         <Avatar alt={name} src='/assets/images/avatars/avatar_1.jpg'/>
                                                         <Typography variant="subtitle2" noWrap>
-                                                            {name}
+                                                            {name} {lastname}
                                                         </Typography>
                                                     </Stack>
                                                 </TableCell>
 
-                                                <TableCell align="left">{lastname}</TableCell>
-
                                                 <TableCell align="left">{email}</TableCell>
 
-                                                <TableCell align="left">{email}</TableCell>
+                                                <TableCell align="left">{formatDate(row.created_at)}</TableCell>
+
+                                                <TableCell align="left">{formatDate(row.updated_at)}</TableCell>
 
                                                 <TableCell align="right">
                                                     <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
@@ -282,7 +311,7 @@ export default function UserPage() {
                     <TablePagination
                         rowsPerPageOptions={[5, 10, 25]}
                         component="div"
-                        count={users.length}
+                        count={filteredUsers.length}
                         rowsPerPage={rowsPerPage}
                         page={page}
                         onPageChange={handleChangePage}

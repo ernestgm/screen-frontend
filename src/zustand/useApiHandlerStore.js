@@ -12,6 +12,5 @@ const useApiHandlerStore = create(
     })
 );
 
-// export default useAuthStore;
 export default useApiHandlerStore
 

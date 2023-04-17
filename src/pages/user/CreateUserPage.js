@@ -27,6 +27,7 @@ import Iconify from "../../components/iconify";
 import BackButton from "../../sections/@dashboard/app/AppBackButton";
 import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
+import PROYECT_CONFIG from "../../config/config";
 
 
 // ----------------------------------------------------------------------
@@ -124,7 +125,7 @@ export default function CreateUserPage() {
     return (
         <>
             <Helmet>
-                <title> {id ? 'User edit' : 'Create User'} | EScreens </title>
+                <title> {id ? 'User edit' : 'Create User'} | { PROYECT_CONFIG.NAME } </title>
             </Helmet>
 
             <Container>

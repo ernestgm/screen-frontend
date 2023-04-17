@@ -1,4 +1,4 @@
-import API_CONFIG from '../../config/config';
+import PROYECT_CONFIG from '../../config/config';
 
 class ApiHanler {
     setUserToken(value) {
@@ -20,7 +20,7 @@ class ApiHanler {
             _header.Authorization = `Bearer ${ this._token}`;
         }
 
-        return fetch(API_CONFIG.baseURL+path, {
+        return fetch(PROYECT_CONFIG.API_CONFIG.baseURL+path, {
               method: _method,
               headers: _header,
               body: data && JSON.stringify(data)

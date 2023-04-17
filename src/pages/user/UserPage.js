@@ -33,6 +33,7 @@ import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import {formatDate} from "../../utils/formatTime";
 import useMessagesAlert from "../../hooks/messages/useMessagesAlert";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
+import PROYECT_CONFIG from "../../config/config";
 
 
 // ----------------------------------------------------------------------
@@ -208,7 +209,7 @@ export default function UserPage() {
     return (
         <>
             <Helmet>
-                <title> User | EScreen </title>
+                <title> User | { PROYECT_CONFIG.NAME } </title>
             </Helmet>
 
             <Container>

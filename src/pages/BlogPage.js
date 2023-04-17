@@ -6,6 +6,7 @@ import Iconify from '../components/iconify';
 import { BlogPostCard, BlogPostsSort, BlogPostsSearch } from '../sections/@dashboard/blog';
 // mock
 import POSTS from '../_mock/blog';
+import PROYECT_CONFIG from "../config/config";
 
 // ----------------------------------------------------------------------
 
@@ -21,7 +22,7 @@ export default function BlogPage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard: Blog | Minimal UI </title>
+        <title> Dashboard: Blog | { PROYECT_CONFIG.NAME } </title>
       </Helmet>
 
       <Container>

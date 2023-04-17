@@ -3,6 +3,7 @@ import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Button, Typography, Container, Box } from '@mui/material';
+import PROYECT_CONFIG from "../config/config";
 
 // ----------------------------------------------------------------------
 
@@ -22,7 +23,7 @@ export default function Page404() {
   return (
     <>
       <Helmet>
-        <title> 404 Page Not Found | Minimal UI </title>
+        <title> 404 Page Not Found | { PROYECT_CONFIG.NAME } </title>
       </Helmet>
 
       <Container>

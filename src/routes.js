@@ -12,6 +12,7 @@ import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
 import ProtectedLayout from './layouts/protected/ProtectedLayout';
 import CreateUserPage from "./pages/user/CreateUserPage";
+import BusinessPage from "./pages/business/BusinessPage";
 
 // ----------------------------------------------------------------------
 
@@ -26,9 +27,13 @@ export default function Router() {
           children: [
             { element: <Navigate to="/dashboard/app" />, index: true },
             { path: 'app', element: <DashboardAppPage /> },
+              // Business
+            { path: 'business', element: <BusinessPage /> },
+              // Users
             { path: 'user', element: <UserPage /> },
             { path: 'user/create', element: <CreateUserPage /> },
             { path: 'user/edit/:id', element: <CreateUserPage /> },
+            // Others
             { path: 'products', element: <ProductsPage /> },
             { path: 'blog', element: <BlogPage /> },
           ],

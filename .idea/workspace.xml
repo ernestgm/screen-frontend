@@ -5,7 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d4767243-8cf2-4570-929d-1212d7106fb6" name="Changes" comment="Create roles CRUD and Permission">
+      <change afterPath="$PROJECT_DIR$/src/pages/business/BusinessPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/config/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layouts/dashboard/nav/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/dashboard/nav/config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/BlogPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/BlogPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/DashboardAppPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/DashboardAppPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/LoginPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LoginPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Page404.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Page404.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/ProductsPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/ProductsPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/user/CreateUserPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/user/CreateUserPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/user/UserPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/user/UserPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/handlers/ApiHandler.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/handlers/ApiHandler.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,33 +38,39 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="C:\Users\ernes\AppData\Roaming\Local\lightning-services\php-7.4.1+16\bin\win64\php.exe" />
   <component name="ProjectId" id="2O9LXvboXYplE1El3svjaymFgQ3" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/ernes/Documents/proyect/react/screen-frontend/src/components/snackbar&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\PhpStorm 2022.3.3\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/ernes/Documents/proyect/react/screen-frontend/src/components/table",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "yarn",
+    "prettierjs.PrettierConfiguration.Package": "C:\\Users\\ernes\\Documents\\proyect\\react\\screen-frontend\\node_modules\\prettier",
+    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\PhpStorm 2022.3.3\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\components\table" />
       <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\components\snackbar" />
       <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\components\alert" />
       <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\pages\user" />
       <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\zustand" />
-      <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\hooks\user" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\pages\user" />

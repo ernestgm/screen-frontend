@@ -1,8 +1,8 @@
-const API_CONFIG = {
-    baseURL: process.env.REACT_APP_API_CONFIG_BASE_URL,
-    LOGIN: {
-        path: '/login'
+const PROYECT_CONFIG = {
+    NAME: 'EScreen',
+    API_CONFIG: {
+        baseURL: process.env.REACT_APP_API_CONFIG_BASE_URL,
     }
 }
 
-export default API_CONFIG;
+export default PROYECT_CONFIG;

@@ -1,42 +1,47 @@
-import { Navigate, useRoutes } from 'react-router-dom';
+import {useEffect} from "react";
+import {Navigate, useNavigate, useRoutes} from 'react-router-dom';
 // layouts
 import DashboardLayout from './layouts/dashboard';
 import SimpleLayout from './layouts/simple';
 //
 import BlogPage from './pages/BlogPage';
-import UserPage from './pages/UserPage';
+import UserPage from './pages/user/UserPage';
 import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
 import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
 import ProtectedLayout from './layouts/protected/ProtectedLayout';
-import useToken from './hooks/auth/useToken'
+import CreateUserPage from "./pages/user/CreateUserPage";
 
 // ----------------------------------------------------------------------
 
 export default function Router() {
-  const { token, setToken } = useToken();
-
-  console.log(token)
   const routes = useRoutes([
     {
       path: '/dashboard',
-      element: <ProtectedLayout token={token} />,
-      children: [{
+      element: <ProtectedLayout />,
+      children: [
+        {
           element: <DashboardLayout />,
           children: [
             { element: <Navigate to="/dashboard/app" />, index: true },
             { path: 'app', element: <DashboardAppPage /> },
             { path: 'user', element: <UserPage /> },
+            { path: 'user/create', element: <CreateUserPage /> },
+            { path: 'user/edit/:id', element: <CreateUserPage /> },
             { path: 'products', element: <ProductsPage /> },
             { path: 'blog', element: <BlogPage /> },
           ],
-        }
-      ]
+        },
+      ],
     },
     {
       path: 'login',
-      element: <LoginPage setToken={setToken} />,
+      element: <LoginPage />,
+    },
+    {
+    path: '/404',
+      element: <Page404 />,
     },
     {
       path: '*',

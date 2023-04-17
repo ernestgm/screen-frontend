@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 // @mui
 import { styled } from '@mui/material/styles';
@@ -9,6 +11,8 @@ import Logo from '../components/logo';
 import Iconify from '../components/iconify';
 // sections
 import { LoginForm } from '../sections/auth/login';
+import useAuthStore from '../zustand/useAuthStore';
+import GlobalNotification from "../components/snackbar";
 
 // ----------------------------------------------------------------------
 
@@ -40,15 +44,23 @@ const StyledContent = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function LoginPage({setToken}) {
+export default function LoginPage(props) {
+  const navigate = useNavigate();
   const mdUp = useResponsive('up', 'md');
+  const { currentUser } = useAuthStore((state) => state);
+
+  useEffect(() => {
+    if (currentUser) {
+      navigate('/', { replace: true });
+    }
+  }, []);
 
   return (
     <>
       <Helmet>
-        <title> Login | Minimal UI </title>
+        <title> Login | EScreen </title>
       </Helmet>
-
+      <GlobalNotification/>
       <StyledRoot>
         <Logo
           sx={{
@@ -98,7 +110,7 @@ export default function LoginPage({setToken}) {
               </Typography>
             </Divider>
 
-            <LoginForm setToken={setToken} />
+            <LoginForm />
           </StyledContent>
         </Container>
       </StyledRoot>

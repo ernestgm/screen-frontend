@@ -1,23 +1,31 @@
-import { useState } from 'react';
+import { useState, } from 'react';
 // @mui
 import { alpha } from '@mui/material/styles';
 import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton, Popover } from '@mui/material';
 // mocks_
-import account from '../../../_mock/account';
+import { useNavigate } from 'react-router-dom';
+import useAuthStore from '../../../zustand/useAuthStore';
+import useApiHandlerStore from "../../../zustand/useApiHandlerStore";
+import useAccontHandlerStore from "../../../zustand/useAccontHandlerStore";
+import useGlobalMessageStore from "../../../zustand/useGlobalMessageStore";
+import useMessagesSnackbar from "../../../hooks/messages/useMessagesSnackbar";
 
 // ----------------------------------------------------------------------
 
 const MENU_OPTIONS = [
   {
     label: 'Home',
+    tag: 'home',
     icon: 'eva:home-fill',
   },
   {
     label: 'Profile',
+    tag: 'profile',
     icon: 'eva:person-fill',
   },
   {
     label: 'Settings',
+    tag: 'setting',
     icon: 'eva:settings-2-fill',
   },
 ];
@@ -25,14 +33,43 @@ const MENU_OPTIONS = [
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(null);
+  const { resetCurrentUser, userAccount } = useAuthStore((state) => state);
+  const { account } = useAccontHandlerStore((state) => state);
+  const {api} = useApiHandlerStore((state) => state)
+  const showSnackbarMessage = useMessagesSnackbar();
+
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleClose = (e) => {
+    console.log(e)
     setOpen(null);
+  };
+
+
+
+  const handleLogout = async (e) => {
+    e.preventDefault()
+    const response = await api.__post('/logout', null, (msg) => {
+      showSnackbarMessage(msg, 'error');
+    });
+    if (response) {
+      setOpen(null);
+      resetCurrentUser();
+      navigate('/');
+    }
+  };
+
+  const handleListItemClick = async (tag) => {
+    if (tag === 'home') {
+      console.log(account)
+      const response = await api.__get('/users');
+      console.log(response)
+    }
   };
 
   return (
@@ -89,7 +126,10 @@ export default function AccountPopover() {
 
         <Stack sx={{ p: 1 }}>
           {MENU_OPTIONS.map((option) => (
-            <MenuItem key={option.label} onClick={handleClose}>
+            <MenuItem
+                key={option.label}
+                onClick={() => handleListItemClick(option.tag)}
+            >
               {option.label}
             </MenuItem>
           ))}
@@ -97,7 +137,7 @@ export default function AccountPopover() {
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        <MenuItem onClick={handleClose} sx={{ m: 1 }}>
+        <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
           Logout
         </MenuItem>
       </Popover>

@@ -8,6 +8,7 @@ import useAuthStore from '../../../zustand/useAuthStore';
 import useApiHandlerStore from "../../../zustand/useApiHandlerStore";
 import useAccontHandlerStore from "../../../zustand/useAccontHandlerStore";
 import useGlobalMessageStore from "../../../zustand/useGlobalMessageStore";
+import useMessagesSnackbar from "../../../hooks/messages/useMessagesSnackbar";
 
 // ----------------------------------------------------------------------
 
@@ -37,7 +38,7 @@ export default function AccountPopover() {
   const { resetCurrentUser, userAccount } = useAuthStore((state) => state);
   const { account } = useAccontHandlerStore((state) => state);
   const {api} = useApiHandlerStore((state) => state)
-  const {showMessage} = useGlobalMessageStore((state) => state)
+  const showSnackbarMessage = useMessagesSnackbar();
 
 
   const handleOpen = (event) => {
@@ -54,12 +55,7 @@ export default function AccountPopover() {
   const handleLogout = async (e) => {
     e.preventDefault()
     const response = await api.__post('/logout', null, (msg) => {
-      showMessage({
-        openAlert: false,
-        openSnackbar: true,
-        message: msg,
-        type: 'error'
-      })
+      showSnackbarMessage(msg, 'error');
     });
     if (response) {
       setOpen(null);
@@ -70,7 +66,7 @@ export default function AccountPopover() {
 
   const handleListItemClick = async (tag) => {
     if (tag === 'home') {
-      userAccount()
+      console.log(account)
       const response = await api.__get('/users');
       console.log(response)
     }

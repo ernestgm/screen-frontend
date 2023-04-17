@@ -8,6 +8,7 @@ import Iconify from '../../../components/iconify';
 import useAuthStore from '../../../zustand/useAuthStore';
 import useApiHandlerStore from "../../../zustand/useApiHandlerStore";
 import useGlobalMessageStore from "../../../zustand/useGlobalMessageStore";
+import useMessagesSnackbar from "../../../hooks/messages/useMessagesSnackbar";
 // ----------------------------------------------------------------------
 
 export default function LoginForm() {
@@ -16,7 +17,7 @@ export default function LoginForm() {
 
     const [showPassword, setShowPassword] = useState(false);
     const {api} = useApiHandlerStore((state) => state)
-    const {showMessage} = useGlobalMessageStore((state) => state)
+    const showSnackbarMessage = useMessagesSnackbar();
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
 
@@ -29,12 +30,7 @@ export default function LoginForm() {
         }
 
         const userData = await api.__post('/login', formData, (msg) => {
-            showMessage({
-                openAlert: false,
-                openSnackbar: true,
-                message: msg,
-                type: 'error'
-            })
+            showSnackbarMessage(msg, 'error');
         });
 
         if (userData) {

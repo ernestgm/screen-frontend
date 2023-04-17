@@ -20,32 +20,33 @@ import {
     IconButton,
     TableContainer,
     TablePagination,
-    TextField, InputAdornment,
+    TextField, InputAdornment, FormControl, InputLabel, Select,
 } from '@mui/material';
 import {LoadingButton} from "@mui/lab";
 import Iconify from "../../components/iconify";
 import BackButton from "../../sections/@dashboard/app/AppBackButton";
 import useApiHandlerStore from "../../zustand/useApiHandlerStore";
-import useGlobalMessageStore from "../../zustand/useGlobalMessageStore";
+import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 
 
 // ----------------------------------------------------------------------
 
 export default function CreateUserPage() {
-    const { id } = useParams();
+    const showSnackbarMessage = useMessagesSnackbar();
+    const {id} = useParams();
     const navigate = useNavigate();
-    const {api} = useApiHandlerStore((state) => state)
-    const { showMessage } = useGlobalMessageStore((state) => state)
+    const {api} = useApiHandlerStore((state) => state);
     const [validator, setValidator] = useState({});
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
         lastname: '',
         email: '',
+        role_id: '',
         password: '',
         c_password: ''
     });
-    const [cpasword, setCPassword] = useState('')
+    const [roles, setRoles] = useState([]);
 
     const handleChange = (event) => {
         const {name, value} = event.target;
@@ -67,33 +68,20 @@ export default function CreateUserPage() {
         e.preventDefault();
         let response;
         if (id) {
-            response = await api.__update(`/user/${id}`, formData, (msg) => {
-                showMessage({
-                    openAlert: false,
-                    openSnackbar: true,
-                    message: msg,
-                    type: 'error'
-                })
+            console.log(formData);
+            response = await api.__update(`/user/update/${id}`, formData, (msg) => {
+                showSnackbarMessage(msg, 'error');
             });
         } else {
             response = await api.__post('/user', formData, (msg) => {
-                showMessage({
-                    openAlert: false,
-                    openSnackbar: true,
-                    message: msg,
-                    type: 'error'
-                })
+                showSnackbarMessage(msg, 'error');
             });
         }
 
         if (response) {
             if (response.success) {
-                showMessage({
-                    openAlert: false,
-                    openSnackbar: true,
-                    message: 'Added a new user',
-                    type: 'success'
-                })
+                const msg = id ? 'User updated successfully!' : 'User added successfully!';
+                showSnackbarMessage(msg, 'success');
                 navigate('/dashboard/user')
             } else {
                 setValidator(response && response.data)
@@ -103,28 +91,40 @@ export default function CreateUserPage() {
 
     const getUser = async () => {
         const response = await api.__get(`/user/${id}`, null, (msg) => {
-            showMessage({
-                openAlert: false,
-                openSnackbar: true,
-                message: msg,
-                type: 'error'
-            })
+            showSnackbarMessage(msg, 'error');
         });
         if (response) {
-            response.data.c_password = response.data.password
-            setFormData(response.data)
-            console.log(response)
+            setFormData({
+                name: response.data.name,
+                lastname: response.data.lastname,
+                email: response.data.email,
+                role_id: response.data.role_id,
+                password: response.data.password,
+                c_password: response.data.password
+            })
+        }
+    }
+
+    const getRoles = async () => {
+        const response = await api.__get(`/roles`, null, (msg) => {
+            showSnackbarMessage(msg, 'error');
+        });
+        if (response) {
+            setRoles(response.data);
         }
     }
 
     useEffect(() => {
-        getUser()
+        getRoles()
+        if (id) {
+            getUser();
+        }
     }, [])
 
     return (
         <>
             <Helmet>
-                <title> { id ? 'User edit' : 'Create User' }  | EScreens </title>
+                <title> {id ? 'User edit' : 'Create User'} | EScreens </title>
             </Helmet>
 
             <Container>
@@ -133,7 +133,7 @@ export default function CreateUserPage() {
                         <BackButton path="/dashboard/user"/>
                     </Stack>
                     <Typography variant="h4" gutterBottom>
-                        { id ? 'User edit' : 'Create User' }
+                        {id ? 'User edit' : 'Create User'}
                     </Typography>
                 </Stack>
                 <Card>
@@ -162,6 +162,23 @@ export default function CreateUserPage() {
                             error={validator.email && true}
                             helperText={validator.email}
                         />
+                        <FormControl fullWidth>
+                            <InputLabel id="role-select-label">Role</InputLabel>
+                            <Select
+                                name="role_id"
+                                labelId="role-select-label"
+                                id="role-select"
+                                value={formData.role_id}
+                                label="Role"
+                                onChange={handleChange}
+                            >
+                                {roles.map((rol) => {
+                                    return (
+                                        <MenuItem key={rol.id} value={rol.id}>{rol.name}</MenuItem>
+                                    )
+                                })}
+                            </Select>
+                        </FormControl>
                         <TextField
                             name="password"
                             label="Password"

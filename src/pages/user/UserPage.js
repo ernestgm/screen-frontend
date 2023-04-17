@@ -31,8 +31,8 @@ import Scrollbar from '../../components/scrollbar';
 import {UserListHead, UserListToolbar} from '../../sections/@dashboard/user';
 import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import {formatDate} from "../../utils/formatTime";
-import AlertMessage from "../../components/alert";
-import useGlobalMessageStore from "../../zustand/useGlobalMessageStore";
+import useMessagesAlert from "../../hooks/messages/useMessagesAlert";
+import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 
 
 // ----------------------------------------------------------------------
@@ -40,7 +40,7 @@ import useGlobalMessageStore from "../../zustand/useGlobalMessageStore";
 const TABLE_HEAD = [
     {id: 'name', label: 'Name', alignRight: false},
     {id: 'email', label: 'Email', alignRight: false},
-    // { id: 'role', label: 'Role', alignRight: false },
+    {id: 'role', label: 'Role', alignRight: false },
     {id: 'created_at', label: 'Create At', alignRight: false},
     {id: 'updated_at', label: 'Update At', alignRight: false},
     { id: 'actions', label: 'Actions' },
@@ -97,17 +97,13 @@ export default function UserPage() {
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
 
-    const {api} = useApiHandlerStore((state) => state)
-    const { showMessage } = useGlobalMessageStore((state) => state)
+    const {api} = useApiHandlerStore((state) => state);
+    const showMessageAlert = useMessagesAlert();
+    const showMessageSnackbar = useMessagesSnackbar()
 
     const getUsers = async () => {
         const response = await api.__get('/users', (msg) => {
-            showMessage({
-                openAlert: false,
-                openSnackbar: true,
-                message: msg,
-                type: 'error'
-            })
+            showMessageSnackbar(msg, 'error');
         })
 
         if (response) {
@@ -118,21 +114,11 @@ export default function UserPage() {
     const deleteUsers = async (ids) => {
         const data = { 'ids': ids };
         const response = await api.__delete('/users', data, (msg) => {
-            showMessage({
-                openAlert: false,
-                openSnackbar: true,
-                message: msg,
-                type: 'error'
-            })
+            showMessageSnackbar(msg, 'error');
         })
 
         if (response) {
-            showMessage({
-                openAlert: true,
-                openSnackbar: false,
-                message: response.message,
-                type: 'success'}
-            )
+            showMessageAlert(response.message, 'success');
             getUsers();
             setSelected([]);
         }
@@ -255,9 +241,8 @@ export default function UserPage() {
                                 />
                                 <TableBody>
                                     {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                        const {id, name, lastname, email} = row;
+                                        const {id, name, lastname, email, role} = row;
                                         const selectedUser = selected.indexOf(id) !== -1;
-
                                         return (
                                             <TableRow hover key={id} tabIndex={-1} role="checkbox"
                                                       selected={selectedUser}>
@@ -276,6 +261,8 @@ export default function UserPage() {
                                                 </TableCell>
 
                                                 <TableCell align="left">{email}</TableCell>
+
+                                                <TableCell align="left">{role && role.name}</TableCell>
 
                                                 <TableCell align="left">{formatDate(row.created_at)}</TableCell>
 

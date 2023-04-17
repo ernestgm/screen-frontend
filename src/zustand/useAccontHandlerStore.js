@@ -12,6 +12,7 @@ const useAccountHandlerStore = create(
                 useAuthStore.getState().currentUser ? useAuthStore.getState().currentUser.user.lastname : ''
             }`,
             email: `${useAuthStore.getState().currentUser ? useAuthStore.getState().currentUser.user.email : ''}`,
+            role: useAuthStore.getState().currentUser ? useAuthStore.getState().currentUser.role : '',
             photoURL: '/assets/images/avatars/avatar_default.jpg',
         },
 
@@ -20,6 +21,7 @@ const useAccountHandlerStore = create(
             account: {
                 displayName: `${user.name} ${user.lastname}`,
                 email: `${user.email}`,
+                role: user.role,
                 photoURL: '/assets/images/avatars/avatar_default.jpg',
             }
         }),

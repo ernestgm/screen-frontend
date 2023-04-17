@@ -1,5 +1,5 @@
 const API_CONFIG = {
-    baseURL: 'http://www.screen-server.test/api/v1',
+    baseURL: process.env.REACT_APP_API_CONFIG || 'http://www.screen-server.test/api/v1',
     LOGIN: {
         path: '/login'
     }

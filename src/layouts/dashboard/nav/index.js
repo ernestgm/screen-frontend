@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
+import {useEffect, useState} from 'react';
 import { useLocation } from 'react-router-dom';
+import {filter} from "lodash";
 // @mui
 import { styled, alpha } from '@mui/material/styles';
 import { Box, Link, Button, Drawer, Typography, Avatar, Stack } from '@mui/material';
@@ -13,6 +14,7 @@ import NavSection from '../../../components/nav-section';
 //
 import navConfig from './config';
 import useAccontHandlerStore from "../../../zustand/useAccontHandlerStore";
+
 
 // ----------------------------------------------------------------------
 
@@ -36,10 +38,21 @@ Nav.propTypes = {
 export default function Nav({ openNav, onCloseNav }) {
   const { pathname } = useLocation();
   const { account } = useAccontHandlerStore((state) => state);
+  const [menu, setMenu] = useState([]);
 
   const isDesktop = useResponsive('up', 'lg');
 
+  const setMenuByRole = () => {
+    const rol = account.role && account.role.tag;
+    const items = navConfig.filter((item) =>
+        item.roles.includes(rol)
+    );
+
+    setMenu(items);
+  }
+
   useEffect(() => {
+    setMenuByRole()
     if (openNav) {
       onCloseNav();
     }
@@ -68,14 +81,15 @@ export default function Nav({ openNav, onCloseNav }) {
               </Typography>
 
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {account.role}
+                {account.role && account.role.name}
               </Typography>
             </Box>
           </StyledAccount>
         </Link>
       </Box>
 
-      <NavSection data={navConfig} />
+
+      <NavSection data={menu} />
 
       <Box sx={{ flexGrow: 1 }} />
     </Scrollbar>

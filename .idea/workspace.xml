@@ -4,20 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d4767243-8cf2-4570-929d-1212d7106fb6" name="Changes" comment="Create roles CRUD and Permission">
-      <change afterPath="$PROJECT_DIR$/src/pages/business/BusinessPage.js" afterDir="false" />
+    <list default="true" id="d4767243-8cf2-4570-929d-1212d7106fb6" name="Changes" comment="Create business CRUD">
+      <change afterPath="$PROJECT_DIR$/src/pages/business/CreateBusinessPage.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/utils/table/tableFunctions.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/dashboard/nav/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/dashboard/nav/config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/BlogPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/BlogPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/DashboardAppPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/DashboardAppPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LoginPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LoginPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Page404.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Page404.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/ProductsPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/ProductsPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/user/CreateUserPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/user/CreateUserPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/user/UserPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/user/UserPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/business/BusinessPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/business/BusinessPage.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/handlers/ApiHandler.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/handlers/ApiHandler.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sections/@dashboard/user/UserListToolbar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sections/@dashboard/user/UserListToolbar.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,7 +46,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/ernes/Documents/proyect/react/screen-frontend/src/components/table",
+    "last_opened_file_path": "C:/Users/ernes/Documents/proyect/react/screen-frontend/src/pages/business",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -66,11 +59,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\pages\business" />
       <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\components\table" />
       <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\components\snackbar" />
       <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\components\alert" />
       <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\pages\user" />
-      <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\zustand" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\pages\user" />
@@ -155,7 +148,14 @@
       <option name="project" value="LOCAL" />
       <updated>1681697015600</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Create business CRUD">
+      <created>1681753496967</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1681753496967</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -194,6 +194,7 @@
     <MESSAGE value="Create User Form, manage Messages" />
     <MESSAGE value="Edit User Form" />
     <MESSAGE value="Create roles CRUD and Permission" />
-    <option name="LAST_COMMIT_MESSAGE" value="Create roles CRUD and Permission" />
+    <MESSAGE value="Create business CRUD" />
+    <option name="LAST_COMMIT_MESSAGE" value="Create business CRUD" />
   </component>
 </project>

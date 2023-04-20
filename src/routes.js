@@ -13,6 +13,7 @@ import DashboardAppPage from './pages/DashboardAppPage';
 import ProtectedLayout from './layouts/protected/ProtectedLayout';
 import CreateUserPage from "./pages/user/CreateUserPage";
 import BusinessPage from "./pages/business/BusinessPage";
+import CreateBusinessPage from "./pages/business/CreateBusinessPage";
 
 // ----------------------------------------------------------------------
 
@@ -29,6 +30,8 @@ export default function Router() {
             { path: 'app', element: <DashboardAppPage /> },
               // Business
             { path: 'business', element: <BusinessPage /> },
+            { path: 'business/create', element: <CreateBusinessPage /> },
+            { path: 'business/edit/:id', element: <CreateBusinessPage /> },
               // Users
             { path: 'user', element: <UserPage /> },
             { path: 'user/create', element: <CreateUserPage /> },

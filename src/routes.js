@@ -14,6 +14,7 @@ import ProtectedLayout from './layouts/protected/ProtectedLayout';
 import CreateUserPage from "./pages/user/CreateUserPage";
 import BusinessPage from "./pages/business/BusinessPage";
 import CreateBusinessPage from "./pages/business/CreateBusinessPage";
+import Page401 from "./pages/Page401";
 
 // ----------------------------------------------------------------------
 
@@ -50,6 +51,10 @@ export default function Router() {
     {
     path: '/404',
       element: <Page404 />,
+    },
+    {
+      path: '/401',
+      element: <Page401 />,
     },
     {
       path: '*',

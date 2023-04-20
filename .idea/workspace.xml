@@ -4,11 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d4767243-8cf2-4570-929d-1212d7106fb6" name="Changes" comment="Create business CRUD">
-      <change afterPath="$PROJECT_DIR$/src/pages/Page401.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="d4767243-8cf2-4570-929d-1212d7106fb6" name="Changes" comment="Fixed PAge Access">
       <change beforePath="$PROJECT_DIR$/src/layouts/protected/ProtectedLayout.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/protected/ProtectedLayout.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -160,7 +157,14 @@
       <option name="project" value="LOCAL" />
       <updated>1682008546737</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Fixed PAge Access">
+      <created>1682011312369</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1682011312369</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -200,6 +204,7 @@
     <MESSAGE value="Edit User Form" />
     <MESSAGE value="Create roles CRUD and Permission" />
     <MESSAGE value="Create business CRUD" />
-    <option name="LAST_COMMIT_MESSAGE" value="Create business CRUD" />
+    <MESSAGE value="Fixed PAge Access" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed PAge Access" />
   </component>
 </project>

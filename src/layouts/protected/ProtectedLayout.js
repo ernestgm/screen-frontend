@@ -18,15 +18,12 @@ export default function ProtectedLayout(props) {
       navigate('/login', { replace: true });
 
     } else {
+      setApiToken(currentUser.token);
+      setAccountData(currentUser.user);
       const pathWithAccess = filter(navConfig, (item) => item.roles.find(tag => tag === currentUser.user.role.tag));
-
-      if (pathWithAccess.some(item => item.path === window.location.pathname)) {
-        setApiToken(currentUser.token);
-        setAccountData(currentUser.user)
-      } else {
+      if (!pathWithAccess.some(item => item.path === window.location.pathname)) {
         navigate('/401', { replace: true });
       }
-
     }
   }, []);
 

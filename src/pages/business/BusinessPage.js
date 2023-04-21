@@ -52,6 +52,7 @@ const URL_GET_DATA = '/businesses';
 const URL_DELETE_ROW = '/businesses';
 const PATH_EDIT_ROW = `/dashboard/business/edit/`;
 const PATH_NEW_ROW = '/dashboard/business/create';
+const PATH_DETAILS_ROW = '/dashboard/business/details/';
 
 // ----------------------------------------------------------------------
 
@@ -172,6 +173,11 @@ export default function UserPage() {
     const handleEditItemClick = (item) => {
         handleCloseMenu()
         navigate(`${PATH_EDIT_ROW}${item.id}`, {replace: true})
+    }
+
+    const handleDetailsItemClick = (item) => {
+        handleCloseMenu()
+        navigate(`${PATH_DETAILS_ROW}${item.id}`, {replace: true})
     }
 
     const handleDeleteItemClick = (item) => {
@@ -316,6 +322,11 @@ export default function UserPage() {
                     },
                 }}
             >
+                <MenuItem onClick={() => handleDetailsItemClick(open)}>
+                    <Iconify icon={'tabler:list-details'} sx={{mr: 2}}/>
+                    Details
+                </MenuItem>
+
                 <MenuItem onClick={() => handleEditItemClick(open)}>
                     <Iconify icon={'eva:edit-fill'} sx={{mr: 2}}/>
                     Edit

@@ -15,6 +15,7 @@ import CreateUserPage from "./pages/user/CreateUserPage";
 import BusinessPage from "./pages/business/BusinessPage";
 import CreateBusinessPage from "./pages/business/CreateBusinessPage";
 import Page401 from "./pages/Page401";
+import DetailsBusinessPage from "./pages/business/DetailsBusinessPage";
 
 // ----------------------------------------------------------------------
 
@@ -33,6 +34,7 @@ export default function Router() {
             { path: 'business', element: <BusinessPage /> },
             { path: 'business/create', element: <CreateBusinessPage /> },
             { path: 'business/edit/:id', element: <CreateBusinessPage /> },
+            { path: 'business/details/:id', element: <DetailsBusinessPage /> },
               // Users
             { path: 'user', element: <UserPage /> },
             { path: 'user/create', element: <CreateUserPage /> },

@@ -57,10 +57,11 @@ BusinessDetailsCard.propTypes = {
   index: PropTypes.number,
 };
 
-export default function BusinessDetailsCard({ post, index }) {
-  const { cover, title, view, comment, share, author, createdAt } = post;
-  const latestPostLarge = index === 0;
-  const latestPost = index === 1 || index === 2;
+export default function BusinessDetailsCard({ business }) {
+  const { cover, title, view, comment, share, author, createdAt, description } = business;
+  const latestPostLarge = true;
+  const latestPost = false;
+
 
   const POST_INFO = [
     { number: comment, icon: 'eva:message-circle-fill' },
@@ -69,11 +70,6 @@ export default function BusinessDetailsCard({ post, index }) {
   ];
 
   return (
-    <Grid
-        item xs={12}
-        sm={12}
-        md={12}
-    >
       <Card sx={{ position: 'relative' }}>
         <StyledCardMedia
           sx={{
@@ -91,7 +87,7 @@ export default function BusinessDetailsCard({ post, index }) {
             ...(latestPostLarge && {
               pt: {
                 xs: 'calc(100% * 3 / 3)',
-                sm: 'calc(100% * 1.3 / 4.66)',
+                sm: 'calc(100% * 3 / 4.66)',
               },
             }),
           }}
@@ -145,7 +141,7 @@ export default function BusinessDetailsCard({ post, index }) {
             variant="subtitle2"
             underline="hover"
             sx={{
-              ...(latestPostLarge && { typography: 'h5', height: 60 }),
+              ...(latestPostLarge && { typography: 'h5', height: 40 }),
               ...((latestPostLarge || latestPost) && {
                 color: 'common.white',
               }),
@@ -153,8 +149,10 @@ export default function BusinessDetailsCard({ post, index }) {
           >
             {title}
           </StyledTitle>
+            <Typography gutterBottom variant="caption" sx={{ color: 'common.white', display: 'block' }}>
+                Description: { description }
+            </Typography>
         </CardContent>
       </Card>
-    </Grid>
   );
 }

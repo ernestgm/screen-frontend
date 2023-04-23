@@ -33,97 +33,97 @@ import POSTS from "../../_mock/blog";
 import {BlogPostCard} from "../../sections/@dashboard/blog";
 import BusinessDetailsCard from "../../sections/@dashboard/business/BusinessDetailsCard";
 import {AppTasks} from "../../sections/@dashboard/app";
+import {MapContainer} from "../../components/map";
 
 
 // ----------------------------------------------------------------------
 
 const NAME_PAGE = 'Business Details';
-const URL_UPDATE = '/business/update/';
+const URL_GET_BUSINESS = PROYECT_CONFIG.API_CONFIG.BUSINESS.GET;
 const URL_CREATE = '/business';
 const URL_TABLES_PAGE = '/dashboard/business';
 const URL_GET_ITEM_FOR_UPDATE = '/business/';
 
-const business = [...Array(1)].map((_, index) => ({
-    id: faker.datatype.uuid(),
-    cover: `/assets/images/covers/cover_${index + 1}.jpg`,
-    title: 'Business 1',
-    createdAt: faker.date.past(),
-    view: faker.datatype.number(),
-    comment: faker.datatype.number(),
-    share: faker.datatype.number(),
-    favorite: faker.datatype.number(),
-    author: {
-        name: faker.name.fullName(),
-        avatarUrl: `/assets/images/avatars/avatar_${index + 1}.jpg`,
-    },
-}));
+// const business = [...Array(1)].map((_, index) => ({
+//     id: faker.datatype.uuid(),
+//     cover: `/assets/images/covers/cover_${index + 1}.jpg`,
+//     title: 'Business 1',
+//     createdAt: faker.date.past(),
+//     view: faker.datatype.number(),
+//     comment: faker.datatype.number(),
+//     share: faker.datatype.number(),
+//     favorite: faker.datatype.number(),
+//     author: {
+//         name: faker.name.fullName(),
+//         avatarUrl: `/assets/images/avatars/avatar_${index + 1}.jpg`,
+//     },
+// }));
+
 export default function DetailsBusinessPage() {
-    // const showSnackbarMessage = useMessagesSnackbar();
+    const showSnackbarMessage = useMessagesSnackbar();
     const {id} = useParams();
     // const navigate = useNavigate();
-    // const {api} = useApiHandlerStore((state) => state);
-    // const [validator, setValidator] = useState({});
-    // const [formData, setFormData] = useState({
-    //     name: '',
-    //     description: '',
-    //     logo: '',
-    // });
-    //
-    // const handleChange = (event) => {
-    //     const {name, value} = event.target;
-    //     setFormData((prevFormData) => ({
-    //         ...prevFormData,
-    //         [name]: value,
-    //     }));
-    // };
-    //
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-    //     let response;
-    //     if (id) {
-    //         response = await api.__update(`${URL_UPDATE}${id}`, formData, (msg) => {
-    //             showSnackbarMessage(msg, 'error');
-    //         });
-    //     } else {
-    //         response = await api.__post(URL_CREATE, formData, (msg) => {
-    //             showSnackbarMessage(msg, 'error');
-    //         });
-    //     }
-    //
-    //     if (response) {
-    //         if (response.success) {
-    //             const msg = id ? `${NAME_PAGE} updated successfully!` : `${NAME_PAGE} added successfully!`;
-    //             showSnackbarMessage(msg, 'success');
-    //             navigate(URL_TABLES_PAGE)
-    //         } else {
-    //             setValidator(response && response.data)
-    //         }
-    //     }
-    // };
-    //
-    // const getItemForUpdate = async () => {
-    //     const response = await api.__get(`${URL_GET_ITEM_FOR_UPDATE}${id}`, null, (msg) => {
-    //         showSnackbarMessage(msg, 'error');
-    //     });
-    //     if (response) {
-    //         setFormData({
-    //             name: response.data.name,
-    //             description: response.data.description,
-    //             logo: response.data.logo,
-    //         })
-    //     }
-    // }
-    //
-    // useEffect(() => {
-    //     if (id) {
-    //         getItemForUpdate();
-    //     }
-    // }, [])
+    const {api} = useApiHandlerStore((state) => state);
+
+    const [business, setBusiness] = useState({
+        id: 0,
+        cover: `/assets/images/covers/cover_2.jpg`,
+        title: '',
+        description: '',
+        createdAt: '',
+        view: 0,
+        comment: 0,
+        share: 0,
+        favorite: 0,
+        author: {
+            name: '',
+            avatarUrl: `/assets/images/avatars/avatar_2.jpg`,
+        },
+        geolocation: {
+            address: '',
+            latitude: '',
+            longitude: ''
+        }
+    });
+
+    const getBusinessDetails = async () => {
+        const response = await api.__get(`${URL_GET_BUSINESS}${id}`, null, (msg) => {
+            showSnackbarMessage(msg, 'error');
+        });
+        if (response) {
+            console.log(response)
+            const data = response.data;
+            setBusiness({
+                id: data.id,
+                cover: `/assets/images/covers/cover_2.jpg`,
+                title: data.name,
+                description: data.description,
+                createdAt: data.created_at,
+                view: 0,
+                comment: 0,
+                share: 0,
+                favorite: 0,
+                author: {
+                    name: `${data.user.name} ${data.user.lastname}`,
+                    avatarUrl: `/assets/images/avatars/avatar_2.jpg`,
+                },
+                geolocation: {
+                    address: data.geolocation.address,
+                    latitude: data.geolocation.latitude,
+                    longitude: data.geolocation.longitude
+                }
+            })
+        }
+    }
+
+    useEffect(() => {
+        getBusinessDetails();
+    }, [])
 
     return (
         <>
             <Helmet>
-                <title> {NAME_PAGE} | { PROYECT_CONFIG.NAME } </title>
+                <title> {NAME_PAGE} | {PROYECT_CONFIG.NAME} </title>
             </Helmet>
 
             <Container>
@@ -135,21 +135,39 @@ export default function DetailsBusinessPage() {
                         {NAME_PAGE}
                     </Typography>
                 </Stack>
-                <Grid container>
-                    {business.map((post, index) => (
-                        <BusinessDetailsCard key={post.id} post={post} index={index} />
-                    ))}
+                <Grid container spacing={2} mb={5}>
+                    <Grid item xs={12} md={5} lg={5}>
+                        { business && <BusinessDetailsCard business={business} /> }
+                    </Grid>
+                    <Grid item xs={12} md={7} lg={7}>
+                        <Grid item xs={12} md={12} lg={12}>
+                            <Typography variant="h6" gutterBottom>
+                                Address: { business.geolocation.address }
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={12} md={12} lg={12} sx={{
+                            width: '100%',
+                            height: '85%',
+                        }}>
+                            <Card sx={{
+                                width: '100%',
+                                height: '100%',
+                            }}>
+                                <MapContainer map geolocation={business.geolocation} />
+                            </Card>
+                        </Grid>
+                    </Grid>
                 </Grid>
                 <Stack>
                     <Grid item xs={12} md={6} lg={8}>
                         <AppTasks
                             title="Areas"
                             list={[
-                                { id: '1', label: 'Create FireStone Logo' },
-                                { id: '2', label: 'Add SCSS and JS files if required' },
-                                { id: '3', label: 'Stakeholder Meeting' },
-                                { id: '4', label: 'Scoping & Estimations' },
-                                { id: '5', label: 'Sprint Showcase' },
+                                {id: '1', label: 'Create FireStone Logo'},
+                                {id: '2', label: 'Add SCSS and JS files if required'},
+                                {id: '3', label: 'Stakeholder Meeting'},
+                                {id: '4', label: 'Scoping & Estimations'},
+                                {id: '5', label: 'Sprint Showcase'},
                             ]}
                         />
                     </Grid>

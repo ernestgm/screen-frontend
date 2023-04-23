@@ -5,7 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d4767243-8cf2-4570-929d-1212d7106fb6" name="Changes" comment="Fixed PAge Access">
-      <change beforePath="$PROJECT_DIR$/src/layouts/protected/ProtectedLayout.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/protected/ProtectedLayout.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/map/MapContainer.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/map/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/business/BusinessPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/business/BusinessPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/business/CreateBusinessPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/business/CreateBusinessPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/business/DetailsBusinessPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/business/DetailsBusinessPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sections/@dashboard/business/BusinessDetailsCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sections/@dashboard/business/BusinessDetailsCard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,11 +47,12 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/ernes/Documents/proyect/react/screen-frontend/src/pages",
+    "last_opened_file_path": "C:/Users/ernes/Documents/proyect/react/screen-frontend/src/components/map",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -54,13 +65,14 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\pages" />
+      <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\components\map" />
+      <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\sections\business" />
       <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\pages\business" />
+      <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\pages" />
       <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\components\table" />
-      <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\components\snackbar" />
-      <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\components\alert" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\sections\@dashboard" />
       <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\pages\user" />
     </key>
   </component>
@@ -79,6 +91,8 @@
       <workItem from="1681568298473" duration="31396000" />
       <workItem from="1681696390054" duration="808000" />
       <workItem from="1681697243642" duration="1501000" />
+      <workItem from="1682183204943" duration="1426000" />
+      <workItem from="1682197322933" duration="24366000" />
     </task>
     <task id="LOCAL-00001" summary="User login Complete">
       <created>1680980627562</created>
@@ -164,7 +178,21 @@
       <option name="project" value="LOCAL" />
       <updated>1682011312369</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Fixed PAge Access">
+      <created>1682014838133</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1682014838133</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Fixed PAge Access">
+      <created>1682093437483</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1682093437483</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

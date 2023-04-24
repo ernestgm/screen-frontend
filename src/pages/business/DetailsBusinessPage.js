@@ -44,21 +44,6 @@ const URL_CREATE = '/business';
 const URL_TABLES_PAGE = '/dashboard/business';
 const URL_GET_ITEM_FOR_UPDATE = '/business/';
 
-// const business = [...Array(1)].map((_, index) => ({
-//     id: faker.datatype.uuid(),
-//     cover: `/assets/images/covers/cover_${index + 1}.jpg`,
-//     title: 'Business 1',
-//     createdAt: faker.date.past(),
-//     view: faker.datatype.number(),
-//     comment: faker.datatype.number(),
-//     share: faker.datatype.number(),
-//     favorite: faker.datatype.number(),
-//     author: {
-//         name: faker.name.fullName(),
-//         avatarUrl: `/assets/images/avatars/avatar_${index + 1}.jpg`,
-//     },
-// }));
-
 export default function DetailsBusinessPage() {
     const showSnackbarMessage = useMessagesSnackbar();
     const {id} = useParams();
@@ -67,7 +52,7 @@ export default function DetailsBusinessPage() {
 
     const [business, setBusiness] = useState({
         id: 0,
-        cover: `/assets/images/covers/cover_2.jpg`,
+        cover: `/assets/images/covers/cover_4.jpg`,
         title: '',
         description: '',
         createdAt: '',
@@ -77,7 +62,7 @@ export default function DetailsBusinessPage() {
         favorite: 0,
         author: {
             name: '',
-            avatarUrl: `/assets/images/avatars/avatar_2.jpg`,
+            avatarUrl: `/assets/images/avatars/avatar_4.jpg`,
         },
         geolocation: {
             address: '',
@@ -93,26 +78,24 @@ export default function DetailsBusinessPage() {
         if (response) {
             console.log(response)
             const data = response.data;
-            setBusiness({
-                id: data.id,
-                cover: `/assets/images/covers/cover_2.jpg`,
-                title: data.name,
-                description: data.description,
-                createdAt: data.created_at,
-                view: 0,
-                comment: 0,
-                share: 0,
-                favorite: 0,
-                author: {
-                    name: `${data.user.name} ${data.user.lastname}`,
-                    avatarUrl: `/assets/images/avatars/avatar_2.jpg`,
-                },
-                geolocation: {
-                    address: data.geolocation.address,
-                    latitude: data.geolocation.latitude,
-                    longitude: data.geolocation.longitude
+            setBusiness((oldData) =>(
+                {
+                    ...oldData,
+                    id: data.id,
+                    title: data.name,
+                    description: data.description,
+                    createdAt: data.created_at,
+                    author: {
+                        name: `${data.user.name} ${data.user.lastname}`,
+                        avatarUrl: oldData.author.avatarUrl,
+                    },
+                    geolocation: {
+                        address: data.geolocation.address,
+                        latitude: data.geolocation.latitude,
+                        longitude: data.geolocation.longitude
+                    }
                 }
-            })
+            ))
         }
     }
 

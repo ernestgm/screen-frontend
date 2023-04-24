@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from "react-router-dom";
 // @mui
 import {Helmet} from 'react-helmet-async';
@@ -29,7 +29,7 @@ import BackButton from "../../sections/@dashboard/app/AppBackButton";
 import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import PROYECT_CONFIG from "../../config/config";
-import {MapContainer} from "../../components/map";
+import { MapContainer } from "../../components/map";
 
 // ----------------------------------------------------------------------
 
@@ -56,8 +56,8 @@ export default function CreateBusinessPage() {
     });
 
     const [owners, setOwners] = useState([]);
-    const [latitude, setLatitude] = useState(0);
-    const [longitude, setLongitude] = useState(0);
+    const [autocomplete, setAutocomplete] = useState(null);
+
 
     const handleChange = (event) => {
         const {name, value} = event.target;
@@ -65,21 +65,21 @@ export default function CreateBusinessPage() {
             ...prevFormData,
             [name]: value,
         }));
-
-        console.log(formData);
     };
 
     const chanceAddress = (place) => {
-
+        console.log(place.geometry);
         setFormData((prevFormData) => ({
             ...prevFormData,
             address: place.formatted_address,
             latitude: place.geometry.location.lat().toString(),
             longitude: place.geometry.location.lng().toString(),
         }));
+    }
 
-        console.log(place);
-        console.log(formData);
+    const chanceAutocomplete = (autocomplete) => {
+        console.log(autocomplete);
+        setAutocomplete(autocomplete);
     }
 
     const handleSubmit = async (e) => {
@@ -112,12 +112,19 @@ export default function CreateBusinessPage() {
         const response = await api.__get(`${URL_GET_ITEM_FOR_UPDATE}${id}`, null, (msg) => {
             showSnackbarMessage(msg, 'error');
         });
+
         if (response) {
             setFormData({
                 name: response.data.name,
                 description: response.data.description,
                 logo: response.data.logo,
-            })
+                user_id: response.data.user_id,
+                address: response.data.geolocation.address,
+                latitude: response.data.geolocation.latitude,
+                longitude: response.data.geolocation.longitude,
+            });
+            const input = document.getElementById("address");
+            input.value = response.data.geolocation.address;
         }
     }
 
@@ -130,8 +137,6 @@ export default function CreateBusinessPage() {
             setOwners(Object.values(response.data));
         }
     }
-
-
 
     useEffect(() => {
         getOwners()
@@ -185,8 +190,8 @@ export default function CreateBusinessPage() {
                             <InputLabel id="role-select-label">Select Owner</InputLabel>
                             <Select
                                 name="user_id"
-                                labelId="role-select-label"
-                                id="role-select"
+                                labelId="user-select-label"
+                                id="user-select"
                                 value={formData.user_id}
                                 label="Select Owner"
                                 onChange={handleChange}
@@ -201,9 +206,21 @@ export default function CreateBusinessPage() {
                                 }
                             </Select>
                         </FormControl>
-                        <MapContainer setAdress={chanceAddress} />
-                        <input name='latitude' value={latitude} type="hidden"/>
-                        <input name='longitude' value={longitude} type="hidden"/>
+                        <MapContainer setAdress={chanceAddress} geolocation={formData} >
+                            <TextField
+                                id="address"
+                                name="address"
+                                label="Address"
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start" >
+                                            <Iconify icon="mdi:home-map-marker" />
+                                        </InputAdornment>
+                                    ),
+                                }}
+                                sx={{width: '100%', height: 100}}
+                            />
+                        </MapContainer>
                     </Stack>
                 </Card>
                 <Stack>

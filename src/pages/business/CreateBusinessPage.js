@@ -84,7 +84,6 @@ export default function CreateBusinessPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData);
 
         let response;
         if (id) {

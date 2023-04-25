@@ -4,18 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d4767243-8cf2-4570-929d-1212d7106fb6" name="Changes" comment="Fixed PAge Access">
-      <change afterPath="$PROJECT_DIR$/src/components/map/MapContainer.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/map/index.js" afterDir="false" />
+    <list default="true" id="d4767243-8cf2-4570-929d-1212d7106fb6" name="Changes" comment="CRUD business" />
+    <list id="d4ad349c-1410-4760-87b2-6c449dfa42b6" name="ignore" comment="CRUD Business">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/business/BusinessPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/business/BusinessPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/business/CreateBusinessPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/business/CreateBusinessPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/business/DetailsBusinessPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/business/DetailsBusinessPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sections/@dashboard/business/BusinessDetailsCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sections/@dashboard/business/BusinessDetailsCard.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,6 +71,7 @@
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="d4767243-8cf2-4570-929d-1212d7106fb6" name="Changes" comment="" />
+      <changelist id="d4ad349c-1410-4760-87b2-6c449dfa42b6" name="ignore" comment="" />
       <created>1680967893555</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -92,7 +84,7 @@
       <workItem from="1681696390054" duration="808000" />
       <workItem from="1681697243642" duration="1501000" />
       <workItem from="1682183204943" duration="1426000" />
-      <workItem from="1682197322933" duration="24366000" />
+      <workItem from="1682197322933" duration="41853000" />
     </task>
     <task id="LOCAL-00001" summary="User login Complete">
       <created>1680980627562</created>
@@ -192,7 +184,28 @@
       <option name="project" value="LOCAL" />
       <updated>1682093437483</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Build Page business details">
+      <created>1682291637708</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1682291637708</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Build Page business details">
+      <created>1682320585231</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1682320585231</updated>
+    </task>
+    <task id="LOCAL-00017" summary="CRUD business">
+      <created>1682440526515</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1682440526515</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -233,6 +246,9 @@
     <MESSAGE value="Create roles CRUD and Permission" />
     <MESSAGE value="Create business CRUD" />
     <MESSAGE value="Fixed PAge Access" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed PAge Access" />
+    <MESSAGE value="Build Page business details" />
+    <MESSAGE value="CRUD Business" />
+    <MESSAGE value="CRUD business" />
+    <option name="LAST_COMMIT_MESSAGE" value="CRUD business" />
   </component>
 </project>

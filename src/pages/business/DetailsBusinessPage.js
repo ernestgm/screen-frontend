@@ -34,6 +34,10 @@ import {BlogPostCard} from "../../sections/@dashboard/blog";
 import BusinessDetailsCard from "../../sections/@dashboard/business/BusinessDetailsCard";
 import {AppTasks} from "../../sections/@dashboard/app";
 import {MapContainer} from "../../components/map";
+import {UserListHead, UserListToolbar} from "../../sections/@dashboard/user";
+import Scrollbar from "../../components/scrollbar/Scrollbar";
+import {formatDate} from "../../utils/formatTime";
+import AreasDataTable from "./component/AreasDataTable";
 
 
 // ----------------------------------------------------------------------
@@ -47,7 +51,6 @@ const URL_GET_ITEM_FOR_UPDATE = '/business/';
 export default function DetailsBusinessPage() {
     const showSnackbarMessage = useMessagesSnackbar();
     const {id} = useParams();
-    // const navigate = useNavigate();
     const {api} = useApiHandlerStore((state) => state);
 
     const [business, setBusiness] = useState({
@@ -143,16 +146,7 @@ export default function DetailsBusinessPage() {
                 </Grid>
                 <Stack>
                     <Grid item xs={12} md={6} lg={8}>
-                        <AppTasks
-                            title="Areas"
-                            list={[
-                                {id: '1', label: 'Create FireStone Logo'},
-                                {id: '2', label: 'Add SCSS and JS files if required'},
-                                {id: '3', label: 'Stakeholder Meeting'},
-                                {id: '4', label: 'Scoping & Estimations'},
-                                {id: '5', label: 'Sprint Showcase'},
-                            ]}
-                        />
+                        <AreasDataTable business={id} />
                     </Grid>
                 </Stack>
             </Container>

@@ -16,6 +16,13 @@ const PROYECT_CONFIG = {
             DELETE: '/businesses',
             ALL: '/businesses',
         },
+        AREA: {
+            CREATE: '/area',
+            GET: '/area/',
+            UPDATE: '/area/update/',
+            DELETE: '/areas',
+            ALL: '/areas',
+        },
     },
     GOOGLE_API_KEY: 'AIzaSyCUcpKY6fcESOmIpZfYlNRZNLS1dA0is-g'
 }

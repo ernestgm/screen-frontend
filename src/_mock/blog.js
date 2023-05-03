@@ -26,7 +26,7 @@ const POST_TITLES = [
   'Akkers van Margraten',
   'Gradient Ticket icon',
   'Here’s a Dyson motorcycle concept that doesn’t ‘suck’!',
-  'How to Animate a SVG with border-image',
+  'How to Animate a SVG with border-screen',
 ];
 
 const posts = [...Array(23)].map((_, index) => ({

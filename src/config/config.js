@@ -23,6 +23,13 @@ const PROYECT_CONFIG = {
             DELETE: '/areas',
             ALL: '/areas',
         },
+        SCREEN: {
+            CREATE: '/screen',
+            GET: '/screen/',
+            UPDATE: '/screen/update/',
+            DELETE: '/screens',
+            ALL: '/screens',
+        },
     },
     GOOGLE_API_KEY: 'AIzaSyCUcpKY6fcESOmIpZfYlNRZNLS1dA0is-g'
 }

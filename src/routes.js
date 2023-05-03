@@ -1,8 +1,6 @@
-import {useEffect} from "react";
 import {Navigate, useNavigate, useRoutes} from 'react-router-dom';
 // layouts
 import DashboardLayout from './layouts/dashboard';
-import SimpleLayout from './layouts/simple';
 //
 import BlogPage from './pages/BlogPage';
 import UserPage from './pages/user/UserPage';
@@ -16,6 +14,9 @@ import BusinessPage from "./pages/business/BusinessPage";
 import CreateBusinessPage from "./pages/business/CreateBusinessPage";
 import Page401 from "./pages/Page401";
 import DetailsBusinessPage from "./pages/business/DetailsBusinessPage";
+import DetailsAreasPage from "./pages/areas/DetailsAreasPage";
+import DetailsScreenPage from "./pages/screen/DetailsScreenPage";
+import CreateImagePage from "./pages/images/CreateImagePage";
 
 // ----------------------------------------------------------------------
 
@@ -35,7 +36,15 @@ export default function Router() {
             { path: 'business/create', element: <CreateBusinessPage /> },
             { path: 'business/edit/:id', element: <CreateBusinessPage /> },
             { path: 'business/details/:id', element: <DetailsBusinessPage /> },
-              // Users
+              // Areas
+            { path: 'area/details/:id', element: <DetailsAreasPage /> },
+              // Screen
+            { path: 'screen/details/:id', element: <DetailsScreenPage /> },
+              // Images
+            { path: 'image/edit/:pscreen/:pimage', element: <CreateImagePage /> },
+            { path: 'image/create/:pscreen', element: <CreateImagePage /> },
+
+            // Users
             { path: 'user', element: <UserPage /> },
             { path: 'user/create', element: <CreateUserPage /> },
             { path: 'user/edit/:id', element: <CreateUserPage /> },

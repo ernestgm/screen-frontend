@@ -11,6 +11,7 @@ import {
     TableRow, TextField,
     Typography
 } from "@mui/material";
+import PropTypes from "prop-types";
 import PROYECT_CONFIG from "../../../config/config";
 import {UserListHead, UserListToolbar} from "../../../sections/@dashboard/user";
 import Scrollbar from "../../../components/scrollbar/Scrollbar";
@@ -24,28 +25,30 @@ import {applySortFilter, getComparator} from "../../../utils/table/tableFunction
 
 // Area Table
 
-const AREA_URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.AREA.ALL;
-const AREA_URL_GET_DATA_UPDATE = PROYECT_CONFIG.API_CONFIG.AREA.GET;
-const AREA_URL_DELETE_ROW = PROYECT_CONFIG.API_CONFIG.AREA.DELETE;
-const AREA_URL_CREATE_ROW = PROYECT_CONFIG.API_CONFIG.AREA.CREATE;
-const AREA_URL_UPDATE_ROW = PROYECT_CONFIG.API_CONFIG.AREA.UPDATE;
-const ROUTE_DETAILS_ROW = '/dashboard/area/details/';
+const SCREEN_URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.SCREEN.ALL;
+const SCREEN_URL_GET_DATA_UPDATE = PROYECT_CONFIG.API_CONFIG.SCREEN.GET;
+const SCREEN_URL_DELETE_ROW = PROYECT_CONFIG.API_CONFIG.SCREEN.DELETE;
+const SCREEN_URL_CREATE_ROW = PROYECT_CONFIG.API_CONFIG.SCREEN.CREATE;
+const SCREEN_URL_UPDATE_ROW = PROYECT_CONFIG.API_CONFIG.SCREEN.UPDATE;
+const ROUTE_DETAILS_ROW = '/dashboard/screen/details/';
 
-const AREA_TABLE_HEAD = [
+const TABLE_HEAD = [
     {id: 'name', label: 'Name', alignRight: false},
+    {id: 'description', label: 'Description', alignRight: false},
     {id: 'created_at', label: 'Create At', alignRight: false},
     {id: 'updated_at', label: 'Update At', alignRight: false},
     {id: 'actions', label: 'Actions'},
 ];
 
-export default function AreasDataTable({business}) {
+
+export default function ScreenDataTable({area}) {
     const navigate = useNavigate();
 
     const [dataTable, setDataTable] = useState([]);
 
     const [open, setOpen] = useState(false);
 
-    const [openNewAreaDialog, setOpenNewAreaDialog] = useState(false);
+    const [openNewDialog, setOpenNewDialog] = useState(false);
 
     const [page, setPage] = useState(0);
 
@@ -63,8 +66,8 @@ export default function AreasDataTable({business}) {
     const showMessageAlert = useMessagesAlert();
     const showMessageSnackbar = useMessagesSnackbar();
 
-    const getAreas = async () => {
-        const response = await api.__get(`${AREA_URL_GET_DATA}?business_id=${business}`, (msg) => {
+    const getScreens = async () => {
+        const response = await api.__get(`${SCREEN_URL_GET_DATA}?area_id=${area}`, (msg) => {
             showMessageSnackbar(msg, 'error');
         })
 
@@ -76,13 +79,13 @@ export default function AreasDataTable({business}) {
 
     const deleteRows = async (ids) => {
         const data = {'ids': ids};
-        const response = await api.__delete(AREA_URL_DELETE_ROW, data, (msg) => {
+        const response = await api.__delete(SCREEN_URL_DELETE_ROW, data, (msg) => {
             showMessageSnackbar(msg, 'error');
         })
 
         if (response) {
             showMessageAlert(response.message, 'success');
-            getAreas();
+            getScreens();
             setSelected([]);
         }
     }
@@ -156,7 +159,7 @@ export default function AreasDataTable({business}) {
 
     const handleEditItemClick = (item) => {
         handleCloseMenu()
-        editAreaAction(item.id)
+        editAction(item.id)
     }
 
     const handleDetailsItemClick = (item) => {
@@ -172,7 +175,8 @@ export default function AreasDataTable({business}) {
     const [validator, setValidator] = useState({});
     const initialFormData = {
         name: '',
-        business_id: business
+        description: '',
+        area_id: area
     }
     const [formData, setFormData] = useState(initialFormData);
 
@@ -186,26 +190,26 @@ export default function AreasDataTable({business}) {
         }));
     };
     const handleClickNewArea = () => {
-        setOpenNewAreaDialog(true);
+        setOpenNewDialog(true);
     };
 
-    const handleCloseNewArea = () => {
-        setOpenNewAreaDialog(false);
+    const handleCloseNew = () => {
+        setOpenNewDialog(false);
         setFormData(initialFormData);
         setUpdate(null);
         setValidator([]);
     };
 
-    const createNewAreaAction = async () => {
+    const createNewAction = async () => {
         console.log(formData);
         let response;
 
         if (update) {
-            response = await api.__update(`${AREA_URL_UPDATE_ROW}${update}`, formData, (msg) => {
+            response = await api.__update(`${SCREEN_URL_UPDATE_ROW}${update}`, formData, (msg) => {
                 showMessageSnackbar(msg, 'error');
             });
         } else {
-            response = await api.__post(AREA_URL_CREATE_ROW, formData, (msg) => {
+            response = await api.__post(SCREEN_URL_CREATE_ROW, formData, (msg) => {
                 showMessageSnackbar(msg, 'error');
             });
         }
@@ -215,8 +219,8 @@ export default function AreasDataTable({business}) {
             if (response.success) {
                 const msg = update ? `Area updated successfully!` : `Area added successfully!`;
                 showMessageSnackbar(msg, 'success');
-                setOpenNewAreaDialog(false);
-                getAreas();
+                setOpenNewDialog(false);
+                getScreens();
                 setUpdate(null);
                 setFormData(initialFormData);
                 setValidator([]);
@@ -226,34 +230,35 @@ export default function AreasDataTable({business}) {
         }
     }
 
-    const editAreaAction = async (id) => {
+    const editAction = async (id) => {
         setUpdate(id);
-        const response = await api.__get(`${AREA_URL_GET_DATA_UPDATE}${id}`, null, (msg) => {
+        const response = await api.__get(`${SCREEN_URL_GET_DATA_UPDATE}${id}`, null, (msg) => {
             showMessageSnackbar(msg, 'error');
         });
 
         if (response) {
             setFormData({
                 name: response.data.name,
-                business_id: business,
-            });
-            setOpenNewAreaDialog(true);
+                description: response.data.description,
+                area_id: area
+            })
+            setOpenNewDialog(true);
         }
     }
 
     useEffect(() => {
-        getAreas()
+        getScreens();
     }, []);
 
     return (
         <>
             <Stack direction="row" alignItems="left" justifyContent="space-between" mb={5}>
                 <Typography variant="h4" gutterBottom>
-                    Areas
+                    Screens
                 </Typography>
                 <Button variant="outlined" onClick={handleClickNewArea}
                         startIcon={<Iconify icon="eva:plus-fill"/>}>
-                    New Area
+                    New Screen
                 </Button>
             </Stack>
             <Card>
@@ -266,7 +271,7 @@ export default function AreasDataTable({business}) {
                             <UserListHead
                                 order={order}
                                 orderBy={orderBy}
-                                headLabel={AREA_TABLE_HEAD}
+                                headLabel={TABLE_HEAD}
                                 rowCount={filteredDataTable.length}
                                 numSelected={selected.length}
                                 onRequestSort={handleRequestSort}
@@ -274,7 +279,7 @@ export default function AreasDataTable({business}) {
                             />
                             <TableBody>
                                 {filteredDataTable.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                    const {id, name} = row;
+                                    const {id, name, description} = row;
                                     const selectedRow = selected.indexOf(id) !== -1;
                                     return (
                                         <TableRow hover key={id} tabIndex={-1} role="checkbox"
@@ -292,6 +297,8 @@ export default function AreasDataTable({business}) {
                                                     </Typography>
                                                 </Stack>
                                             </TableCell>
+
+                                            <TableCell align="left">{description}</TableCell>
 
                                             <TableCell align="left">{formatDate(row.created_at)}</TableCell>
 
@@ -350,14 +357,13 @@ export default function AreasDataTable({business}) {
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
             </Card>
-            <Dialog open={openNewAreaDialog} onClose={handleCloseNewArea}>
-                <DialogTitle>{update ? 'Edit' : 'Create'} Area</DialogTitle>
+            <Dialog open={openNewDialog} onClose={handleCloseNew}>
+                <DialogTitle>{update ? 'Edit' : 'Create'} Screen</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        {update ? 'Edit' : 'Create a new' } area for the screens!
+                        {update ? 'Edit' : 'Create a new' } screen!
                     </DialogContentText>
                     <TextField
-                        autoFocus
                         margin="dense"
                         name="name"
                         label="Name"
@@ -369,10 +375,22 @@ export default function AreasDataTable({business}) {
                         error={validator.name && true}
                         helperText={validator.name}
                     />
+                    <TextField
+                        margin="dense"
+                        name="description"
+                        label="Description"
+                        value={formData.description}
+                        type="text"
+                        fullWidth
+                        variant="standard"
+                        onChange={handleChange}
+                        error={validator.description && true}
+                        helperText={validator.description}
+                    />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleCloseNewArea}>Cancel</Button>
-                    <Button onClick={createNewAreaAction}>{update ? 'Save' : 'Create'}</Button>
+                    <Button onClick={handleCloseNew}>Cancel</Button>
+                    <Button onClick={createNewAction}>{update ? 'Save' : 'Create'}</Button>
                 </DialogActions>
             </Dialog>
             <Popover

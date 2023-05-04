@@ -35,10 +35,10 @@ import ProductsDataTable from "./table/ProductsDataTable";
 // ----------------------------------------------------------------------
 
 const NAME_PAGE = 'Image';
-const URL_UPDATE = PROYECT_CONFIG.API_CONFIG.BUSINESS.UPDATE;
-const URL_CREATE = PROYECT_CONFIG.API_CONFIG.BUSINESS.CREATE;
+const URL_UPDATE = PROYECT_CONFIG.API_CONFIG.IMAGE.UPDATE;
+const URL_CREATE = PROYECT_CONFIG.API_CONFIG.IMAGE.CREATE;
 const URL_BACK = '/dashboard/screen/details/';
-const URL_GET_ITEM_FOR_UPDATE = PROYECT_CONFIG.API_CONFIG.BUSINESS.GET;
+const URL_GET_ITEM_FOR_UPDATE = PROYECT_CONFIG.API_CONFIG.IMAGE.GET;
 
 export default function CreateImagePage() {
     const showSnackbarMessage = useMessagesSnackbar();
@@ -49,6 +49,7 @@ export default function CreateImagePage() {
     const [formData, setFormData] = useState({
         name: '',
         description: '',
+        screen_id: pscreen,
         products: [],
     });
 
@@ -123,16 +124,6 @@ export default function CreateImagePage() {
         }
     }
 
-    const getOwners = async () => {
-        const response = await api.__get(PROYECT_CONFIG.API_CONFIG.USERS.ALL, null, (msg) => {
-            showSnackbarMessage(msg, 'error');
-        });
-
-        if (response) {
-            setOwners(Object.values(response.data));
-        }
-    }
-
     const updateListProducts = (items) => {
         setFormData((prevFormData) => ({
             ...prevFormData,
@@ -143,7 +134,6 @@ export default function CreateImagePage() {
     }
 
     useEffect(() => {
-        getOwners()
         if (pimage) {
             getItemForUpdate();
         }

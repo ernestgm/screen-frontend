@@ -30,6 +30,13 @@ const PROYECT_CONFIG = {
             DELETE: '/screens',
             ALL: '/screens',
         },
+        IMAGE: {
+            CREATE: '/image',
+            GET: '/image/',
+            UPDATE: '/image/update/',
+            DELETE: '/images',
+            ALL: '/images',
+        },
     },
     GOOGLE_API_KEY: 'AIzaSyCUcpKY6fcESOmIpZfYlNRZNLS1dA0is-g'
 }

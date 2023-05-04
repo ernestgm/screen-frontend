@@ -11,7 +11,12 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
+import {useEffect} from "react";
 import Iconify from "../../components/iconify";
+import PROYECT_CONFIG from "../../config/config";
+import useApiHandlerStore from "../../zustand/useApiHandlerStore";
+import useMessagesAlert from "../../hooks/messages/useMessagesAlert";
+import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 
 function createData(id, name, description, createAt, updateAt) {
     return {
@@ -120,7 +125,28 @@ const rows = [
     createData(2,'Images 1', 'Una imagen', 9, 9),
 ];
 
-export default function CollapsibleTable() {
+const URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.IMAGE.ALL;
+
+export default function ImageDataTable({screen}) {
+    const {api} = useApiHandlerStore((state) => state);
+    const showMessageAlert = useMessagesAlert();
+    const showMessageSnackbar = useMessagesSnackbar();
+
+    const getData = async () => {
+        const response = await api.__get(`${URL_GET_DATA}?screen_id=${screen}`, (msg) => {
+            showMessageSnackbar(msg, 'error');
+        })
+
+        if (response) {
+            console.log(response)
+            // setDataTable(Object.values(response.data));
+        }
+    };
+
+    useEffect(() => {
+        getData();
+    }, []);
+
     return (
         <TableContainer component={Paper}>
             <Table aria-label="collapsible table">

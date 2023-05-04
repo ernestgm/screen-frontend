@@ -1,4 +1,4 @@
-// component
+// table
 import SvgColor from '../../../components/svg-color';
 
 // ----------------------------------------------------------------------

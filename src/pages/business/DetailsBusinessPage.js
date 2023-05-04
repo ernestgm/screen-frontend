@@ -37,7 +37,7 @@ import {MapContainer} from "../../components/map";
 import {UserListHead, UserListToolbar} from "../../sections/@dashboard/user";
 import Scrollbar from "../../components/scrollbar/Scrollbar";
 import {formatDate} from "../../utils/formatTime";
-import AreasDataTable from "./component/AreasDataTable";
+import AreasDataTable from "./table/AreasDataTable";
 
 
 // ----------------------------------------------------------------------

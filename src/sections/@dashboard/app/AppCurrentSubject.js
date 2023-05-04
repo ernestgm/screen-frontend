@@ -3,7 +3,7 @@ import ReactApexChart from 'react-apexcharts';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Card, CardHeader } from '@mui/material';
-// components
+// table
 import { useChart } from '../../../components/chart';
 
 // ----------------------------------------------------------------------

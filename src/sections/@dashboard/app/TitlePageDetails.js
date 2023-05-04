@@ -4,7 +4,7 @@ import {alpha, styled} from '@mui/material/styles';
 import {Card, Grid, Stack, Typography} from '@mui/material';
 // utils
 import {fShortenNumber} from '../../../utils/formatNumber';
-// components
+// table
 import Iconify from '../../../components/iconify';
 import {fDate} from "../../../utils/formatTime";
 

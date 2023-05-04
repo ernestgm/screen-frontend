@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import ReactApexChart from 'react-apexcharts';
 // @mui
 import { Card, CardHeader, Box } from '@mui/material';
-// components
+// table
 import { useChart } from '../../../components/chart';
 
 // ----------------------------------------------------------------------

@@ -30,6 +30,7 @@ import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import PROYECT_CONFIG from "../../config/config";
 import { MapContainer } from "../../components/map";
+import ProductsDataTable from "./table/ProductsDataTable";
 
 // ----------------------------------------------------------------------
 
@@ -48,11 +49,7 @@ export default function CreateImagePage() {
     const [formData, setFormData] = useState({
         name: '',
         description: '',
-        logo: '',
-        user_id: '',
-        address: '',
-        latitude: '',
-        longitude: ''
+        products: [],
     });
 
     const [owners, setOwners] = useState([]);
@@ -136,6 +133,15 @@ export default function CreateImagePage() {
         }
     }
 
+    const updateListProducts = (items) => {
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            products: items,
+        }));
+
+        console.log(formData)
+    }
+
     useEffect(() => {
         getOwners()
         if (pimage) {
@@ -176,54 +182,13 @@ export default function CreateImagePage() {
                             error={validator.description && true}
                             helperText={validator.description}
                         />
-                        <TextField
-                            name="logo"
-                            label="Logo"
-                            value={formData.logo}
-                            onChange={handleChange}
-                            error={validator.logo && true}
-                            helperText={validator.logo}
-                        />
-                        <FormControl fullWidth>
-                            <InputLabel id="role-select-label">Select Owner</InputLabel>
-                            <Select
-                                name="user_id"
-                                labelId="user-select-label"
-                                id="user-select"
-                                value={formData.user_id}
-                                label="Select Owner"
-                                onChange={handleChange}
-                            >
-                                {
-                                    owners.map((user) => {
-                                        return (
-                                            <MenuItem key={user.id}
-                                                      value={user.id}>{user.name} {user.lastname}</MenuItem>
-                                        )
-                                    })
-                                }
-                            </Select>
-                        </FormControl>
-                        <MapContainer setAdress={chanceAddress} geolocation={formData} >
-                            <TextField
-                                id="address"
-                                name="address"
-                                label="Address"
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start" >
-                                            <Iconify icon="mdi:home-map-marker" />
-                                        </InputAdornment>
-                                    ),
-                                }}
-                                sx={{width: '100%', height: 100}}
-                            />
-                        </MapContainer>
                     </Stack>
+
+                    <ProductsDataTable image={pimage} saveLocalProducts={updateListProducts}/>
                 </Card>
-                <Stack>
+                <Stack mt={5}>
                     <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleSubmit}>
-                        Save
+                        {`Save ${NAME_PAGE}`}
                     </LoadingButton>
                 </Stack>
             </Container>

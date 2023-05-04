@@ -5,7 +5,7 @@ import { useTheme, styled } from '@mui/material/styles';
 import { Card, CardHeader } from '@mui/material';
 // utils
 import { fNumber } from '../../../utils/formatNumber';
-// components
+// table
 import { useChart } from '../../../components/chart';
 
 // ----------------------------------------------------------------------

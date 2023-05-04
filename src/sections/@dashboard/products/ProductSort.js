@@ -1,7 +1,7 @@
 import { useState } from 'react';
 // @mui
 import { Menu, Button, MenuItem, Typography } from '@mui/material';
-// component
+// table
 import Iconify from '../../../components/iconify';
 
 // ----------------------------------------------------------------------

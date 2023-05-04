@@ -4,7 +4,7 @@ import { Box, Card, Link, Typography, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 // utils
 import { fCurrency } from '../../../utils/formatNumber';
-// components
+// table
 import Label from '../../../components/label';
 import { ColorPreview } from '../../../components/color-utils';
 

@@ -3,7 +3,7 @@ import {useNavigate} from 'react-router-dom';
 // @mui
 import {Link, Stack, IconButton, InputAdornment, TextField, Checkbox} from '@mui/material';
 import {LoadingButton} from '@mui/lab';
-// components
+// table
 import Iconify from '../../../components/iconify';
 import useAuthStore from '../../../zustand/useAuthStore';
 import useApiHandlerStore from "../../../zustand/useApiHandlerStore";

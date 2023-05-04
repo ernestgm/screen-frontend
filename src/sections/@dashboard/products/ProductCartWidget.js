@@ -1,7 +1,7 @@
 // @mui
 import { styled } from '@mui/material/styles';
 import { Badge } from '@mui/material';
-// component
+// table
 import Iconify from '../../../components/iconify';
 
 // ----------------------------------------------------------------------

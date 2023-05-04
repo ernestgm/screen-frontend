@@ -23,7 +23,7 @@ import {
     TableContainer,
     TablePagination, Collapse, Alert,
 } from '@mui/material';
-// components
+// table
 import Label from '../../components/label';
 import Iconify from '../../components/iconify';
 import Scrollbar from '../../components/scrollbar';

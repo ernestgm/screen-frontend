@@ -14,7 +14,7 @@ import {
   CardHeader,
   FormControlLabel,
 } from '@mui/material';
-// components
+// table
 import Iconify from '../../../components/iconify';
 
 // ----------------------------------------------------------------------

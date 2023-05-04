@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Autocomplete, InputAdornment, Popper, TextField } from '@mui/material';
-// components
+// table
 import Iconify from '../../../components/iconify';
 
 // ----------------------------------------------------------------------

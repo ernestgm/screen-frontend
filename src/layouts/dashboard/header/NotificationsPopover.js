@@ -22,7 +22,7 @@ import {
 } from '@mui/material';
 // utils
 import { fToNow } from '../../../utils/formatTime';
-// components
+// table
 import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 

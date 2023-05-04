@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import { Box, Stack, AppBar, Toolbar, IconButton } from '@mui/material';
 // utils
 import { bgBlur } from '../../../utils/cssStyles';
-// components
+// table
 import Iconify from '../../../components/iconify';
 //
 import Searchbar from './Searchbar';

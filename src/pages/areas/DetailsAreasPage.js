@@ -14,7 +14,7 @@ import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import PROYECT_CONFIG from "../../config/config";
 import {AppWidgetSummary} from "../../sections/@dashboard/app";
 import TitlePageDetails from "../../sections/@dashboard/app/TitlePageDetails";
-import ScreenDataTable from "./components/ScreenDataTable";
+import ScreenDataTable from "./table/ScreenDataTable";
 
 
 // ----------------------------------------------------------------------

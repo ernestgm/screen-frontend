@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import { Input, Slide, Button, IconButton, InputAdornment, ClickAwayListener } from '@mui/material';
 // utils
 import { bgBlur } from '../../../utils/cssStyles';
-// component
+// table
 import Iconify from '../../../components/iconify';
 
 // ----------------------------------------------------------------------

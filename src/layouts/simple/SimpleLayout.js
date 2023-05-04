@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
-// components
+// table
 import Logo from '../../components/logo';
 
 // ----------------------------------------------------------------------

@@ -91,7 +91,7 @@ export default function DetailsScreenPage() {
                         </Button>
                     </Stack>
                     <Grid item xs={12} md={6} lg={8}>
-                        <ImageDataTable />
+                        <ImageDataTable screen={id} />
                     </Grid>
                 </Stack>
             </Container>

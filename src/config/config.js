@@ -37,6 +37,13 @@ const PROYECT_CONFIG = {
             DELETE: '/images',
             ALL: '/images',
         },
+        PRODUCT: {
+            CREATE: '/product',
+            GET: '/product/',
+            UPDATE: '/product/update/',
+            DELETE: '/products',
+            ALL: '/products',
+        },
     },
     GOOGLE_API_KEY: 'AIzaSyCUcpKY6fcESOmIpZfYlNRZNLS1dA0is-g'
 }

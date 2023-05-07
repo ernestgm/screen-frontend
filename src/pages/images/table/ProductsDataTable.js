@@ -27,15 +27,15 @@ import {fCurrency} from "../../../utils/formatNumber";
 
 // Area Table
 
-const SCREEN_URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.SCREEN.ALL;
-const SCREEN_URL_GET_DATA_UPDATE = PROYECT_CONFIG.API_CONFIG.SCREEN.GET;
-const SCREEN_URL_DELETE_ROW = PROYECT_CONFIG.API_CONFIG.SCREEN.DELETE;
-const SCREEN_URL_CREATE_ROW = PROYECT_CONFIG.API_CONFIG.SCREEN.CREATE;
-const SCREEN_URL_UPDATE_ROW = PROYECT_CONFIG.API_CONFIG.SCREEN.UPDATE;
-const ROUTE_DETAILS_ROW = '/dashboard/screen/details/';
+const PRODUCT_URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.PRODUCT.ALL;
+const PRODUCT_URL_GET_DATA_UPDATE = PROYECT_CONFIG.API_CONFIG.PRODUCT.GET;
+const PRODUCT_URL_DELETE_ROW = PROYECT_CONFIG.API_CONFIG.PRODUCT.DELETE;
+const PRODUCT_URL_CREATE_ROW = PROYECT_CONFIG.API_CONFIG.PRODUCT.CREATE;
+const PRODUCT_URL_UPDATE_ROW = PROYECT_CONFIG.API_CONFIG.PRODUCT.UPDATE;
 
 const TABLE_HEAD = [
     {id: 'name', label: 'Name', alignRight: false},
+    {id: 'description', label: 'Description', alignRight: false},
     {id: 'price', label: 'Price', alignRight: false},
     {id: 'created_at', label: 'Create At', alignRight: false},
     {id: 'updated_at', label: 'Update At', alignRight: false},
@@ -44,7 +44,6 @@ const TABLE_HEAD = [
 
 
 export default function ProductsDataTable({image, saveLocalProducts}) {
-    const navigate = useNavigate();
 
     const [dataTable, setDataTable] = useState([]);
 
@@ -68,16 +67,16 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
     const showMessageAlert = useMessagesAlert();
     const showMessageSnackbar = useMessagesSnackbar();
 
-    const getScreens = async () => {
+    const getProducts = async () => {
         console.log(image);
-        // const response = await api.__get(`${SCREEN_URL_GET_DATA}?area_id=${image}`, (msg) => {
-        //     showMessageSnackbar(msg, 'error');
-        // })
-        //
-        // if (response) {
-        //     console.log(response)
-        //     setDataTable(Object.values(response.data));
-        // }
+        const response = await api.__get(`${PRODUCT_URL_GET_DATA}?image_id=${image}`, (msg) => {
+            showMessageSnackbar(msg, 'error');
+        })
+
+        if (response) {
+            console.log(response)
+            setDataTable(Object.values(response.data));
+        }
     };
 
     const deleteRows = async (ids) => {
@@ -88,13 +87,13 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
             saveLocalProducts(filteredItems)
         } else {
             const data = {'ids': ids};
-            const response = await api.__delete(SCREEN_URL_DELETE_ROW, data, (msg) => {
+            const response = await api.__delete(PRODUCT_URL_DELETE_ROW, data, (msg) => {
                 showMessageSnackbar(msg, 'error');
             })
 
             if (response) {
                 showMessageAlert(response.message, 'success');
-                getScreens();
+                getProducts();
                 setSelected([]);
             }
         }
@@ -172,11 +171,6 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
         editAction(item.id)
     }
 
-    const handleDetailsItemClick = (item) => {
-        handleCloseMenu()
-        navigate(`${ROUTE_DETAILS_ROW}${item.id}`, {replace: true})
-    }
-
     const handleDeleteItemClick = (item) => {
         handleCloseMenu()
         deleteRows([item.id])
@@ -187,7 +181,8 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
     const initialFormData = {
         id:'',
         name: '',
-        price: '',
+        description: '',
+        price: 0,
         created_at: '',
         updated_at: '',
         image_id: image
@@ -246,11 +241,11 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
         } else {
             let response;
             if (update) {
-                response = await api.__update(`${SCREEN_URL_UPDATE_ROW}${update}`, formData, (msg) => {
+                response = await api.__update(`${PRODUCT_URL_UPDATE_ROW}${update}`, formData, (msg) => {
                     showMessageSnackbar(msg, 'error');
                 });
             } else {
-                response = await api.__post(SCREEN_URL_CREATE_ROW, formData, (msg) => {
+                response = await api.__post(PRODUCT_URL_CREATE_ROW, formData, (msg) => {
                     showMessageSnackbar(msg, 'error');
                 });
             }
@@ -260,7 +255,7 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
                     const msg = update ? `Area updated successfully!` : `Area added successfully!`;
                     showMessageSnackbar(msg, 'success');
                     setOpenNewDialog(false);
-                    getScreens();
+                    getProducts();
                     setUpdate(null);
                     setFormData(initialFormData);
                     setValidator([]);
@@ -278,7 +273,7 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
             setFormData(item)
             setOpenNewDialog(true);
         } else {
-            const response = await api.__get(`${SCREEN_URL_GET_DATA_UPDATE}${id}`, null, (msg) => {
+            const response = await api.__get(`${PRODUCT_URL_GET_DATA_UPDATE}${id}`, null, (msg) => {
                 showMessageSnackbar(msg, 'error');
             });
 
@@ -286,7 +281,8 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
                 setFormData({
                     name: response.data.name,
                     description: response.data.description,
-                    area_id: image
+                    image_id: image,
+                    price: response.data.prices.slice(-1)[0].value
                 })
                 setOpenNewDialog(true);
             }
@@ -294,7 +290,9 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
     }
 
     useEffect(() => {
-        getScreens();
+        if (image !== undefined){
+            getProducts();
+        }
     }, []);
 
     return (
@@ -326,8 +324,9 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
                             />
                             <TableBody>
                                 {filteredDataTable.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                    const {id, name, price} = row;
+                                    const {id, name, description, prices, price} = row;
                                     const selectedRow = selected.indexOf(id) !== -1;
+                                    console.log(prices)
                                     return (
                                         <TableRow hover key={id} tabIndex={-1} role="checkbox"
                                                   selected={selectedRow}>
@@ -345,13 +344,17 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
                                                 </Stack>
                                             </TableCell>
 
-                                            <TableCell align="left">{ price && fCurrency(price) }</TableCell>
+                                            <TableCell align="left">{ description }</TableCell>
+
+                                            <TableCell align="left">{
+                                                 prices ? fCurrency(prices.slice(-1)[0].value) : fCurrency(price)
+                                            }</TableCell>
 
                                             <TableCell align="left">{formatDate(row.created_at)}</TableCell>
 
                                             <TableCell align="left">{formatDate(row.updated_at)}</TableCell>
 
-                                            <TableCell align="right">
+                                            <TableCell align="center">
                                                 <IconButton id={id} size="large" color="inherit"
                                                             onClick={handleOpenMenu}>
                                                     <Iconify icon={'eva:more-vertical-fill'}/>
@@ -421,6 +424,18 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
                         onChange={handleChange}
                         error={validator.name && true}
                         helperText={validator.name}
+                    />
+                    <TextField
+                        margin="dense"
+                        name="description"
+                        label="Description"
+                        value={formData.description}
+                        type="text"
+                        fullWidth
+                        variant="standard"
+                        onChange={handleChange}
+                        error={validator.description && true}
+                        helperText={validator.description}
                     />
                     <TextField
                         margin="dense"

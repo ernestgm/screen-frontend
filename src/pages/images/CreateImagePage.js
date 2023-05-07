@@ -50,11 +50,7 @@ export default function CreateImagePage() {
         name: '',
         description: '',
         screen_id: pscreen,
-        products: [],
     });
-
-    const [owners, setOwners] = useState([]);
-    const [autocomplete, setAutocomplete] = useState(null);
 
     const handleChange = (event) => {
         const {name, value} = event.target;
@@ -63,21 +59,6 @@ export default function CreateImagePage() {
             [name]: value,
         }));
     };
-
-    const chanceAddress = (place) => {
-        console.log(place.geometry);
-        setFormData((prevFormData) => ({
-            ...prevFormData,
-            address: place.formatted_address,
-            latitude: place.geometry.location.lat().toString(),
-            longitude: place.geometry.location.lng().toString(),
-        }));
-    }
-
-    const chanceAutocomplete = (autocomplete) => {
-        console.log(autocomplete);
-        setAutocomplete(autocomplete);
-    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -110,17 +91,12 @@ export default function CreateImagePage() {
         });
 
         if (response) {
+            console.log(response)
             setFormData({
                 name: response.data.name,
                 description: response.data.description,
-                logo: response.data.logo,
-                user_id: response.data.user_id,
-                address: response.data.geolocation.address,
-                latitude: response.data.geolocation.latitude,
-                longitude: response.data.geolocation.longitude,
+                screen_id: pscreen,
             });
-            const input = document.getElementById("address");
-            input.value = response.data.geolocation.address;
         }
     }
 

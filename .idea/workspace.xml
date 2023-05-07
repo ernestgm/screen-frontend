@@ -4,43 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d4767243-8cf2-4570-929d-1212d7106fb6" name="Changes" comment="CRUD images">
-      <change afterPath="$PROJECT_DIR$/src/pages/images/table/ProductsDataTable.js" afterDir="false" />
+    <list default="true" id="d4767243-8cf2-4570-929d-1212d7106fb6" name="Changes" comment="CRUD images and save products list localy">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/logo/Logo.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/logo/Logo.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/dashboard/header/NotificationsPopover.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/dashboard/header/NotificationsPopover.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/dashboard/header/Searchbar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/dashboard/header/Searchbar.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/dashboard/header/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/dashboard/header/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/dashboard/nav/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/dashboard/nav/config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/dashboard/nav/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/dashboard/nav/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/simple/SimpleLayout.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/simple/SimpleLayout.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/BlogPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/BlogPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/DashboardAppPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/DashboardAppPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LoginPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LoginPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/ProductsPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/ProductsPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/areas/DetailsAreasPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/areas/DetailsAreasPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/areas/components/ScreenDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/areas/table/ScreenDataTable.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/business/BusinessPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/business/BusinessPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/business/DetailsBusinessPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/business/DetailsBusinessPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/business/component/AreasDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/business/table/AreasDataTable.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/config.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/images/CreateImagePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/images/CreateImagePage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/user/UserPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/user/UserPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sections/@dashboard/app/AppConversionRates.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sections/@dashboard/app/AppConversionRates.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sections/@dashboard/app/AppCurrentSubject.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sections/@dashboard/app/AppCurrentSubject.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sections/@dashboard/app/AppCurrentVisits.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sections/@dashboard/app/AppCurrentVisits.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sections/@dashboard/app/AppNewsUpdate.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sections/@dashboard/app/AppNewsUpdate.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sections/@dashboard/app/AppTasks.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sections/@dashboard/app/AppTasks.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sections/@dashboard/app/AppWebsiteVisits.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sections/@dashboard/app/AppWebsiteVisits.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sections/@dashboard/app/AppWidgetSummary.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sections/@dashboard/app/AppWidgetSummary.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sections/@dashboard/app/TitlePageDetails.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sections/@dashboard/app/TitlePageDetails.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sections/@dashboard/blog/BlogPostsSearch.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sections/@dashboard/blog/BlogPostsSearch.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sections/@dashboard/products/ProductCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sections/@dashboard/products/ProductCard.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sections/@dashboard/products/ProductCartWidget.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sections/@dashboard/products/ProductCartWidget.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sections/@dashboard/products/ProductFilterSidebar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sections/@dashboard/products/ProductFilterSidebar.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sections/@dashboard/products/ProductSort.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sections/@dashboard/products/ProductSort.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sections/@dashboard/user/UserListToolbar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sections/@dashboard/user/UserListToolbar.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sections/auth/login/LoginForm.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sections/auth/login/LoginForm.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/images/table/ProductsDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/images/table/ProductsDataTable.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/screen/DetailsScreenPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/screen/DetailsScreenPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/screen/ImageDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/screen/ImageDataTable.js" afterDir="false" />
     </list>
     <list id="d4ad349c-1410-4760-87b2-6c449dfa42b6" name="ignore" comment="CRUD Business" />
     <option name="SHOW_DIALOG" value="false" />
@@ -71,24 +41,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/ernes/Documents/proyect/react/screen-frontend/src/pages/images/table",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "yarn",
-    "prettierjs.PrettierConfiguration.Package": "C:\\Users\\ernes\\Documents\\proyect\\react\\screen-frontend\\node_modules\\prettier",
-    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\PhpStorm 2022.3.3\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/ernes/Documents/proyect/react/screen-frontend/src/pages/images/table&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;C:\\Users\\ernes\\Documents\\proyect\\react\\screen-frontend\\node_modules\\prettier&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\PhpStorm 2022.3.3\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\pages\images\table" />
@@ -122,7 +92,8 @@
       <workItem from="1681697243642" duration="1501000" />
       <workItem from="1682183204943" duration="1426000" />
       <workItem from="1682197322933" duration="41853000" />
-      <workItem from="1682883198980" duration="25022000" />
+      <workItem from="1682883198980" duration="27362000" />
+      <workItem from="1683486913656" duration="8399000" />
     </task>
     <task id="LOCAL-00001" summary="User login Complete">
       <created>1680980627562</created>
@@ -250,7 +221,14 @@
       <option name="project" value="LOCAL" />
       <updated>1683134432925</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="CRUD images and save products list localy">
+      <created>1683216901828</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1683216901828</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -295,6 +273,7 @@
     <MESSAGE value="CRUD Business" />
     <MESSAGE value="CRUD business" />
     <MESSAGE value="CRUD images" />
-    <option name="LAST_COMMIT_MESSAGE" value="CRUD images" />
+    <MESSAGE value="CRUD images and save products list localy" />
+    <option name="LAST_COMMIT_MESSAGE" value="CRUD images and save products list localy" />
   </component>
 </project>

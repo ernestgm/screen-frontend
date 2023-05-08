@@ -17,6 +17,7 @@ import DetailsBusinessPage from "./pages/business/DetailsBusinessPage";
 import DetailsAreasPage from "./pages/areas/DetailsAreasPage";
 import DetailsScreenPage from "./pages/screen/DetailsScreenPage";
 import CreateImagePage from "./pages/images/CreateImagePage";
+import Dashboard from "./pages/main/Dashboard";
 
 // ----------------------------------------------------------------------
 
@@ -30,7 +31,7 @@ export default function Router() {
           element: <DashboardLayout />,
           children: [
             { element: <Navigate to="/dashboard/app" />, index: true },
-            { path: 'app', element: <DashboardAppPage /> },
+            { path: 'app', element: <Dashboard /> },
               // Business
             { path: 'business', element: <BusinessPage /> },
             { path: 'business/create', element: <CreateBusinessPage /> },

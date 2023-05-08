@@ -5,12 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d4767243-8cf2-4570-929d-1212d7106fb6" name="Changes" comment="CRUD images and save products list localy">
+      <change afterPath="$PROJECT_DIR$/src/pages/main/Dashboard.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/sections/@dashboard/business/BusinessResume.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/config/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/images/CreateImagePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/images/CreateImagePage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/images/table/ProductsDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/images/table/ProductsDataTable.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/screen/DetailsScreenPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/screen/DetailsScreenPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/screen/ImageDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/screen/ImageDataTable.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes.js" afterDir="false" />
     </list>
     <list id="d4ad349c-1410-4760-87b2-6c449dfa42b6" name="ignore" comment="CRUD Business" />
     <option name="SHOW_DIALOG" value="false" />
@@ -41,31 +40,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/ernes/Documents/proyect/react/screen-frontend/src/pages/images/table&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
-    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;C:\\Users\\ernes\\Documents\\proyect\\react\\screen-frontend\\node_modules\\prettier&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\PhpStorm 2022.3.3\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/ernes/Documents/proyect/react/screen-frontend/src/sections/@dashboard/business",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "yarn",
+    "prettierjs.PrettierConfiguration.Package": "C:\\Users\\ernes\\Documents\\proyect\\react\\screen-frontend\\node_modules\\prettier",
+    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\PhpStorm 2022.3.3\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\sections\@dashboard\business" />
+      <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\pages\main" />
       <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\pages\images\table" />
       <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\pages\images" />
       <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\pages\screen" />
-      <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\pages\areas\components" />
-      <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\pages\areas" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\pages" />
@@ -93,7 +92,7 @@
       <workItem from="1682183204943" duration="1426000" />
       <workItem from="1682197322933" duration="41853000" />
       <workItem from="1682883198980" duration="27362000" />
-      <workItem from="1683486913656" duration="8399000" />
+      <workItem from="1683486913656" duration="15019000" />
     </task>
     <task id="LOCAL-00001" summary="User login Complete">
       <created>1680980627562</created>
@@ -228,7 +227,14 @@
       <option name="project" value="LOCAL" />
       <updated>1683216901828</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="CRUD images and save products list localy">
+      <created>1683497317582</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1683497317582</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

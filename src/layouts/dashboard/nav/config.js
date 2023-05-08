@@ -10,7 +10,7 @@ const navConfig = [
     title: 'dashboard',
     path: '/dashboard/app',
     icon: icon('ic_analytics'),
-    roles: ['admin', 'owner', 'editor']
+    roles: ['admin']
   },
   {
     title: 'business',
@@ -24,24 +24,24 @@ const navConfig = [
     icon: icon('ic_user'),
     roles: ['admin']
   },
-  {
-    title: 'product',
-    path: '/dashboard/products',
-    icon: icon('ic_cart'),
-    roles: ['admin']
-  },
-  {
-    title: 'blog',
-    path: '/dashboard/blog',
-    icon: icon('ic_blog'),
-    roles: ['admin']
-  },
-  {
-    title: 'Not found',
-    path: '/404',
-    icon: icon('ic_disabled'),
-    roles: ['admin']
-  },
+  // {
+  //   title: 'product',
+  //   path: '/dashboard/products',
+  //   icon: icon('ic_cart'),
+  //   roles: ['admin']
+  // },
+  // {
+  //   title: 'blog',
+  //   path: '/dashboard/blog',
+  //   icon: icon('ic_blog'),
+  //   roles: ['admin']
+  // },
+  // {
+  //   title: 'Not found',
+  //   path: '/404',
+  //   icon: icon('ic_disabled'),
+  //   roles: ['admin']
+  // },
 ];
 
 export default navConfig;

@@ -6,7 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="d4767243-8cf2-4570-929d-1212d7106fb6" name="Changes" comment="CRUD images and save products list localy">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/dashboard/nav/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/dashboard/nav/config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/screen/ImageDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/screen/ImageDataTable.js" afterDir="false" />
     </list>
     <list id="d4ad349c-1410-4760-87b2-6c449dfa42b6" name="ignore" comment="CRUD Business" />
     <option name="SHOW_DIALOG" value="false" />
@@ -231,7 +232,14 @@
       <option name="project" value="LOCAL" />
       <updated>1683497317582</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="Generate JSON for business.">
+      <created>1683511602887</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1683511602887</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -277,6 +285,7 @@
     <MESSAGE value="CRUD business" />
     <MESSAGE value="CRUD images" />
     <MESSAGE value="CRUD images and save products list localy" />
-    <option name="LAST_COMMIT_MESSAGE" value="CRUD images and save products list localy" />
+    <MESSAGE value="Generate JSON for business." />
+    <option name="LAST_COMMIT_MESSAGE" value="Generate JSON for business." />
   </component>
 </project>

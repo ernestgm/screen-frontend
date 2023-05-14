@@ -12,7 +12,7 @@ import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import {useEffect, useState} from "react";
-import {MenuItem, Popover} from "@mui/material";
+import {MenuItem, Popover, Stack} from "@mui/material";
 import {useNavigate} from "react-router-dom";
 import Iconify from "../../components/iconify";
 import PROYECT_CONFIG from "../../config/config";
@@ -23,9 +23,23 @@ import {fCurrency} from "../../utils/formatNumber";
 import {formatDate} from "../../utils/formatTime";
 
 
+const URL_GET_ROUTE_JSON = PROYECT_CONFIG.API_CONFIG.BUSINESS.ROUTE_JSON;
 function Row(props) {
     const {row, handleClickMenu} = props;
     const [open, setOpen] = React.useState(false);
+    const showSnackbarMessage = useMessagesSnackbar();
+    const {api} = useApiHandlerStore((state) => state);
+
+    const handleCopyClick = async (id, field, attr) => {
+        const response = await api.__get(`${URL_GET_ROUTE_JSON}?id=${id}&field=${field}&attr=${attr}`, null, (msg) => {
+            showSnackbarMessage(msg, 'error');
+        });
+        if (response) {
+            navigator.clipboard.writeText(response.route);
+            showSnackbarMessage(`Copy to clipboard: ${response.route}`, 'success');
+            console.log(response)
+        }
+    };
 
     return (
         <>
@@ -76,13 +90,40 @@ function Row(props) {
                                     {row.products && row.products.map((productRow) => (
                                         <TableRow key={productRow.id}>
                                             <TableCell component="th" scope="row">
-                                                {productRow.name && productRow.name}
+                                                <Stack direction="row" alignItems="left" justifyContent="space-between"
+                                                       mb={5}>
+                                                    <Typography variant="inherit" alignSelf="center">
+                                                        {productRow.name && productRow.name}
+                                                    </Typography>
+                                                    <IconButton onClick={() => handleCopyClick(productRow.id, 'products', 'name')} aria-label="copy">
+                                                        <Iconify icon="material-symbols:file-copy-outline"/>
+                                                    </IconButton>
+                                                </Stack>
                                             </TableCell>
                                             <TableCell component="th" scope="row">
-                                                {productRow.description && productRow.description}
+                                                <Stack direction="row" alignItems="left" justifyContent="space-between"
+                                                       mb={5}>
+                                                    <Typography variant="inherit" alignSelf="center">
+                                                        {productRow.description && productRow.description}
+                                                    </Typography>
+                                                    <IconButton onClick={() => handleCopyClick(productRow.id, 'products', 'description')} aria-label="copy">
+                                                        <Iconify icon="material-symbols:file-copy-outline"/>
+                                                    </IconButton>
+                                                </Stack>
                                             </TableCell>
                                             <TableCell>
-                                                {productRow.prices[0] && fCurrency(productRow.prices.slice(-1)[0].value)}
+                                                <Stack direction="row" alignItems="left" justifyContent="space-between"
+                                                       mb={5}>
+                                                    <Typography variant="inherit" alignSelf="center">
+                                                        {productRow.prices[0] && fCurrency(productRow.prices.slice(-1)[0].value)}
+                                                    </Typography>
+                                                    <IconButton
+                                                        aria-label="copy"
+                                                        onClick={() => handleCopyClick(productRow.prices.slice(-1)[0].id, 'prices', 'value')}
+                                                    >
+                                                        <Iconify icon="material-symbols:file-copy-outline"/>
+                                                    </IconButton>
+                                                </Stack>
                                             </TableCell>
                                         </TableRow>
                                     ))}
@@ -101,17 +142,18 @@ Row.propTypes = {
         id: PropTypes.number.isRequired,
         name: PropTypes.string.isRequired,
         description: PropTypes.string.isRequired,
-        created_at: PropTypes.number.isRequired,
-        updated_at: PropTypes.number.isRequired,
+        created_at: PropTypes.string.isRequired,
+        updated_at: PropTypes.string.isRequired,
         products: PropTypes.arrayOf(
             PropTypes.shape({
                 id: PropTypes.number.isRequired,
                 name: PropTypes.string.isRequired,
                 prices: PropTypes.arrayOf(
-                    {
-                        id: PropTypes.number.isRequired,
-                        value: PropTypes.number.isRequired,
-                    }
+                    PropTypes.shape({
+                            id: PropTypes.number.isRequired,
+                            value: PropTypes.number.isRequired,
+                        }
+                    )
                 ).isRequired,
             }),
         ).isRequired,

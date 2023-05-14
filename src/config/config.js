@@ -15,7 +15,8 @@ const PROYECT_CONFIG = {
             UPDATE: '/business/update/',
             DELETE: '/businesses',
             ALL: '/businesses',
-            GENERATE_JSON: '/business/generate_json/'
+            GENERATE_JSON: '/business/generate_json/',
+            ROUTE_JSON: '/business/jsonroute'
         },
         AREA: {
             CREATE: '/area',

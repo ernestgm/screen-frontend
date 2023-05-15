@@ -1,35 +1,37 @@
 // table
+import * as React from "react";
 import SvgColor from '../../../components/svg-color';
+import Iconify from "../../../components/iconify";
 
 // ----------------------------------------------------------------------
 
-const icon = (name) => <SvgColor src={`/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />;
+const icon = (name) => <Iconify icon={name}/>;
 
 const navConfig = [
   {
-    title: 'dashboard',
+    title: 'home',
     path: '/dashboard/app',
-    icon: icon('ic_analytics'),
+    icon: icon('ri:dashboard-2-line'),
     roles: ['admin']
   },
   {
     title: 'business',
     path: '/dashboard/business',
-    icon: icon('ic_analytics'),
+    icon: icon('ion:business-sharp'),
     roles: ['admin', 'owner', 'editor']
   },
   {
     title: 'user',
     path: '/dashboard/user',
-    icon: icon('ic_user'),
+    icon: icon('material-symbols:supervised-user-circle'),
     roles: ['admin']
   },
-  // {
-  //   title: 'product',
-  //   path: '/dashboard/products',
-  //   icon: icon('ic_cart'),
-  //   roles: ['admin']
-  // },
+  {
+    title: 'screens',
+    path: '/dashboard/screens',
+    icon: icon('mdi:monitor-dashboard'),
+    roles: ['admin']
+  },
   // {
   //   title: 'blog',
   //   path: '/dashboard/blog',

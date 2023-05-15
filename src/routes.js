@@ -18,6 +18,7 @@ import DetailsAreasPage from "./pages/areas/DetailsAreasPage";
 import DetailsScreenPage from "./pages/screen/DetailsScreenPage";
 import CreateImagePage from "./pages/images/CreateImagePage";
 import Dashboard from "./pages/main/Dashboard";
+import ScreensPage from "./pages/screen/ScreensPage";
 
 // ----------------------------------------------------------------------
 
@@ -41,6 +42,7 @@ export default function Router() {
             { path: 'area/details/:id', element: <DetailsAreasPage /> },
               // Screen
             { path: 'screen/details/:id', element: <DetailsScreenPage /> },
+            { path: 'screens', element: <ScreensPage /> },
               // Images
             { path: 'image/edit/:pscreen/:pimage', element: <CreateImagePage /> },
             { path: 'image/create/:pscreen', element: <CreateImagePage /> },

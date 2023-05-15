@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {
     Avatar, Button, Card, Dialog,
@@ -9,7 +9,7 @@ import {
     TableCell,
     TableContainer, TablePagination,
     TableRow, TextField,
-    Typography
+    Typography, InputLabel, Select, FormControl
 } from "@mui/material";
 import PropTypes from "prop-types";
 import PROYECT_CONFIG from "../../../config/config";
@@ -23,8 +23,8 @@ import useMessagesSnackbar from "../../../hooks/messages/useMessagesSnackbar";
 import {applySortFilter, getComparator} from "../../../utils/table/tableFunctions";
 
 
-// Area Table
 
+const AREA_URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.AREA.ALL;
 const SCREEN_URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.SCREEN.ALL;
 const SCREEN_URL_GET_DATA_UPDATE = PROYECT_CONFIG.API_CONFIG.SCREEN.GET;
 const SCREEN_URL_DELETE_ROW = PROYECT_CONFIG.API_CONFIG.SCREEN.DELETE;
@@ -35,6 +35,7 @@ const ROUTE_DETAILS_ROW = '/dashboard/screen/details/';
 const TABLE_HEAD = [
     {id: 'name', label: 'Name', alignRight: false},
     {id: 'description', label: 'Description', alignRight: false},
+    {id: 'area', label: 'Area', alignRight: false},
     {id: 'created_at', label: 'Create At', alignRight: false},
     {id: 'updated_at', label: 'Update At', alignRight: false},
     {id: 'actions', label: 'Actions'},
@@ -43,31 +44,35 @@ const TABLE_HEAD = [
 
 export default function ScreenDataTable({area}) {
     const navigate = useNavigate();
-
     const [dataTable, setDataTable] = useState([]);
-
     const [open, setOpen] = useState(false);
-
     const [openNewDialog, setOpenNewDialog] = useState(false);
-
     const [page, setPage] = useState(0);
-
     const [order, setOrder] = useState('asc');
-
     const [selected, setSelected] = useState([]);
-
     const [orderBy, setOrderBy] = useState('name');
-
     const [filterName, setFilterName] = useState('');
-
     const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [areas, setAreas] = useState([]);
+    const [disabledAreaField, setDisabledAreaField] = useState(false);
 
     const {api} = useApiHandlerStore((state) => state);
     const showMessageAlert = useMessagesAlert();
     const showMessageSnackbar = useMessagesSnackbar();
 
+    const getAreas = async () => {
+        const response = await api.__get(`${AREA_URL_GET_DATA}`, (msg) => {
+            showMessageSnackbar(msg, 'error');
+        })
+
+        if (response) {
+            console.log(response)
+            setAreas(Object.values(response.data));
+        }
+    };
     const getScreens = async () => {
-        const response = await api.__get(`${SCREEN_URL_GET_DATA}?area_id=${area}`, (msg) => {
+        const urlApi = area ? `${SCREEN_URL_GET_DATA}?area_id=${area}` : SCREEN_URL_GET_DATA;
+        const response = await api.__get(urlApi, (msg) => {
             showMessageSnackbar(msg, 'error');
         })
 
@@ -176,7 +181,7 @@ export default function ScreenDataTable({area}) {
     const initialFormData = {
         name: '',
         description: '',
-        area_id: area
+        area_id: ''
     }
     const [formData, setFormData] = useState(initialFormData);
 
@@ -190,6 +195,9 @@ export default function ScreenDataTable({area}) {
         }));
     };
     const handleClickNewArea = () => {
+        if (area) {
+            setDisabledAreaField(true);
+        }
         setOpenNewDialog(true);
     };
 
@@ -201,7 +209,6 @@ export default function ScreenDataTable({area}) {
     };
 
     const createNewAction = async () => {
-        console.log(formData);
         let response;
 
         if (update) {
@@ -222,6 +229,7 @@ export default function ScreenDataTable({area}) {
                 setOpenNewDialog(false);
                 getScreens();
                 setUpdate(null);
+                setDisabledAreaField(false);
                 setFormData(initialFormData);
                 setValidator([]);
             } else {
@@ -231,6 +239,7 @@ export default function ScreenDataTable({area}) {
     }
 
     const editAction = async (id) => {
+        setDisabledAreaField(true);
         setUpdate(id);
         const response = await api.__get(`${SCREEN_URL_GET_DATA_UPDATE}${id}`, null, (msg) => {
             showMessageSnackbar(msg, 'error');
@@ -240,13 +249,14 @@ export default function ScreenDataTable({area}) {
             setFormData({
                 name: response.data.name,
                 description: response.data.description,
-                area_id: area
+                area_id: response.data.area_id
             })
             setOpenNewDialog(true);
         }
     }
 
     useEffect(() => {
+        getAreas();
         getScreens();
     }, []);
 
@@ -281,6 +291,7 @@ export default function ScreenDataTable({area}) {
                                 {filteredDataTable.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                                     const {id, name, description} = row;
                                     const selectedRow = selected.indexOf(id) !== -1;
+                                    const nameArea = (areas.find((n) => n.id === row.area_id))
                                     return (
                                         <TableRow hover key={id} tabIndex={-1} role="checkbox"
                                                   selected={selectedRow}>
@@ -299,6 +310,12 @@ export default function ScreenDataTable({area}) {
                                             </TableCell>
 
                                             <TableCell align="left">{description}</TableCell>
+
+                                            <TableCell align="left">
+                                                {
+                                                    nameArea && nameArea.name
+                                                }
+                                            </TableCell>
 
                                             <TableCell align="left">{formatDate(row.created_at)}</TableCell>
 
@@ -387,6 +404,30 @@ export default function ScreenDataTable({area}) {
                         error={validator.description && true}
                         helperText={validator.description}
                     />
+                    <FormControl
+                        variant="standard"
+                        fullWidth
+                        disabled={disabledAreaField}
+                    >
+                        <InputLabel id="role-select-label">Select Area</InputLabel>
+                        <Select
+                            name="area_id"
+                            labelId="user-select-label"
+                            id="area-select"
+                            value={formData.area_id}
+                            label="Select Area"
+                            onChange={handleChange}
+                        >
+                            {
+                                areas.map((item) => {
+                                    return (
+                                        <MenuItem key={item.id}
+                                                  value={item.id}>{item.name}</MenuItem>
+                                    )
+                                })
+                            }
+                        </Select>
+                    </FormControl>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseNew}>Cancel</Button>

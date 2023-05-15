@@ -77,7 +77,7 @@ export default function DetailsScreenPage() {
                             title={screen.name}
                             description={screen.description}
                             createdAt={screen.created_at}
-                            icon={'ic:outline-tv'}
+                            icon={'material-symbols:live-tv-outline-rounded'}
                         />
                     </Grid>
                 </Grid>

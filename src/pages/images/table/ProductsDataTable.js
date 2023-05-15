@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import PropTypes from "prop-types";
 import {faker} from "@faker-js/faker";
+import * as React from "react";
 import PROYECT_CONFIG from "../../../config/config";
 import {UserListHead, UserListToolbar} from "../../../sections/@dashboard/user";
 import Scrollbar from "../../../components/scrollbar/Scrollbar";
@@ -32,6 +33,7 @@ const PRODUCT_URL_GET_DATA_UPDATE = PROYECT_CONFIG.API_CONFIG.PRODUCT.GET;
 const PRODUCT_URL_DELETE_ROW = PROYECT_CONFIG.API_CONFIG.PRODUCT.DELETE;
 const PRODUCT_URL_CREATE_ROW = PROYECT_CONFIG.API_CONFIG.PRODUCT.CREATE;
 const PRODUCT_URL_UPDATE_ROW = PROYECT_CONFIG.API_CONFIG.PRODUCT.UPDATE;
+const URL_GET_ROUTE_JSON = PROYECT_CONFIG.API_CONFIG.BUSINESS.ROUTE_JSON;
 
 const TABLE_HEAD = [
     {id: 'name', label: 'Name', alignRight: false},
@@ -179,7 +181,7 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
     const [validator, setValidator] = useState({});
 
     const initialFormData = {
-        id:'',
+        id: '',
         name: '',
         description: '',
         price: 0,
@@ -221,7 +223,7 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
                     if (item.id === formData.id) {
                         console.log(item)
                         console.log(formData)
-                        return { ...item, name: formData.name, price: formData.price };
+                        return {...item, name: formData.name, price: formData.price};
                     }
                     return item;
                 });
@@ -289,8 +291,19 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
         }
     }
 
+    const handleCopyClick = async (id, field, attr) => {
+        const response = await api.__get(`${URL_GET_ROUTE_JSON}?id=${id}&field=${field}&attr=${attr}`, null, (msg) => {
+            showMessageSnackbar(msg, 'error');
+        });
+        if (response) {
+            navigator.clipboard.writeText(response.route);
+            showMessageSnackbar(`Copy to clipboard: ${response.route}`, 'success');
+            console.log(response)
+        }
+    };
+
     useEffect(() => {
-        if (image !== undefined){
+        if (image !== undefined) {
             getProducts();
         }
     }, []);
@@ -331,34 +344,83 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
                                         <TableRow hover key={id} tabIndex={-1} role="checkbox"
                                                   selected={selectedRow}>
                                             <TableCell padding="checkbox">
-                                                <Checkbox checked={selectedRow}
-                                                          onChange={(event) => handleClick(event, id)}/>
+                                                <Stack direction="row" alignItems="left" justifyContent="space-between"
+                                                       mb={5}>
+                                                    <Checkbox
+                                                        checked={selectedRow}
+                                                        onChange={(event) => handleClick(event, id)}
+                                                    />
+                                                </Stack>
                                             </TableCell>
 
                                             <TableCell component="th" scope="row" padding="none">
-                                                <Stack direction="row" alignItems="center" spacing={2}>
-                                                    <Avatar alt={name} src='/assets/images/avatars/avatar_1.jpg'/>
-                                                    <Typography variant="subtitle2" noWrap>
+                                                <Stack direction="row" alignItems="left" justifyContent="space-between"
+                                                       mb={5}>
+                                                    <Typography variant="subtitle1" alignSelf="center">
                                                         {name}
+                                                    </Typography>
+                                                    <IconButton onClick={() => handleCopyClick(id, 'products', 'name')}
+                                                                aria-label="copy">
+                                                        <Iconify icon="material-symbols:file-copy-outline"/>
+                                                    </IconButton>
+                                                </Stack>
+                                            </TableCell>
+
+                                            <TableCell align="left">
+                                                <Stack direction="row" alignItems="left" justifyContent="space-between"
+                                                       mb={5}>
+                                                    <Typography variant="inherit" alignSelf="center">
+                                                        {description}
+                                                    </Typography>
+                                                    <IconButton
+                                                        onClick={() => handleCopyClick(id, 'products', 'description')}
+                                                        aria-label="copy">
+                                                        <Iconify icon="material-symbols:file-copy-outline"/>
+                                                    </IconButton>
+                                                </Stack>
+                                            </TableCell>
+
+                                            <TableCell align="left">
+                                                <Stack direction="row" alignItems="left" justifyContent="space-between"
+                                                       mb={5}>
+                                                    <Typography variant="inherit" alignSelf="center">
+                                                        {prices && fCurrency(prices.slice(-1)[0].value)}
+                                                    </Typography>
+                                                    <IconButton
+                                                        aria-label="copy"
+                                                        onClick={() => handleCopyClick(prices.slice(-1)[0].id, 'prices', 'value')}
+                                                    >
+                                                        <Iconify icon="material-symbols:file-copy-outline"/>
+                                                    </IconButton>
+                                                </Stack>
+                                            </TableCell>
+
+                                            <TableCell align="left">
+                                                <Stack direction="row" alignItems="left" justifyContent="space-between"
+                                                       mb={5}>
+                                                    <Typography variant="inherit" alignSelf="center">
+                                                        {formatDate(row.created_at)}
                                                     </Typography>
                                                 </Stack>
                                             </TableCell>
 
-                                            <TableCell align="left">{ description }</TableCell>
-
-                                            <TableCell align="left">{
-                                                 prices ? fCurrency(prices.slice(-1)[0].value) : fCurrency(price)
-                                            }</TableCell>
-
-                                            <TableCell align="left">{formatDate(row.created_at)}</TableCell>
-
-                                            <TableCell align="left">{formatDate(row.updated_at)}</TableCell>
+                                            <TableCell align="left">
+                                                <Stack direction="row" alignItems="left" justifyContent="space-between"
+                                                       mb={5}>
+                                                    <Typography variant="inherit" alignSelf="center">
+                                                        {formatDate(row.updated_at)}
+                                                    </Typography>
+                                                </Stack>
+                                            </TableCell>
 
                                             <TableCell align="center">
-                                                <IconButton id={id} size="large" color="inherit"
-                                                            onClick={handleOpenMenu}>
-                                                    <Iconify icon={'eva:more-vertical-fill'}/>
-                                                </IconButton>
+                                                <Stack direction="row" alignItems="left" justifyContent="space-between"
+                                                       mb={5}>
+                                                    <IconButton id={id} size="large" color="inherit"
+                                                                onClick={handleOpenMenu}>
+                                                        <Iconify icon={'eva:more-vertical-fill'}/>
+                                                    </IconButton>
+                                                </Stack>
                                             </TableCell>
                                         </TableRow>
                                     );
@@ -411,7 +473,7 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
                 <DialogTitle>{update ? 'Edit' : 'Create'} Product</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        {update ? 'Edit' : 'Create a new' } product!
+                        {update ? 'Edit' : 'Create a new'} product!
                     </DialogContentText>
                     <TextField
                         margin="dense"

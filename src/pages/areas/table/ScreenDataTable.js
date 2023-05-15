@@ -291,7 +291,7 @@ export default function ScreenDataTable({area}) {
 
                                             <TableCell component="th" scope="row" padding="none">
                                                 <Stack direction="row" alignItems="center" spacing={2}>
-                                                    <Avatar alt={name} src='/assets/images/avatars/avatar_1.jpg'/>
+                                                    <Iconify icon="material-symbols:live-tv-outline-rounded"/>
                                                     <Typography variant="subtitle2" noWrap>
                                                         {name}
                                                     </Typography>
@@ -304,7 +304,7 @@ export default function ScreenDataTable({area}) {
 
                                             <TableCell align="left">{formatDate(row.updated_at)}</TableCell>
 
-                                            <TableCell align="right">
+                                            <TableCell align="center">
                                                 <IconButton id={id} size="large" color="inherit"
                                                             onClick={handleOpenMenu}>
                                                     <Iconify icon={'eva:more-vertical-fill'}/>

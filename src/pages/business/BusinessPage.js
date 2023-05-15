@@ -21,7 +21,7 @@ import {
     Typography,
     IconButton,
     TableContainer,
-    TablePagination, Collapse, Alert,
+    TablePagination, Collapse, Alert, Box,
 } from '@mui/material';
 // table
 import Label from '../../components/label';
@@ -237,7 +237,8 @@ export default function UserPage() {
 
                                                 <TableCell component="th" scope="row" padding="none">
                                                     <Stack direction="row" alignItems="center" spacing={2}>
-                                                        <Avatar alt={name} src='/assets/images/avatars/avatar_1.jpg'/>
+                                                        <Box component="img" alt={name} src='/assets/images/covers/cover_5.jpg'
+                                                             sx={{width: 48, height: 48, borderRadius: 1.5, flexShrink: 0}}/>
                                                         <Typography variant="subtitle2" noWrap>
                                                             {name}
                                                         </Typography>
@@ -250,7 +251,7 @@ export default function UserPage() {
 
                                                 <TableCell align="left">{formatDate(row.updated_at)}</TableCell>
 
-                                                <TableCell align="right">
+                                                <TableCell align="center">
                                                     <IconButton id={id} size="large" color="inherit" onClick={handleOpenMenu}>
                                                         <Iconify icon={'eva:more-vertical-fill'}/>
                                                     </IconButton>

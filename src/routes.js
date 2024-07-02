@@ -19,6 +19,7 @@ import DetailsScreenPage from "./pages/screen/DetailsScreenPage";
 import CreateImagePage from "./pages/images/CreateImagePage";
 import Dashboard from "./pages/main/Dashboard";
 import ScreensPage from "./pages/screen/ScreensPage";
+import DevicePage from "./pages/devices/DevicesPage";
 
 // ----------------------------------------------------------------------
 
@@ -51,6 +52,10 @@ export default function Router() {
             { path: 'user', element: <UserPage /> },
             { path: 'user/create', element: <CreateUserPage /> },
             { path: 'user/edit/:id', element: <CreateUserPage /> },
+
+            // Devices
+            { path: 'devices', element: <DevicePage /> },
+
             // Others
             { path: 'products', element: <ProductsPage /> },
             { path: 'blog', element: <BlogPage /> },

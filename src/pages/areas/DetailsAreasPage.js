@@ -47,6 +47,7 @@ export default function DetailsAreasPage() {
     }
 
     useEffect(() => {
+        console.log(id);
         getAreaDetails();
     }, [])
 

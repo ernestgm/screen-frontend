@@ -6,8 +6,9 @@ import {
     Stack,
     Container,
     Typography,
-    Grid, Button,
+    Grid, Button, Card,
 } from '@mui/material';
+import {alpha} from "@mui/material/styles";
 import BackButton from "../../sections/@dashboard/app/AppBackButton";
 import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
@@ -15,6 +16,7 @@ import PROYECT_CONFIG from "../../config/config";
 import TitlePageDetails from "../../sections/@dashboard/app/TitlePageDetails";
 import ImageDataTable from "./ImageDataTable";
 import Iconify from "../../components/iconify";
+
 
 
 // ----------------------------------------------------------------------
@@ -34,6 +36,7 @@ export default function DetailsScreenPage() {
         created_at : '',
         id: '',
         name: '',
+        device_id: '',
         description: '',
         screens: []
     })
@@ -72,13 +75,29 @@ export default function DetailsScreenPage() {
                     </Typography>
                 </Stack>
                 <Grid container spacing={2} mb={5}>
-                    <Grid item xs={12} sm={12} md={12}>
+                    <Grid item xs={12} sm={8} md={8}>
                         <TitlePageDetails
                             title={screen.name}
                             description={screen.description}
                             createdAt={screen.created_at}
                             icon={'material-symbols:live-tv-outline-rounded'}
                         />
+                    </Grid>
+                    <Grid item xs={12} sm={4} md={4}>
+                        <Card
+                            sx={{
+                                py: 3,
+                                px: 5,
+                                boxShadow: 0,
+                                textAlign: 'left',
+                                color: (theme) => theme.palette.primary.darker,
+                                bgcolor: (theme) => theme.palette.primary.lighter,
+                            }}
+                        >
+                            <Typography variant="h4" gutterBottom>
+                                Device ID: { screen.device_id }
+                            </Typography>
+                        </Card>
                     </Grid>
                 </Grid>
                 <Stack>

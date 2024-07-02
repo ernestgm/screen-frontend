@@ -160,7 +160,7 @@ export default function CreateBusinessPage() {
                     </Typography>
                 </Stack>
                 <Card>
-                    <Stack spacing={3} justifyContent="space-between" mb={5} sx={{my: 2}}>
+                    <Stack spacing={3} justifyContent="space-between" sx={{m: 2}}>
                         <TextField
                             name="name"
                             error={validator.name && true}
@@ -222,7 +222,7 @@ export default function CreateBusinessPage() {
                         </MapContainer>
                     </Stack>
                 </Card>
-                <Stack>
+                <Stack sx={{m: 2}}>
                     <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleSubmit}>
                         Save
                     </LoadingButton>

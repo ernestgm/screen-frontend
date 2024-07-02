@@ -32,12 +32,12 @@ const navConfig = [
     icon: icon('mdi:monitor-dashboard'),
     roles: ['admin']
   },
-  // {
-  //   title: 'blog',
-  //   path: '/dashboard/blog',
-  //   icon: icon('ic_blog'),
-  //   roles: ['admin']
-  // },
+  {
+    title: 'Devices',
+    path: '/dashboard/devices',
+    icon: icon('mdi:cast-variant'),
+    roles: ['admin']
+  },
   // {
   //   title: 'Not found',
   //   path: '/404',

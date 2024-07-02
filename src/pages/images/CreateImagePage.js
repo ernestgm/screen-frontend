@@ -20,7 +20,7 @@ import {
     IconButton,
     TableContainer,
     TablePagination,
-    TextField, InputAdornment, FormControl, InputLabel, Select,
+    TextField, InputAdornment, FormControl, InputLabel, Select, FormControlLabel,
 } from '@mui/material';
 import {LoadingButton} from "@mui/lab";
 import { GoogleMap, LoadScript, Autocomplete } from '@react-google-maps/api';
@@ -31,6 +31,7 @@ import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import PROYECT_CONFIG from "../../config/config";
 import { MapContainer } from "../../components/map";
 import ProductsDataTable from "./table/ProductsDataTable";
+import {SaveImage} from "../../components/save-image";
 
 // ----------------------------------------------------------------------
 
@@ -49,16 +50,38 @@ export default function CreateImagePage() {
     const [formData, setFormData] = useState({
         name: '',
         description: '',
+        is_static: 0,
         screen_id: pscreen,
+        image: '',
+        products: []
     });
 
     const handleChange = (event) => {
         const {name, value} = event.target;
+
         setFormData((prevFormData) => ({
             ...prevFormData,
             [name]: value,
         }));
+
+        if (name === "is_static") {
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                "is_static": formData.is_static === 0 ? 1 : 0,
+            }));
+        }
     };
+
+    const handleUploadImage = (images) => {
+        console.log(images);
+
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            image: images
+        }));
+
+        console.log(formData);
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -96,6 +119,8 @@ export default function CreateImagePage() {
                 name: response.data.name,
                 description: response.data.description,
                 screen_id: pscreen,
+                is_static: response.data.is_static,
+                image: response.data.image,
             });
         }
     }
@@ -105,8 +130,6 @@ export default function CreateImagePage() {
             ...prevFormData,
             products: items,
         }));
-
-        console.log(formData)
     }
 
     useEffect(() => {
@@ -131,7 +154,7 @@ export default function CreateImagePage() {
                     </Typography>
                 </Stack>
                 <Card>
-                    <Stack spacing={3} justifyContent="space-between" mb={5} sx={{my: 2}}>
+                    <Stack spacing={3} justifyContent="space-between" sx={{m: 2}}>
                         <TextField
                             name="name"
                             error={validator.name && true}
@@ -148,11 +171,21 @@ export default function CreateImagePage() {
                             error={validator.description && true}
                             helperText={validator.description}
                         />
+
+                        <FormControlLabel
+                            control={<Checkbox name="is_static" checked={formData.is_static === 1} onChange={handleChange} />}
+                            label="Solo imagen"
+                            sx={{ flexGrow: 1, m: 0 }}
+                        />
+
+                        <SaveImage onChange={handleUploadImage} previewImage={formData.image}/>
                     </Stack>
 
-                    <ProductsDataTable image={pimage} saveLocalProducts={updateListProducts}/>
+                    <Stack sx={{m: 2}}>
+                        <ProductsDataTable image={pimage} saveLocalProducts={updateListProducts}/>
+                    </Stack>
                 </Card>
-                <Stack mt={5}>
+                <Stack sx={{m: 2}}>
                     <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleSubmit}>
                         {`Save ${NAME_PAGE}`}
                     </LoadingButton>

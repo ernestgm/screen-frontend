@@ -36,6 +36,7 @@ const TABLE_HEAD = [
     {id: 'name', label: 'Name', alignRight: false},
     {id: 'description', label: 'Description', alignRight: false},
     {id: 'area', label: 'Area', alignRight: false},
+    {id: 'device_id', label: 'Device ID', alignRight: false},
     {id: 'created_at', label: 'Create At', alignRight: false},
     {id: 'updated_at', label: 'Update At', alignRight: false},
     {id: 'actions', label: 'Actions'},
@@ -66,7 +67,6 @@ export default function ScreenDataTable({area}) {
         })
 
         if (response) {
-            console.log(response)
             setAreas(Object.values(response.data));
         }
     };
@@ -181,6 +181,7 @@ export default function ScreenDataTable({area}) {
     const initialFormData = {
         name: '',
         description: '',
+        device_id: '',
         area_id: ''
     }
     const [formData, setFormData] = useState(initialFormData);
@@ -195,9 +196,16 @@ export default function ScreenDataTable({area}) {
         }));
     };
     const handleClickNewArea = () => {
+        console.log(area);
         if (area) {
             setDisabledAreaField(true);
         }
+        setFormData({
+            name: '',
+            description: '',
+            device_id: '',
+            area_id: area
+        })
         setOpenNewDialog(true);
     };
 
@@ -249,7 +257,8 @@ export default function ScreenDataTable({area}) {
             setFormData({
                 name: response.data.name,
                 description: response.data.description,
-                area_id: response.data.area_id
+                area_id: response.data.area_id,
+                device_id: response.data.device_id
             })
             setOpenNewDialog(true);
         }
@@ -314,6 +323,12 @@ export default function ScreenDataTable({area}) {
                                             <TableCell align="left">
                                                 {
                                                     nameArea && nameArea.name
+                                                }
+                                            </TableCell>
+
+                                            <TableCell align="left">
+                                                {
+                                                    row.device_id
                                                 }
                                             </TableCell>
 
@@ -403,6 +418,20 @@ export default function ScreenDataTable({area}) {
                         onChange={handleChange}
                         error={validator.description && true}
                         helperText={validator.description}
+                        sx={{pb: 2}}
+                    />
+                    <TextField
+                        margin="dense"
+                        name="device_id"
+                        label="Device ID"
+                        value={formData.device_id}
+                        type="text"
+                        fullWidth
+                        variant="standard"
+                        onChange={handleChange}
+                        error={validator.device_id && true}
+                        helperText={validator.device_id}
+                        sx={{pb: 2}}
                     />
                     <FormControl
                         variant="standard"

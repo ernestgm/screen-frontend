@@ -24,6 +24,7 @@ import useMessagesAlert from "../../../hooks/messages/useMessagesAlert";
 import useMessagesSnackbar from "../../../hooks/messages/useMessagesSnackbar";
 import {applySortFilter, getComparator} from "../../../utils/table/tableFunctions";
 import {fCurrency} from "../../../utils/formatNumber";
+import {SaveImage} from "../../../components/save-image";
 
 
 // Area Table
@@ -187,7 +188,8 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
         price: 0,
         created_at: '',
         updated_at: '',
-        image_id: image
+        image_id: image,
+        image: ''
     }
 
     const [formData, setFormData] = useState(initialFormData);
@@ -203,6 +205,14 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
             updated_at: new Date(),
         }));
     };
+
+    const handleUploadImage = (images) => {
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            image: images
+        }));
+    }
+
     const handleClickNewArea = () => {
         setOpenNewDialog(true);
     };
@@ -227,7 +237,6 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
                     }
                     return item;
                 });
-                console.log(updatedItems)
                 setDataTable(updatedItems);
                 saveLocalProducts(updatedItems);
             } else {
@@ -254,7 +263,7 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
 
             if (response) {
                 if (response.success) {
-                    const msg = update ? `Area updated successfully!` : `Area added successfully!`;
+                    const msg = update ? `Product updated successfully!` : `Product added successfully!`;
                     showMessageSnackbar(msg, 'success');
                     setOpenNewDialog(false);
                     getProducts();
@@ -284,7 +293,8 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
                     name: response.data.name,
                     description: response.data.description,
                     image_id: image,
-                    price: response.data.prices.slice(-1)[0].value
+                    price: response.data.prices.slice(-1)[0].value,
+                    image: response.data.image
                 })
                 setOpenNewDialog(true);
             }
@@ -339,7 +349,6 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
                                 {filteredDataTable.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                                     const {id, name, description, prices, price} = row;
                                     const selectedRow = selected.indexOf(id) !== -1;
-                                    console.log(prices)
                                     return (
                                         <TableRow hover key={id} tabIndex={-1} role="checkbox"
                                                   selected={selectedRow}>
@@ -511,6 +520,8 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
                         error={validator.price && true}
                         helperText={validator.price}
                     />
+
+                    <SaveImage onChange={handleUploadImage} previewImage={formData.image}/>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseNew}>Cancel</Button>

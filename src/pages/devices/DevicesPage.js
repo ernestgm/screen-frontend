@@ -39,7 +39,7 @@ import PROYECT_CONFIG from "../../config/config";
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-    {id: 'mac', label: 'MAC', alignRight: false},
+    {id: 'code', label: 'Device Code', alignRight: false},
     {id: 'device_id', label: 'Device ID', alignRight: false},
     {id: 'user', label: 'User', alignRight: false },
     {id: 'created_at', label: 'Create At', alignRight: false},
@@ -73,7 +73,7 @@ function applySortFilter(array, comparator, query) {
         return a[1] - b[1];
     });
     if (query) {
-        return filter(array, (_user) => _user.device_id.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+        return filter(array, (_device) => _device.code.toLowerCase().indexOf(query.toLowerCase()) !== -1);
     }
     return stabilizedThis.map((el) => el[0]);
 }
@@ -93,7 +93,7 @@ export default function DevicePage() {
 
     const [selected, setSelected] = useState([]);
 
-    const [orderBy, setOrderBy] = useState('name');
+    const [orderBy, setOrderBy] = useState('code');
 
     const [filterName, setFilterName] = useState('');
 
@@ -242,7 +242,7 @@ export default function DevicePage() {
                                 />
                                 <TableBody>
                                     {filteredDevices.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                        const {id, mac} = row;
+                                        const {id, code} = row;
                                         const selectedDevices = selected.indexOf(id) !== -1;
                                         const user = (users.find((n) => n.id === row.user_id))
                                         return (
@@ -257,7 +257,7 @@ export default function DevicePage() {
                                                     <Stack direction="row" alignItems="center" spacing={2}>
                                                         <Iconify icon="mdi:cast-variant"/>
                                                         <Typography variant="subtitle2" noWrap>
-                                                            {mac}
+                                                            {code}
                                                         </Typography>
                                                     </Stack>
                                                 </TableCell>

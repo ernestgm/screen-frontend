@@ -158,7 +158,7 @@ export default function DevicePage() {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelecteds = users.map((n) => n.id);
+            const newSelecteds = devices.map((n) => n.id);
             setSelected(newSelecteds);
             return;
         }

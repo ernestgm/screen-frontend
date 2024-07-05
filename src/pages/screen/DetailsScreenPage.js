@@ -36,7 +36,7 @@ export default function DetailsScreenPage() {
         created_at : '',
         id: '',
         name: '',
-        device_id: '',
+        code: '',
         description: '',
         screens: []
     })
@@ -95,7 +95,7 @@ export default function DetailsScreenPage() {
                             }}
                         >
                             <Typography variant="h4" gutterBottom>
-                                Device ID: { screen.device_id }
+                                Device Code: { screen.code }
                             </Typography>
                         </Card>
                     </Grid>

@@ -51,6 +51,7 @@ export default function CreateImagePage() {
         name: '',
         description: '',
         is_static: 0,
+        duration: 5,
         screen_id: pscreen,
         image: '',
         products: []
@@ -120,6 +121,7 @@ export default function CreateImagePage() {
                 description: response.data.description,
                 screen_id: pscreen,
                 is_static: response.data.is_static,
+                duration: response.data.duration,
                 image: response.data.image,
             });
         }
@@ -170,6 +172,15 @@ export default function CreateImagePage() {
                             onChange={handleChange}
                             error={validator.description && true}
                             helperText={validator.description}
+                        />
+
+                        <TextField
+                            name="duration"
+                            label="Duration (5s by default)"
+                            value={formData.duration}
+                            onChange={handleChange}
+                            error={validator.duration && true}
+                            helperText={validator.duration}
                         />
 
                         <FormControlLabel

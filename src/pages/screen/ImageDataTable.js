@@ -58,12 +58,15 @@ function Row(props) {
                         }
                     </IconButton>
                 </TableCell>
-                <TableCell component="th" scope="row">
+                <TableCell component="th" scope="row" align="center">
+                    <img src={row.image} alt={row.description} width="70px"/>
+                </TableCell>
+                <TableCell component="th" scope="row" align="center">
                     {row.name}
                 </TableCell>
-                <TableCell align="right">{row.description}</TableCell>
-                <TableCell align="right">{formatDate(row.created_at)}</TableCell>
-                <TableCell align="right">{formatDate(row.updated_at)}</TableCell>
+                <TableCell align="center">{row.duration}s</TableCell>
+                <TableCell align="center">{formatDate(row.created_at)}</TableCell>
+                <TableCell align="center">{formatDate(row.updated_at)}</TableCell>
                 <TableCell align="right">
                     <IconButton id={row.id} size="large" color="inherit"
                                 onClick={handleClickMenu}>
@@ -232,10 +235,13 @@ export default function ImageDataTable({screen}) {
                     <TableHead>
                         <TableRow>
                             <TableCell/>
-                            <TableCell>Name</TableCell>
-                            <TableCell align="right">Description</TableCell>
-                            <TableCell align="right">Create At</TableCell>
-                            <TableCell align="right">Update At</TableCell>
+                            <TableCell align="left">
+                                <Iconify icon='material-symbols:photo' width={24} height={24}/>
+                            </TableCell>
+                            <TableCell align="center">Name</TableCell>
+                            <TableCell align="center">Duration</TableCell>
+                            <TableCell align="center">Create At</TableCell>
+                            <TableCell align="center">Update At</TableCell>
                             <TableCell align="right">Actions</TableCell>
                         </TableRow>
                     </TableHead>

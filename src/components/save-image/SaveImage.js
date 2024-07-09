@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Button } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled } from '@mui/material/styles';
+import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -20,17 +21,22 @@ const VisuallyHiddenInput = styled('input')({
 
 
 export default function SaveImage({ onChange, previewImage }) {
+    const showSnackbarMessage = useMessagesSnackbar();
 
     const [image, setImage] = useState(null);
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImage(file);
-                onChange(reader.result);
-            };
-            reader.readAsDataURL(file);
+            if (file.size > 1024 * 1024) { // 1MB = 1024 * 1024 bytes
+                showSnackbarMessage('File size should be less than 1MB', 'error');
+            } else {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    setImage(file);
+                    onChange(reader.result);
+                };
+                reader.readAsDataURL(file);
+            }
         }
     };
 

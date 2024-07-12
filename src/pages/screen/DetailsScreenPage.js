@@ -8,7 +8,6 @@ import {
     Typography,
     Grid, Button, Card,
 } from '@mui/material';
-import {alpha} from "@mui/material/styles";
 import BackButton from "../../sections/@dashboard/app/AppBackButton";
 import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
@@ -37,6 +36,15 @@ export default function DetailsScreenPage() {
         id: '',
         name: '',
         code: '',
+        area: {
+            business: {
+                name: '',
+                user: {
+                    name: '',
+                    lastname: ''
+                }
+            }
+        },
         description: '',
         screens: []
     })
@@ -46,7 +54,6 @@ export default function DetailsScreenPage() {
             showSnackbarMessage(msg, 'error');
         });
         if (response) {
-            console.log(response)
             setScreen(response.data);
         }
     }
@@ -75,7 +82,7 @@ export default function DetailsScreenPage() {
                     </Typography>
                 </Stack>
                 <Grid container spacing={2} mb={5}>
-                    <Grid item xs={12} sm={8} md={8}>
+                    <Grid item xs={12} sm={6} md={6}>
                         <TitlePageDetails
                             title={screen.name}
                             description={screen.description}
@@ -83,7 +90,7 @@ export default function DetailsScreenPage() {
                             icon={'material-symbols:live-tv-outline-rounded'}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={4} md={4}>
+                    <Grid item xs={12} sm={6} md={6}>
                         <Card
                             sx={{
                                 py: 3,
@@ -97,6 +104,13 @@ export default function DetailsScreenPage() {
                             <Typography variant="h4" gutterBottom>
                                 Device Code: { screen.code }
                             </Typography>
+                            <Typography variant="h4" gutterBottom>
+                                Business Name: { screen.area.business.name }
+                            </Typography>
+                            <Typography variant="h4" gutterBottom>
+                                Owner: { screen.area.business.user.name } { screen.area.business.user.lastname }
+                            </Typography>
+
                         </Card>
                     </Grid>
                 </Grid>

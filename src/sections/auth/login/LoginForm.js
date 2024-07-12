@@ -34,6 +34,7 @@ export default function LoginForm() {
         });
 
         if (userData) {
+            console.log(userData)
             setCurrentUser(userData.success)
             navigate('/', {replace: true});
         }

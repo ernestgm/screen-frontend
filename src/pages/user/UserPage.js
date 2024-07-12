@@ -34,6 +34,7 @@ import {formatDate} from "../../utils/formatTime";
 import useMessagesAlert from "../../hooks/messages/useMessagesAlert";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import PROYECT_CONFIG from "../../config/config";
+import palette from "../../theme/palette";
 
 
 // ----------------------------------------------------------------------
@@ -244,9 +245,10 @@ export default function UserPage() {
                                     {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                                         const {id, name, lastname, email, role} = row;
                                         const selectedUser = selected.indexOf(id) !== -1;
+                                        const bgColorCell = row.enabled === 1 ? palette.success.lighter : palette.error.lighter
                                         return (
                                             <TableRow hover key={id} tabIndex={-1} role="checkbox"
-                                                      selected={selectedUser}>
+                                                      selected={selectedUser} sx={{ background: bgColorCell }}>
                                                 <TableCell padding="checkbox">
                                                     <Checkbox checked={selectedUser}
                                                               onChange={(event) => handleClick(event, id)}/>

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {
-    Avatar, Button, Card, Dialog,
+    Button, Card, Dialog,
     Checkbox, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, MenuItem, Paper, Popover,
     Stack,
     Table,
@@ -9,9 +9,9 @@ import {
     TableCell,
     TableContainer, TablePagination,
     TableRow, TextField,
-    Typography, InputLabel, Select, FormControl
+    Typography, InputLabel, Select, FormControl, FormControlLabel
 } from "@mui/material";
-import PropTypes from "prop-types";
+
 import PROYECT_CONFIG from "../../../config/config";
 import {UserListHead, UserListToolbar} from "../../../sections/@dashboard/user";
 import Scrollbar from "../../../components/scrollbar/Scrollbar";
@@ -21,6 +21,7 @@ import useApiHandlerStore from "../../../zustand/useApiHandlerStore";
 import useMessagesAlert from "../../../hooks/messages/useMessagesAlert";
 import useMessagesSnackbar from "../../../hooks/messages/useMessagesSnackbar";
 import {applySortFilter, getComparator} from "../../../utils/table/tableFunctions";
+import palette from "../../../theme/palette";
 
 
 
@@ -34,8 +35,8 @@ const ROUTE_DETAILS_ROW = '/dashboard/screen/details/';
 
 const TABLE_HEAD = [
     {id: 'name', label: 'Name', alignRight: false},
-    {id: 'description', label: 'Description', alignRight: false},
-    {id: 'area', label: 'Area', alignRight: false},
+    {id: 'user', label: 'User', alignRight: false},
+    {id: 'business', label: 'Business', alignRight: false},
     {id: 'code', label: 'Device Code', alignRight: false},
     {id: 'created_at', label: 'Create At', alignRight: false},
     {id: 'updated_at', label: 'Update At', alignRight: false},
@@ -56,6 +57,7 @@ export default function ScreenDataTable({area}) {
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [areas, setAreas] = useState([]);
     const [disabledAreaField, setDisabledAreaField] = useState(false);
+    const [changeCode, setChangeCode] = useState(false);
 
     const {api} = useApiHandlerStore((state) => state);
     const showMessageAlert = useMessagesAlert();
@@ -182,7 +184,8 @@ export default function ScreenDataTable({area}) {
         name: '',
         description: '',
         code: '',
-        area_id: ''
+        area_id: '',
+        enabled: 1
     }
     const [formData, setFormData] = useState(initialFormData);
 
@@ -194,16 +197,27 @@ export default function ScreenDataTable({area}) {
             ...prevFormData,
             [name]: value,
         }));
+
+        if (name === "enabled") {
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                "enabled": formData.enabled === 0 ? 1 : 0,
+            }));
+        }
     };
     const handleClickNewArea = () => {
         if (area) {
             setDisabledAreaField(true);
+        } else {
+            setDisabledAreaField(false);
         }
+        setChangeCode(!update)
         setFormData({
             name: '',
             description: '',
             code: '',
-            area_id: area
+            area_id: area,
+            enabled: 1
         })
         setOpenNewDialog(true);
     };
@@ -217,9 +231,20 @@ export default function ScreenDataTable({area}) {
 
     const createNewAction = async () => {
         let response;
+        const editFormData = {};
 
         if (update) {
-            response = await api.__update(`${SCREEN_URL_UPDATE_ROW}${update}`, formData, (msg) => {
+            editFormData.name = formData.name
+            editFormData.description = formData.description
+            editFormData.area_id = formData.area_id
+            editFormData.enabled = formData.enabled
+
+            if (changeCode) {
+                editFormData.code = formData.code
+            }
+            console.log(editFormData)
+
+            response = await api.__update(`${SCREEN_URL_UPDATE_ROW}${update}`, editFormData, (msg) => {
                 showMessageSnackbar(msg, 'error');
             });
         } else {
@@ -231,7 +256,7 @@ export default function ScreenDataTable({area}) {
 
         if (response) {
             if (response.success) {
-                const msg = update ? `Area updated successfully!` : `Area added successfully!`;
+                const msg = update ? `Screen updated successfully!` : `Screen added successfully!`;
                 showMessageSnackbar(msg, 'success');
                 setOpenNewDialog(false);
                 getScreens();
@@ -248,6 +273,7 @@ export default function ScreenDataTable({area}) {
     const editAction = async (id) => {
         setDisabledAreaField(true);
         setUpdate(id);
+        setChangeCode(update)
         const response = await api.__get(`${SCREEN_URL_GET_DATA_UPDATE}${id}`, null, (msg) => {
             showMessageSnackbar(msg, 'error');
         });
@@ -257,10 +283,16 @@ export default function ScreenDataTable({area}) {
                 name: response.data.name,
                 description: response.data.description,
                 area_id: response.data.area_id,
-                code: response.data.code
+                code: response.data.code,
+                enabled: response.data.enabled
             })
             setOpenNewDialog(true);
         }
+    }
+
+    const handleChangeCode = (event) => {
+        const {name, value} = event.target;
+        setChangeCode(!changeCode)
     }
 
     useEffect(() => {
@@ -297,12 +329,14 @@ export default function ScreenDataTable({area}) {
                             />
                             <TableBody>
                                 {filteredDataTable.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                    const {id, name, description} = row;
+                                    const {id, name} = row;
                                     const selectedRow = selected.indexOf(id) !== -1;
-                                    const nameArea = (areas.find((n) => n.id === row.area_id))
+                                    const nameUser = row.area.business.user.name
+                                    const nameBusiness = row.area.business.name
+                                    const bgColorCell = row.enabled === 1 ? palette.success.lighter : palette.error.lighter
                                     return (
                                         <TableRow hover key={id} tabIndex={-1} role="checkbox"
-                                                  selected={selectedRow}>
+                                                  selected={selectedRow} sx={{ background: bgColorCell }}>
                                             <TableCell padding="checkbox">
                                                 <Checkbox checked={selectedRow}
                                                           onChange={(event) => handleClick(event, id)}/>
@@ -317,13 +351,9 @@ export default function ScreenDataTable({area}) {
                                                 </Stack>
                                             </TableCell>
 
-                                            <TableCell align="left">{description}</TableCell>
+                                            <TableCell align="left">{ nameUser }</TableCell>
 
-                                            <TableCell align="left">
-                                                {
-                                                    nameArea && nameArea.name
-                                                }
-                                            </TableCell>
+                                            <TableCell align="left">{ nameBusiness}</TableCell>
 
                                             <TableCell align="left">
                                                 {
@@ -389,11 +419,8 @@ export default function ScreenDataTable({area}) {
                 />
             </Card>
             <Dialog open={openNewDialog} onClose={handleCloseNew}>
-                <DialogTitle>{update ? 'Edit' : 'Create'} Screen</DialogTitle>
+                <DialogTitle>{update ? 'Edit' : 'Create a new'} Screen</DialogTitle>
                 <DialogContent>
-                    <DialogContentText>
-                        {update ? 'Edit' : 'Create a new' } screen!
-                    </DialogContentText>
                     <TextField
                         margin="dense"
                         name="name"
@@ -419,11 +446,16 @@ export default function ScreenDataTable({area}) {
                         helperText={validator.description}
                         sx={{pb: 2}}
                     />
+                    <FormControlLabel
+                        control={<Checkbox name="changeCode" checked={changeCode} onChange={ handleChangeCode } />}
+                        label="Change Code"
+                        sx={{ m: -1.5}}
+                    />
                     <TextField
                         margin="dense"
                         name="code"
                         label="Device Code"
-                        value={formData.device_id}
+                        value={formData.code}
                         type="text"
                         fullWidth
                         variant="standard"
@@ -431,11 +463,13 @@ export default function ScreenDataTable({area}) {
                         error={validator.code && true}
                         helperText={validator.code}
                         sx={{pb: 2}}
+                        disabled={!changeCode}
                     />
                     <FormControl
                         variant="standard"
                         fullWidth
                         disabled={disabledAreaField}
+                        sx={{ mb: 3}}
                     >
                         <InputLabel id="role-select-label">Select Area</InputLabel>
                         <Select
@@ -456,6 +490,11 @@ export default function ScreenDataTable({area}) {
                             }
                         </Select>
                     </FormControl>
+                    <FormControlLabel
+                        control={<Checkbox name="enabled" checked={formData.enabled === 1} onChange={ handleChange } />}
+                        label="Enabled"
+                        sx={{ m: -1.5}}
+                    />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseNew}>Cancel</Button>

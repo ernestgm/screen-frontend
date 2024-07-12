@@ -36,6 +36,7 @@ UserListToolbar.propTypes = {
   numSelected: PropTypes.number,
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
+  onDeleteSelect: PropTypes.func,
 };
 
 export default function UserListToolbar({ numSelected, filterName, onFilterName, onDeleteSelect }) {
@@ -72,11 +73,9 @@ export default function UserListToolbar({ numSelected, filterName, onFilterName,
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <Iconify icon="ic:round-filter-list" />
-          </IconButton>
-        </Tooltip>
+          <Typography component="div">
+            {""}
+          </Typography>
       )}
     </StyledRoot>
   );

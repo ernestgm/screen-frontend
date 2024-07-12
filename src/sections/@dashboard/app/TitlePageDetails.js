@@ -71,9 +71,6 @@ export default function TitlePageDetails({title, description, createdAt, icon, c
                             </Typography>
                         )
                     }
-                    <Typography variant="h6" sx={{opacity: 0.72}}>
-                        Created: {fDate(createdAt)}
-                    </Typography>
                 </Stack>
 
 

@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from "react-router-dom";
 // @mui
 import {Helmet} from 'react-helmet-async';
@@ -20,7 +20,7 @@ import {
     IconButton,
     TableContainer,
     TablePagination,
-    TextField, InputAdornment, FormControl, InputLabel, Select,
+    TextField, InputAdornment, FormControl, InputLabel, Select, FormControlLabel,
 } from '@mui/material';
 import {LoadingButton} from "@mui/lab";
 import Iconify from "../../components/iconify";
@@ -45,9 +45,12 @@ export default function CreateUserPage() {
         email: '',
         role_id: '',
         password: '',
-        c_password: ''
+        c_password: '',
+        enabled: 1
     });
     const [roles, setRoles] = useState([]);
+    const [editing, setEditing] = useState(false);
+    const [changePassword, setChangePassword] = useState(false);
 
     const handleChange = (event) => {
         const {name, value} = event.target;
@@ -63,14 +66,38 @@ export default function CreateUserPage() {
                 validator.email = null;
             }
         }
+
+        if (name === "enabled") {
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                "enabled": formData.enabled === 0 ? 1 : 0,
+            }));
+        }
     };
+
+    const handleChangePassword = (event) => {
+        const {name, value} = event.target;
+        console.log(value)
+        setChangePassword(!changePassword)
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         let response;
+        const editFormData = {};
         if (id) {
-            console.log(formData);
-            response = await api.__update(`/user/update/${id}`, formData, (msg) => {
+
+            editFormData.name = formData.name
+            editFormData.lastname = formData.lastname
+            editFormData.role_id = formData.role_id
+            editFormData.enabled = formData.enabled
+
+            if (changePassword) {
+                editFormData.password = formData.password
+                editFormData.c_password = formData.c_password
+            }
+            console.log(editFormData);
+            response = await api.__update(`/user/update/${id}`, editFormData, (msg) => {
                 showSnackbarMessage(msg, 'error');
             });
         } else {
@@ -101,10 +128,11 @@ export default function CreateUserPage() {
                 email: response.data.email,
                 role_id: response.data.role_id,
                 password: response.data.password,
-                c_password: response.data.password
+                c_password: response.data.password,
+                enabled: response.data.enabled
             })
         }
-    }
+    };
 
     const getRoles = async () => {
         const response = await api.__get(`/roles`, null, (msg) => {
@@ -113,19 +141,21 @@ export default function CreateUserPage() {
         if (response) {
             setRoles(response.data);
         }
-    }
+    };
 
     useEffect(() => {
         getRoles()
         if (id) {
             getUser();
         }
-    }, [])
+        setEditing( id !== undefined )
+        setChangePassword( id === undefined )
+    }, []);
 
     return (
         <>
             <Helmet>
-                <title> {id ? 'User edit' : 'Create User'} | { PROYECT_CONFIG.NAME } </title>
+                <title> { id ? 'User edit' : 'Create User'} | { PROYECT_CONFIG.NAME } </title>
             </Helmet>
 
             <Container>
@@ -138,7 +168,7 @@ export default function CreateUserPage() {
                     </Typography>
                 </Stack>
                 <Card>
-                    <Stack spacing={3} justifyContent="space-between" mb={5} sx={{my: 2}}>
+                    <Stack spacing={3} justifyContent="space-between" mb={5} sx={{m: 2}}>
                         <TextField
                             name="name"
                             error={validator.name && true}
@@ -162,6 +192,7 @@ export default function CreateUserPage() {
                             onChange={handleChange}
                             error={validator.email && true}
                             helperText={validator.email}
+                            disabled={editing}
                         />
                         <FormControl fullWidth>
                             <InputLabel id="role-select-label">Role</InputLabel>
@@ -180,6 +211,11 @@ export default function CreateUserPage() {
                                 })}
                             </Select>
                         </FormControl>
+                        <FormControlLabel
+                            control={<Checkbox name="changePassword" checked={changePassword} onChange={ handleChangePassword } />}
+                            label="Change Password"
+                            sx={{ flexGrow: 1, m: 0 }}
+                        />
                         <TextField
                             name="password"
                             label="Password"
@@ -188,6 +224,7 @@ export default function CreateUserPage() {
                             onChange={handleChange}
                             error={validator.password && true}
                             helperText={validator.password}
+                            disabled={!changePassword}
                             InputProps={{
                                 endAdornment: (
                                     <InputAdornment position="end">
@@ -206,6 +243,7 @@ export default function CreateUserPage() {
                             onChange={handleChange}
                             error={validator.c_password && true}
                             helperText={validator.c_password}
+                            disabled={!changePassword}
                             InputProps={{
                                 endAdornment: (
                                     <InputAdornment position="end">
@@ -216,9 +254,14 @@ export default function CreateUserPage() {
                                 ),
                             }}
                         />
+                        <FormControlLabel
+                            control={<Checkbox name="enabled" checked={formData.enabled === 1} onChange={ handleChange } />}
+                            label="Enabled"
+                            sx={{ flexGrow: 1, m: 0 }}
+                        />
                     </Stack>
                 </Card>
-                <Stack>
+                <Stack sx={{m: 2}}>
                     <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleSubmit}>
                         Save
                     </LoadingButton>

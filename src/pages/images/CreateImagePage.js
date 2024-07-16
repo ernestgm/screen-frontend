@@ -35,7 +35,7 @@ export default function CreateImagePage() {
     const [formData, setFormData] = useState({
         name: '',
         description: '',
-        is_static: 0,
+        is_static: 1,
         duration: 5,
         screen_id: pscreen,
         image: '',
@@ -168,17 +168,17 @@ export default function CreateImagePage() {
                             helperText={validator.duration}
                         />
 
-                        <FormControlLabel
-                            control={<Checkbox name="is_static" checked={formData.is_static === 1} onChange={handleChange} />}
-                            label="Solo imagen"
-                            sx={{ flexGrow: 1, m: 0 }}
-                        />
+                        {/* <FormControlLabel */}
+                        {/*    control={<Checkbox name="is_static" checked={formData.is_static === 1} onChange={handleChange} />} */}
+                        {/*    label="Solo imagen" */}
+                        {/*    sx={{ flexGrow: 1, m: 0 }} */}
+                        {/* /> */}
 
                         <SaveImage onChange={handleUploadImage} previewImage={formData.image}/>
                     </Stack>
 
                     <Stack sx={{m: 2}}>
-                        <ProductsDataTable image={pimage} saveLocalProducts={updateListProducts}/>
+                        {/* <ProductsDataTable image={pimage} saveLocalProducts={updateListProducts}/> */}
                     </Stack>
                 </Card>
                 <Stack sx={{m: 2}}>

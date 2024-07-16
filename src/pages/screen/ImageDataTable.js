@@ -44,20 +44,20 @@ function Row(props) {
     return (
         <>
             <TableRow sx={{'& > *': {borderBottom: 'unset'}}}>
-                <TableCell>
-                    <IconButton
-                        aria-label="expand row"
-                        size="small"
-                        onClick={() => setOpen(!open)}
-                    >
-                        {open
-                            ?
-                            <Iconify icon='material-symbols:keyboard-arrow-up-rounded' width={24} height={24}/>
-                            :
-                            <Iconify icon='material-symbols:keyboard-arrow-down-rounded' width={24} height={24}/>
-                        }
-                    </IconButton>
-                </TableCell>
+                {/* <TableCell> */}
+                {/*    <IconButton */}
+                {/*        aria-label="expand row" */}
+                {/*        size="small" */}
+                {/*        onClick={() => setOpen(!open)} */}
+                {/*    > */}
+                {/*        {open */}
+                {/*            ? */}
+                {/*            <Iconify icon='material-symbols:keyboard-arrow-up-rounded' width={24} height={24}/> */}
+                {/*            : */}
+                {/*            <Iconify icon='material-symbols:keyboard-arrow-down-rounded' width={24} height={24}/> */}
+                {/*        } */}
+                {/*    </IconButton> */}
+                {/* </TableCell> */}
                 <TableCell component="th" scope="row" align="center">
                     <img src={row.image} alt={row.description} width="70px"/>
                 </TableCell>
@@ -234,7 +234,7 @@ export default function ImageDataTable({screen}) {
                 <Table aria-label="collapsible table">
                     <TableHead>
                         <TableRow>
-                            <TableCell/>
+                            {/* <TableCell/> */}
                             <TableCell align="left">
                                 <Iconify icon='material-symbols:photo' width={24} height={24}/>
                             </TableCell>

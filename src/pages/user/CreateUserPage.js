@@ -4,22 +4,12 @@ import {useNavigate, useParams} from "react-router-dom";
 import {Helmet} from 'react-helmet-async';
 import {
     Card,
-    Table,
     Stack,
-    Paper,
-    Avatar,
-    Button,
-    Popover,
     Checkbox,
-    TableRow,
     MenuItem,
-    TableBody,
-    TableCell,
     Container,
     Typography,
     IconButton,
-    TableContainer,
-    TablePagination,
     TextField, InputAdornment, FormControl, InputLabel, Select, FormControlLabel,
 } from '@mui/material';
 import {LoadingButton} from "@mui/lab";
@@ -76,7 +66,7 @@ export default function CreateUserPage() {
     };
 
     const handleChangePassword = (event) => {
-        const {name, value} = event.target;
+        const {value} = event.target;
         console.log(value)
         setChangePassword(!changePassword)
     }

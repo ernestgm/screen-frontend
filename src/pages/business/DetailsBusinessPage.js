@@ -4,39 +4,17 @@ import {useNavigate, useParams} from "react-router-dom";
 import {Helmet} from 'react-helmet-async';
 import {
     Card,
-    Table,
     Stack,
-    Paper,
-    Avatar,
-    Button,
-    Popover,
-    Checkbox,
-    TableRow,
-    MenuItem,
-    TableBody,
-    TableCell,
     Container,
     Typography,
-    IconButton,
-    TableContainer,
-    TablePagination,
-    TextField, InputAdornment, FormControl, InputLabel, Select, Grid,
+    Grid,
 } from '@mui/material';
-import {LoadingButton} from "@mui/lab";
-import {faker} from "@faker-js/faker";
-import Iconify from "../../components/iconify";
 import BackButton from "../../sections/@dashboard/app/AppBackButton";
 import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import PROYECT_CONFIG from "../../config/config";
-import POSTS from "../../_mock/blog";
-import {BlogPostCard} from "../../sections/@dashboard/blog";
 import BusinessDetailsCard from "../../sections/@dashboard/business/BusinessDetailsCard";
-import {AppTasks} from "../../sections/@dashboard/app";
 import {MapContainer} from "../../components/map";
-import {UserListHead, UserListToolbar} from "../../sections/@dashboard/user";
-import Scrollbar from "../../components/scrollbar/Scrollbar";
-import {formatDate} from "../../utils/formatTime";
 import AreasDataTable from "./table/AreasDataTable";
 
 

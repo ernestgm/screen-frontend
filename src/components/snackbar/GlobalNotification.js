@@ -5,12 +5,6 @@ import useGlobalMessageStore from "../../zustand/useGlobalMessageStore";
 
 export default function GlobalNotification() {
     const {options, closeAlert } = useGlobalMessageStore((state) => state)
-
-    const titles = {
-        error : 'Error',
-        success: 'Success'
-    }
-
     const handleClose = () => {
         closeAlert()
     };

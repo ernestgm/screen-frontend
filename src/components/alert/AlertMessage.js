@@ -1,4 +1,4 @@
-import {Alert, AlertTitle, Box, Collapse, IconButton, List} from "@mui/material";
+import {Alert, AlertTitle, Collapse, IconButton} from "@mui/material";
 import Iconify from "../iconify";
 import useGlobalMessageStore from "../../zustand/useGlobalMessageStore";
 

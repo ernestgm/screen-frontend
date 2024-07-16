@@ -1,6 +1,4 @@
 import {create} from 'zustand';
-import useAuthStore from "./useAuthStore";
-import ApiHandler from "../utils/handlers/ApiHandler";
 
 const initialState = {
     openAlert: false,

@@ -4,32 +4,17 @@ import {useNavigate, useParams} from "react-router-dom";
 import {Helmet} from 'react-helmet-async';
 import {
     Card,
-    Table,
     Stack,
-    Paper,
-    Avatar,
-    Button,
-    Popover,
     Checkbox,
-    TableRow,
-    MenuItem,
-    TableBody,
-    TableCell,
     Container,
     Typography,
-    IconButton,
-    TableContainer,
-    TablePagination,
-    TextField, InputAdornment, FormControl, InputLabel, Select, FormControlLabel,
+    TextField, FormControlLabel,
 } from '@mui/material';
 import {LoadingButton} from "@mui/lab";
-import { GoogleMap, LoadScript, Autocomplete } from '@react-google-maps/api';
-import Iconify from "../../components/iconify";
 import BackButton from "../../sections/@dashboard/app/AppBackButton";
 import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import PROYECT_CONFIG from "../../config/config";
-import { MapContainer } from "../../components/map";
 import ProductsDataTable from "./table/ProductsDataTable";
 import {SaveImage} from "../../components/save-image";
 

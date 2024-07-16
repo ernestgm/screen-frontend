@@ -1,7 +1,6 @@
 import {useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
 import {
-    Avatar, Button, Card, Dialog,
+    Button, Card, Dialog,
     Checkbox, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, MenuItem, Paper, Popover,
     Stack,
     Table,
@@ -11,7 +10,6 @@ import {
     TableRow, TextField,
     Typography
 } from "@mui/material";
-import PropTypes from "prop-types";
 import {faker} from "@faker-js/faker";
 import * as React from "react";
 import PROYECT_CONFIG from "../../../config/config";
@@ -347,7 +345,7 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
                             />
                             <TableBody>
                                 {filteredDataTable.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                    const {id, name, description, prices, price} = row;
+                                    const {id, name, description, prices} = row;
                                     const selectedRow = selected.indexOf(id) !== -1;
                                     return (
                                         <TableRow hover key={id} tabIndex={-1} role="checkbox"

@@ -1,31 +1,16 @@
 import { Helmet } from 'react-helmet-async';
-import { faker } from '@faker-js/faker';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import { Grid, Container, Typography } from '@mui/material';
 // table
 
 // sections
-import {
-  AppTasks,
-  AppNewsUpdate,
-  AppOrderTimeline,
-  AppCurrentVisits,
-  AppWebsiteVisits,
-  AppTrafficBySite,
-  AppWidgetSummary,
-  AppCurrentSubject,
-  AppConversionRates,
-} from '../../sections/@dashboard/app';
 import PROYECT_CONFIG from "../../config/config";
-import Iconify from "../../components/iconify";
 import BusinessResume from "../../sections/@dashboard/business/BusinessResume";
 
 // ----------------------------------------------------------------------
 
 export default function Dashboard() {
-  const theme = useTheme();
-
   return (
     <>
       <Helmet>

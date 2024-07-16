@@ -1,7 +1,6 @@
 import {useNavigate} from "react-router-dom";
 import {Helmet} from 'react-helmet-async';
 import {filter} from 'lodash';
-import {sentenceCase} from 'change-case';
 import {useEffect, useState} from 'react';
 // @mui
 import {
@@ -21,10 +20,9 @@ import {
     Typography,
     IconButton,
     TableContainer,
-    TablePagination, Collapse, Alert,
+    TablePagination,
 } from '@mui/material';
 // table
-import Label from '../../components/label';
 import Iconify from '../../components/iconify';
 import Scrollbar from '../../components/scrollbar';
 // sections

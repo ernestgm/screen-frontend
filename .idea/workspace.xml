@@ -4,15 +4,31 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d4767243-8cf2-4570-929d-1212d7106fb6" name="Changes" comment="add time duration transition images">
+    <list default="true" id="d4767243-8cf2-4570-929d-1212d7106fb6" name="Changes" comment="Add disabled and enabled user and screen">
+      <change afterPath="$PROJECT_DIR$/public/assets/illustrations/illustration_login.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/areas/table/ScreenDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/areas/table/ScreenDataTable.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/screen/DetailsScreenPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/screen/DetailsScreenPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/alert/AlertMessage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/alert/AlertMessage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/logo/Logo.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/logo/Logo.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/map/MapContainer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/map/MapContainer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/snackbar/GlobalNotification.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/snackbar/GlobalNotification.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/business/DetailsBusinessPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/business/DetailsBusinessPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/devices/DevicesPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/devices/DevicesPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/images/CreateImagePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/images/CreateImagePage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/images/table/ProductsDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/images/table/ProductsDataTable.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/main/Dashboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/main/Dashboard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/screen/ScreensPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/screen/ScreensPage.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/user/CreateUserPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/user/CreateUserPage.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/user/UserPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/user/UserPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sections/@dashboard/app/TitlePageDetails.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sections/@dashboard/app/TitlePageDetails.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sections/@dashboard/user/UserListToolbar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sections/@dashboard/user/UserListToolbar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sections/@dashboard/business/BusinessDetailsCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sections/@dashboard/business/BusinessDetailsCard.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sections/auth/login/LoginForm.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sections/auth/login/LoginForm.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/zustand/useAccontHandlerStore.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/zustand/useAccontHandlerStore.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/zustand/useAuthStore.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/zustand/useAuthStore.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/zustand/useGlobalMessageStore.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/zustand/useGlobalMessageStore.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <list id="d4ad349c-1410-4760-87b2-6c449dfa42b6" name="ignore" comment="CRUD Business" />
     <option name="SHOW_DIALOG" value="false" />
@@ -50,33 +66,33 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/ernes/Documents/proyect/react/screen-frontend/src/pages&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
-    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;C:\\Users\\ernes\\Documents\\proyect\\react\\screen-frontend\\node_modules\\prettier&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\PhpStorm 2022.3.3\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/ernes/Documents/proyect/react/screen-frontend/public/assets/illustrations",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.standard": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.standard": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "yarn",
+    "prettierjs.PrettierConfiguration.Package": "C:\\Users\\ernes\\Documents\\proyect\\react\\screen-frontend\\node_modules\\prettier",
+    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\PhpStorm 2022.3.3\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\public\assets\illustrations" />
+      <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\build\assets\illustrations" />
       <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\pages" />
       <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\pages\screen" />
       <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\public\favicon" />
-      <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\public\assets" />
-      <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\sections\@dashboard\business" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\pages" />
@@ -121,7 +137,9 @@
       <workItem from="1720102484253" duration="35000" />
       <workItem from="1720123906063" duration="3998000" />
       <workItem from="1720313321033" duration="6072000" />
-      <workItem from="1720709713788" duration="16952000" />
+      <workItem from="1720709713788" duration="18398000" />
+      <workItem from="1720914238062" duration="7000" />
+      <workItem from="1721151223772" duration="6452000" />
     </task>
     <task id="LOCAL-00001" summary="User login Complete">
       <created>1680980627562</created>
@@ -312,7 +330,14 @@
       <option name="project" value="LOCAL" />
       <updated>1720496464300</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="Add disabled and enabled user and screen">
+      <created>1720751017236</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1720751017236</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -363,6 +388,7 @@
     <MESSAGE value="Create the Screen Page in Nav" />
     <MESSAGE value="Create the Devices Pages and add device id field" />
     <MESSAGE value="add time duration transition images" />
-    <option name="LAST_COMMIT_MESSAGE" value="add time duration transition images" />
+    <MESSAGE value="Add disabled and enabled user and screen" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add disabled and enabled user and screen" />
   </component>
 </project>

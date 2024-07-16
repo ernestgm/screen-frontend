@@ -1,13 +1,11 @@
 import PropTypes from 'prop-types';
 // @mui
 import {alpha, styled} from '@mui/material/styles';
-import {Box, Link, Card, Grid, Avatar, Typography, CardContent} from '@mui/material';
+import {Link, Card, Avatar, Typography, CardContent} from '@mui/material';
 // utils
 import {fDate} from "../../../utils/formatTime";
-import {fShortenNumber} from "../../../utils/formatNumber";
 //
 import SvgColor from '../../../components/svg-color';
-import Iconify from '../../../components/iconify';
 
 
 // ----------------------------------------------------------------------
@@ -33,8 +31,7 @@ const StyledAvatar = styled(Avatar)(({theme}) => ({
     left: theme.spacing(3),
     bottom: theme.spacing(-2),
 }));
-
-const StyledInfo = styled('div')(({theme}) => ({
+styled('div')(({theme}) => ({
     display: 'flex',
     flexWrap: 'wrap',
     justifyContent: 'flex-end',
@@ -53,21 +50,13 @@ const StyledCover = styled('img')({
 // ----------------------------------------------------------------------
 
 BusinessDetailsCard.propTypes = {
-    business: PropTypes.object.isRequired,
-    index: PropTypes.number,
+    business: PropTypes.object.isRequired
 };
 
 export default function BusinessDetailsCard({business}) {
-    const {cover, title, view, comment, share, author, createdAt, description} = business;
+    const {cover, title, author, createdAt, description} = business;
     const latestPostLarge = true;
     const latestPost = false;
-
-
-    const POST_INFO = [
-        {number: comment, icon: 'eva:message-circle-fill'},
-        {number: view, icon: 'eva:eye-fill'},
-        {number: share, icon: 'eva:share-fill'},
-    ];
 
     return (
         <Card sx={{position: 'relative'}}>

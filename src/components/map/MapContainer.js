@@ -1,16 +1,13 @@
 import React, {useState} from 'react'
 import {Autocomplete, GoogleMap, LoadScript , Marker} from '@react-google-maps/api';
-import {InputAdornment, TextField} from "@mui/material";
-import {Outlet} from "react-router-dom";
 import PROYECT_CONFIG from "../../config/config";
-import Iconify from "../iconify";
 
 const containerStyle = {
     width: '100%',
     height: '100%'
 };
 
-export default function MapContainer({map, setAdress , geolocation , children}) {
+export default function MapContainer({map, setAddress , geolocation , children}) {
     const {address, latitude, longitude} = geolocation;
     const [ libs ] = useState(['places']);
 
@@ -21,7 +18,7 @@ export default function MapContainer({map, setAdress , geolocation , children}) 
 
     const onLoad = (autocomplete) => {
         autocomplete.addListener('place_changed', () => {
-            setAdress(autocomplete.getPlace())
+            setAddress(autocomplete.getPlace())
         });
     };
 

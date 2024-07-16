@@ -1,4 +1,4 @@
-import {Navigate, useNavigate, useRoutes} from 'react-router-dom';
+import {Navigate, useRoutes} from 'react-router-dom';
 // layouts
 import DashboardLayout from './layouts/dashboard';
 //
@@ -7,7 +7,6 @@ import UserPage from './pages/user/UserPage';
 import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
 import ProductsPage from './pages/ProductsPage';
-import DashboardAppPage from './pages/DashboardAppPage';
 import ProtectedLayout from './layouts/protected/ProtectedLayout';
 import CreateUserPage from "./pages/user/CreateUserPage";
 import BusinessPage from "./pages/business/BusinessPage";

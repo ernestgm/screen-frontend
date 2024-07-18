@@ -24,7 +24,7 @@ export default function Dashboard() {
 
         <Grid container spacing={3}>
           <Grid item xs={12} md={12} lg={12}>
-            <BusinessResume />
+            {/* <BusinessResume /> */}
           </Grid>
         </Grid>
       </Container>

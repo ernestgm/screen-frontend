@@ -12,7 +12,7 @@ const navConfig = [
     title: 'home',
     path: '/dashboard/app',
     icon: icon('ri:dashboard-2-line'),
-    roles: ['admin']
+    roles: ['admin', 'owner', 'editor']
   },
   {
     title: 'business',

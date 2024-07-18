@@ -2,6 +2,7 @@ import {useNavigate} from "react-router-dom";
 import {Helmet} from 'react-helmet-async';
 import {filter} from 'lodash';
 import React, {useEffect, useState} from 'react';
+import {Centrifuge} from "centrifuge";
 // @mui
 import {
     Card,
@@ -20,6 +21,7 @@ import {
     TableContainer,
     TablePagination,
 } from '@mui/material';
+
 // table
 import Iconify from '../../components/iconify';
 import Scrollbar from '../../components/scrollbar';
@@ -30,6 +32,7 @@ import {formatDate} from "../../utils/formatTime";
 import useMessagesAlert from "../../hooks/messages/useMessagesAlert";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import PROYECT_CONFIG from "../../config/config";
+
 
 
 // ----------------------------------------------------------------------
@@ -199,9 +202,38 @@ export default function DevicePage() {
 
     const isNotFound = !filteredDevices.length && !!filterName;
 
+
+    const generateToken = (secretKey) => {
+        return jwt.sign(
+            {
+                sub: "323232"
+            },
+            secretKey
+        );
+    }
+    
+    const centrifuge = new Centrifuge('ws://localhost:8000/connection/websocket', {
+        token: generateToken("MEcvUw7o5RpJsgeF9Ay"),
+    });
+    
+    const connectWs = () => {
+        centrifuge.connect();
+
+        centrifuge.on('connect', (ctx) => {
+            console.log('connected', ctx);
+        });
+
+        centrifuge.on('disconnect', (ctx) => {
+            console.log('disconnected', ctx);
+        });
+    }
+
     useEffect(() => {
         getUsers()
         getDevices()
+        connectWs()
+
+        return () => centrifuge.disconnect()
     }, []);
 
     return (

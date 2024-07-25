@@ -47,7 +47,7 @@ export default function Nav({ openNav, onCloseNav }) {
     const items = navConfig.filter((item) =>
         item.roles.includes(rol)
     );
-
+    console.log(items)
     setMenu(items);
   }
 
@@ -81,7 +81,7 @@ export default function Nav({ openNav, onCloseNav }) {
               </Typography>
 
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {account.role && account.role.name}
+                {account.roleName && account.roleName}
               </Typography>
             </Box>
           </StyledAccount>

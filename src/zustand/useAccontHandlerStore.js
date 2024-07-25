@@ -11,7 +11,7 @@ const useAccountHandlerStore = create(
                 useAuthStore.getState().currentUser ? useAuthStore.getState().currentUser.user.lastname : ''
             }`,
             email: `${useAuthStore.getState().currentUser ? useAuthStore.getState().currentUser.user.email : ''}`,
-            role: useAuthStore.getState().currentUser ? useAuthStore.getState().currentUser.role : '',
+            role: useAuthStore.getState().currentUser ? useAuthStore.getState().currentUser.user.role : '',
             photoURL: '/assets/images/avatars/avatar_default.jpg',
         },
 

@@ -81,7 +81,7 @@ export default function Nav({ openNav, onCloseNav }) {
               </Typography>
 
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {account.roleName && account.roleName}
+                {account.role && account.role.name}
               </Typography>
             </Box>
           </StyledAccount>

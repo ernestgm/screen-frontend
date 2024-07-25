@@ -46,8 +46,8 @@ const PROYECT_CONFIG = {
             DELETE: '/products',
             ALL: '/products',
         },
+        GOOGLE_API_KEY: process.env.GOOGLE_API_KEY
     },
-    GOOGLE_API_KEY: 'AIzaSyCUcpKY6fcESOmIpZfYlNRZNLS1dA0is-g'
 }
 
 export default PROYECT_CONFIG;

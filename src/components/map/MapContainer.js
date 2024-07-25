@@ -10,6 +10,7 @@ const containerStyle = {
 export default function MapContainer({map, setAddress , geolocation , children}) {
     const {address, latitude, longitude} = geolocation;
     const [ libs ] = useState(['places']);
+    const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
     const center = {
         lat: latitude ? parseFloat(latitude) : 0,
@@ -24,7 +25,7 @@ export default function MapContainer({map, setAddress , geolocation , children})
 
     return (
         <LoadScript
-            googleMapsApiKey={PROYECT_CONFIG.GOOGLE_API_KEY}
+            googleMapsApiKey={apiKey}
             libraries={libs}
         >
             {map ?

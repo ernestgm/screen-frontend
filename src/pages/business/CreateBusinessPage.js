@@ -205,7 +205,7 @@ export default function CreateBusinessPage() {
                                 }
                             </Select>
                         </FormControl>
-                        <MapContainer setAdress={chanceAddress} geolocation={formData} >
+                        <MapContainer setAddress={chanceAddress} geolocation={formData} >
                             <TextField
                                 id="address"
                                 name="address"

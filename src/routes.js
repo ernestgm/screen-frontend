@@ -35,7 +35,7 @@ export default function Router() {
               // Business
             { path: 'business', element: <BusinessPage /> },
             { path: 'business/create', element: <CreateBusinessPage /> },
-            { path: 'businessEdit/:id', element: <CreateBusinessPage /> },
+            { path: 'business/edit/:id', element: <CreateBusinessPage /> },
             { path: 'business/details/:id', element: <DetailsBusinessPage /> },
               // Areas
             { path: 'area/details/:id', element: <DetailsAreasPage /> },

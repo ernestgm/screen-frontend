@@ -1,7 +1,4 @@
-import {useNavigate} from "react-router-dom";
 import {Helmet} from 'react-helmet-async';
-import {filter} from 'lodash';
-import {sentenceCase} from 'change-case';
 import {useEffect, useState} from 'react';
 // @mui
 import {
@@ -24,7 +21,6 @@ import {
     TablePagination, Collapse, Alert, Box,
 } from '@mui/material';
 // table
-import Label from '../../components/label';
 import Iconify from '../../components/iconify';
 import Scrollbar from '../../components/scrollbar';
 // sections
@@ -35,6 +31,7 @@ import useMessagesAlert from "../../hooks/messages/useMessagesAlert";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import PROYECT_CONFIG from "../../config/config";
 import {applySortFilter, getComparator} from "../../utils/table/tableFunctions";
+import useNavigateTo from "../../hooks/navigateTo";
 
 
 // ----------------------------------------------------------------------
@@ -50,14 +47,14 @@ const TABLE_HEAD = [
 const PAGE_NAME = 'Business';
 const URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.BUSINESS.ALL;
 const URL_DELETE_ROW = PROYECT_CONFIG.API_CONFIG.BUSINESS.DELETE;
-const PATH_EDIT_ROW = `/dashboard/business/edit/`;
+const PATH_EDIT_ROW = `/dashboard/businessEdit/`;
 const PATH_NEW_ROW = '/dashboard/business/create';
 const PATH_DETAILS_ROW = '/dashboard/business/details/';
 
 // ----------------------------------------------------------------------
 
 export default function UserPage() {
-    const navigate = useNavigate();
+    const { navigateTo } = useNavigateTo();
 
     const [dataTable, setDataTable] = useState([]);
 
@@ -161,7 +158,7 @@ export default function UserPage() {
     };
 
     const newRowHandleClick = () => {
-        navigate(PATH_NEW_ROW, {replace: true});
+        navigateTo(PATH_NEW_ROW);
     };
 
     const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - dataTable.length) : 0;
@@ -172,12 +169,12 @@ export default function UserPage() {
 
     const handleEditItemClick = (item) => {
         handleCloseMenu()
-        navigate(`${PATH_EDIT_ROW}${item.id}`, {replace: true})
+        navigateTo(`${PATH_EDIT_ROW}${item.id}`)
     }
 
     const handleDetailsItemClick = (item) => {
         handleCloseMenu()
-        navigate(`${PATH_DETAILS_ROW}${item.id}`, {replace: true})
+        navigateTo(`${PATH_DETAILS_ROW}${item.id}`)
     }
 
     const handleDeleteItemClick = (item) => {

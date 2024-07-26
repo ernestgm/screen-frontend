@@ -1,4 +1,3 @@
-import {useNavigate} from "react-router-dom";
 import {Helmet} from 'react-helmet-async';
 import {filter} from 'lodash';
 import {useEffect, useState} from 'react';
@@ -33,6 +32,7 @@ import useMessagesAlert from "../../hooks/messages/useMessagesAlert";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import PROYECT_CONFIG from "../../config/config";
 import palette from "../../theme/palette";
+import useNavigateTo from "../../hooks/navigateTo";
 
 
 // ----------------------------------------------------------------------
@@ -78,7 +78,7 @@ function applySortFilter(array, comparator, query) {
 }
 
 export default function UserPage() {
-    const navigate = useNavigate();
+    const {navigateTo} = useNavigateTo();
 
     const [users, setUsers] = useState([]);
 
@@ -182,7 +182,7 @@ export default function UserPage() {
     };
 
     const newUserHandleClick = () => {
-        navigate('/dashboard/user/create', {replace: true});
+        navigateTo('/dashboard/user/create');
     };
 
     const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users.length) : 0;
@@ -193,7 +193,7 @@ export default function UserPage() {
 
     const handleEditItemClick = (item) => {
         handleCloseMenu()
-        navigate(`/dashboard/user/edit/${item.id}`, {replace: true})
+        navigateTo(`/dashboard/user/edit/${item.id}`)
     }
 
     const handleDeleteItemClick = (item) => {

@@ -1,14 +1,14 @@
-import {useNavigate} from "react-router-dom";
 import {Button} from "@mui/material";
 import Iconify from "../../../components/iconify";
+import useNavigateTo from "../../../hooks/navigateTo";
 
 
 
 export default function BackButton({path}) {
-    const navigate = useNavigate();
+    const {navigateTo} = useNavigateTo();
 
     const handleOnClick = () => {
-        navigate(path)
+        navigateTo(path)
     };
 
     return (

@@ -28,7 +28,6 @@ export default function BusinessResume({...other}) {
             showMessageSnackbar(msg, 'error');
         })
 
-        console.log(response)
         if (response) {
             setBusinesses(Object.values(response.data));
         }
@@ -39,7 +38,6 @@ export default function BusinessResume({...other}) {
             showMessageSnackbar(msg, 'error');
         })
 
-        console.log(response)
         if (response) {
             showMessageAlert(`JSON URL: ${response.json_url}`, 'success')
         }

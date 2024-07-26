@@ -69,13 +69,11 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
     const showMessageSnackbar = useMessagesSnackbar();
 
     const getProducts = async () => {
-        console.log(image);
         const response = await api.__get(`${PRODUCT_URL_GET_DATA}?image_id=${image}`, (msg) => {
             showMessageSnackbar(msg, 'error');
         })
 
         if (response) {
-            console.log(response)
             setDataTable(Object.values(response.data));
         }
     };
@@ -226,11 +224,8 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
 
         if (image === undefined) {
             if (update) {
-                console.log(formData)
                 const updatedItems = dataTable.map((item) => {
                     if (item.id === formData.id) {
-                        console.log(item)
-                        console.log(formData)
                         return {...item, name: formData.name, price: formData.price};
                     }
                     return item;
@@ -306,7 +301,6 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
         if (response) {
             navigator.clipboard.writeText(response.route);
             showMessageSnackbar(`Copy to clipboard: ${response.route}`, 'success');
-            console.log(response)
         }
     };
 

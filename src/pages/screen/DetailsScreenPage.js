@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {useNavigate, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 // @mui
 import {Helmet} from 'react-helmet-async';
 import {
@@ -15,6 +15,7 @@ import PROYECT_CONFIG from "../../config/config";
 import TitlePageDetails from "../../sections/@dashboard/app/TitlePageDetails";
 import ImageDataTable from "./ImageDataTable";
 import Iconify from "../../components/iconify";
+import useNavigateTo from "../../hooks/navigateTo";
 
 
 
@@ -26,7 +27,7 @@ const URL_TABLES_PAGE = '/dashboard/area/details/';
 const URL_CREATE_IMAGE = '/dashboard/image/create/';
 
 export default function DetailsScreenPage() {
-    const navigate = useNavigate();
+    const {navigateTo} = useNavigateTo();
     const showSnackbarMessage = useMessagesSnackbar();
     const {id} = useParams();
     const {api} = useApiHandlerStore((state) => state);
@@ -63,7 +64,7 @@ export default function DetailsScreenPage() {
     }, [])
 
     const handleClickNew = () => {
-        navigate(`${URL_CREATE_IMAGE}${id}`, {replace: true});
+        navigateTo(`${URL_CREATE_IMAGE}${id}`);
     }
 
     return (

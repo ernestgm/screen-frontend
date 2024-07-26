@@ -2,7 +2,6 @@ import {Navigate, useRoutes} from 'react-router-dom';
 // layouts
 import DashboardLayout from './layouts/dashboard';
 //
-import BlogPage from './pages/BlogPage';
 import UserPage from './pages/user/UserPage';
 import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
@@ -36,7 +35,7 @@ export default function Router() {
               // Business
             { path: 'business', element: <BusinessPage /> },
             { path: 'business/create', element: <CreateBusinessPage /> },
-            { path: 'business/edit/:id', element: <CreateBusinessPage /> },
+            { path: 'businessEdit/:id', element: <CreateBusinessPage /> },
             { path: 'business/details/:id', element: <DetailsBusinessPage /> },
               // Areas
             { path: 'area/details/:id', element: <DetailsAreasPage /> },
@@ -57,7 +56,6 @@ export default function Router() {
 
             // Others
             { path: 'products', element: <ProductsPage /> },
-            { path: 'blog', element: <BlogPage /> },
           ],
         },
       ],

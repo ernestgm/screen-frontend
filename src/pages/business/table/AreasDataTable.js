@@ -1,5 +1,4 @@
 import {useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
 import {
     Avatar, Button, Card, Dialog,
     Checkbox, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, MenuItem, Paper, Popover,
@@ -20,6 +19,7 @@ import useApiHandlerStore from "../../../zustand/useApiHandlerStore";
 import useMessagesAlert from "../../../hooks/messages/useMessagesAlert";
 import useMessagesSnackbar from "../../../hooks/messages/useMessagesSnackbar";
 import {applySortFilter, getComparator} from "../../../utils/table/tableFunctions";
+import useNavigateTo from "../../../hooks/navigateTo";
 
 
 // Area Table
@@ -39,7 +39,7 @@ const AREA_TABLE_HEAD = [
 ];
 
 export default function AreasDataTable({business}) {
-    const navigate = useNavigate();
+    const {navigateTo} = useNavigateTo();
 
     const [dataTable, setDataTable] = useState([]);
 
@@ -69,7 +69,6 @@ export default function AreasDataTable({business}) {
         })
 
         if (response) {
-            console.log(response)
             setDataTable(Object.values(response.data));
         }
     };
@@ -161,7 +160,7 @@ export default function AreasDataTable({business}) {
 
     const handleDetailsItemClick = (item) => {
         handleCloseMenu()
-        navigate(`${ROUTE_DETAILS_ROW}${item.id}`, {replace: true})
+        navigateTo(`${ROUTE_DETAILS_ROW}${item.id}`)
     }
 
     const handleDeleteItemClick = (item) => {
@@ -197,7 +196,6 @@ export default function AreasDataTable({business}) {
     };
 
     const createNewAreaAction = async () => {
-        console.log(formData);
         let response;
 
         if (update) {

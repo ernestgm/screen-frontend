@@ -1,4 +1,3 @@
-import {useNavigate} from "react-router-dom";
 import {Helmet} from 'react-helmet-async';
 import {filter} from 'lodash';
 import React, {useEffect, useState} from 'react';

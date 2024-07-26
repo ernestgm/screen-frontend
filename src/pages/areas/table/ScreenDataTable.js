@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
 import {
     Button, Card, Dialog,
     Checkbox, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, MenuItem, Paper, Popover,
@@ -22,6 +21,7 @@ import useMessagesAlert from "../../../hooks/messages/useMessagesAlert";
 import useMessagesSnackbar from "../../../hooks/messages/useMessagesSnackbar";
 import {applySortFilter, getComparator} from "../../../utils/table/tableFunctions";
 import palette from "../../../theme/palette";
+import useNavigateTo from "../../../hooks/navigateTo";
 
 
 
@@ -45,7 +45,7 @@ const TABLE_HEAD = [
 
 
 export default function ScreenDataTable({area}) {
-    const navigate = useNavigate();
+    const {navigateTo} = useNavigateTo();
     const [dataTable, setDataTable] = useState([]);
     const [open, setOpen] = useState(false);
     const [openNewDialog, setOpenNewDialog] = useState(false);
@@ -79,7 +79,6 @@ export default function ScreenDataTable({area}) {
         })
 
         if (response) {
-            console.log(response)
             setDataTable(Object.values(response.data));
         }
     };
@@ -171,7 +170,7 @@ export default function ScreenDataTable({area}) {
 
     const handleDetailsItemClick = (item) => {
         handleCloseMenu()
-        navigate(`${ROUTE_DETAILS_ROW}${item.id}`, {replace: true})
+        navigateTo(`${ROUTE_DETAILS_ROW}${item.id}`)
     }
 
     const handleDeleteItemClick = (item) => {
@@ -242,7 +241,6 @@ export default function ScreenDataTable({area}) {
             if (changeCode) {
                 editFormData.code = formData.code
             }
-            console.log(editFormData)
 
             response = await api.__update(`${SCREEN_URL_UPDATE_ROW}${update}`, editFormData, (msg) => {
                 showMessageSnackbar(msg, 'error');

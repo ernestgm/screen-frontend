@@ -3,12 +3,11 @@ import { useState, } from 'react';
 import { alpha } from '@mui/material/styles';
 import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton, Popover } from '@mui/material';
 // mocks_
-import { useNavigate } from 'react-router-dom';
 import useAuthStore from '../../../zustand/useAuthStore';
 import useApiHandlerStore from "../../../zustand/useApiHandlerStore";
 import useAccontHandlerStore from "../../../zustand/useAccontHandlerStore";
-import useGlobalMessageStore from "../../../zustand/useGlobalMessageStore";
 import useMessagesSnackbar from "../../../hooks/messages/useMessagesSnackbar";
+import useNavigateTo from "../../../hooks/navigateTo";
 
 // ----------------------------------------------------------------------
 
@@ -33,7 +32,7 @@ const MENU_OPTIONS = [
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
-  const navigate = useNavigate();
+  const { navigateTo } = useNavigateTo();
   const [open, setOpen] = useState(null);
   const { resetCurrentUser, userAccount } = useAuthStore((state) => state);
   const { account } = useAccontHandlerStore((state) => state);
@@ -46,7 +45,6 @@ export default function AccountPopover() {
   };
 
   const handleClose = (e) => {
-    console.log(e)
     setOpen(null);
   };
 
@@ -60,15 +58,13 @@ export default function AccountPopover() {
     if (response) {
       setOpen(null);
       resetCurrentUser();
-      navigate('/');
+      navigateTo('/');
     }
   };
 
   const handleListItemClick = async (tag) => {
     if (tag === 'home') {
-      console.log(account)
       const response = await api.__get('/users');
-      console.log(response)
     }
   };
 

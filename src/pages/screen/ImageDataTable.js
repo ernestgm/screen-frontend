@@ -13,7 +13,6 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import {useEffect, useState} from "react";
 import {MenuItem, Popover, Stack} from "@mui/material";
-import {useNavigate} from "react-router-dom";
 import Iconify from "../../components/iconify";
 import PROYECT_CONFIG from "../../config/config";
 import useApiHandlerStore from "../../zustand/useApiHandlerStore";
@@ -21,6 +20,7 @@ import useMessagesAlert from "../../hooks/messages/useMessagesAlert";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import {fCurrency} from "../../utils/formatNumber";
 import {formatDate} from "../../utils/formatTime";
+import useNavigateTo from "../../hooks/navigateTo";
 
 
 const URL_GET_ROUTE_JSON = PROYECT_CONFIG.API_CONFIG.BUSINESS.ROUTE_JSON;
@@ -37,7 +37,6 @@ function Row(props) {
         if (response) {
             navigator.clipboard.writeText(response.route);
             showSnackbarMessage(`Copy to clipboard: ${response.route}`, 'success');
-            console.log(response)
         }
     };
 
@@ -170,7 +169,7 @@ const URL_EDIT_IMAGE = '/dashboard/image/edit/';
 
 
 export default function ImageDataTable({screen}) {
-    const navigate = useNavigate();
+    const {navigateTo} = useNavigateTo();
     const [open, setOpen] = useState(false);
     const {api} = useApiHandlerStore((state) => state);
     const showMessageAlert = useMessagesAlert();
@@ -198,7 +197,7 @@ export default function ImageDataTable({screen}) {
 
     const editAction = async (id) => {
         handleCloseMenu()
-        navigate(`${URL_EDIT_IMAGE}${screen}/${id}`, {replace: true});
+        navigateTo(`${URL_EDIT_IMAGE}${screen}/${id}`);
     }
 
     const handleDeleteItemClick = (item) => {
@@ -219,7 +218,6 @@ export default function ImageDataTable({screen}) {
         })
 
         if (response) {
-            console.log(response)
             setRows(Object.values(response.data))
         }
     };

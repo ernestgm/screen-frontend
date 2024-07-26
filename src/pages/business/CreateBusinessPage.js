@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {useNavigate, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 // @mui
 import {Helmet} from 'react-helmet-async';
 import {
@@ -30,6 +30,7 @@ import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import PROYECT_CONFIG from "../../config/config";
 import { MapContainer } from "../../components/map";
+import useNavigateTo from "../../hooks/navigateTo";
 
 // ----------------------------------------------------------------------
 
@@ -42,7 +43,7 @@ const URL_GET_ITEM_FOR_UPDATE = PROYECT_CONFIG.API_CONFIG.BUSINESS.GET;
 export default function CreateBusinessPage() {
     const showSnackbarMessage = useMessagesSnackbar();
     const {id} = useParams();
-    const navigate = useNavigate();
+    const { navigateTo } = useNavigateTo();
     const {api} = useApiHandlerStore((state) => state);
     const [validator, setValidator] = useState({});
     const [formData, setFormData] = useState({
@@ -68,7 +69,6 @@ export default function CreateBusinessPage() {
     };
 
     const chanceAddress = (place) => {
-        console.log(place.geometry);
         setFormData((prevFormData) => ({
             ...prevFormData,
             address: place.formatted_address,
@@ -78,7 +78,6 @@ export default function CreateBusinessPage() {
     }
 
     const chanceAutocomplete = (autocomplete) => {
-        console.log(autocomplete);
         setAutocomplete(autocomplete);
     }
 
@@ -100,7 +99,7 @@ export default function CreateBusinessPage() {
             if (response.success) {
                 const msg = id ? `${NAME_PAGE} updated successfully!` : `${NAME_PAGE} added successfully!`;
                 showSnackbarMessage(msg, 'success');
-                navigate(URL_TABLES_PAGE)
+                navigateTo(URL_TABLES_PAGE)
             } else {
                 setValidator(response && response.data)
             }

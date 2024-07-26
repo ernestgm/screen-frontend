@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {useNavigate, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 // @mui
 import {Helmet} from 'react-helmet-async';
 import {
@@ -18,6 +18,7 @@ import BackButton from "../../sections/@dashboard/app/AppBackButton";
 import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import PROYECT_CONFIG from "../../config/config";
+import useNavigateTo from "../../hooks/navigateTo";
 
 
 // ----------------------------------------------------------------------
@@ -25,7 +26,7 @@ import PROYECT_CONFIG from "../../config/config";
 export default function CreateUserPage() {
     const showSnackbarMessage = useMessagesSnackbar();
     const {id} = useParams();
-    const navigate = useNavigate();
+    const {navigateTo} = useNavigateTo();
     const {api} = useApiHandlerStore((state) => state);
     const [validator, setValidator] = useState({});
     const [showPassword, setShowPassword] = useState(false);
@@ -67,7 +68,6 @@ export default function CreateUserPage() {
 
     const handleChangePassword = (event) => {
         const {value} = event.target;
-        console.log(value)
         setChangePassword(!changePassword)
     }
 
@@ -86,7 +86,6 @@ export default function CreateUserPage() {
                 editFormData.password = formData.password
                 editFormData.c_password = formData.c_password
             }
-            console.log(editFormData);
             response = await api.__update(`/user/update/${id}`, editFormData, (msg) => {
                 showSnackbarMessage(msg, 'error');
             });
@@ -100,7 +99,7 @@ export default function CreateUserPage() {
             if (response.success) {
                 const msg = id ? 'User updated successfully!' : 'User added successfully!';
                 showSnackbarMessage(msg, 'success');
-                navigate('/dashboard/user')
+                navigateTo('/dashboard/user')
             } else {
                 setValidator(response && response.data)
             }

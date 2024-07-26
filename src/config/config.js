@@ -12,6 +12,7 @@ const PROYECT_CONFIG = {
         BUSINESS: {
             CREATE: '/business',
             GET: '/business/',
+            RESUME: '/businesses/resume',
             UPDATE: '/business/update/',
             DELETE: '/businesses',
             ALL: '/businesses',

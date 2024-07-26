@@ -1,5 +1,4 @@
 import {useState} from 'react';
-import {useNavigate} from 'react-router-dom';
 // @mui
 import {Stack, IconButton, InputAdornment, TextField, Divider} from '@mui/material';
 import {LoadingButton} from '@mui/lab';
@@ -8,10 +7,11 @@ import Iconify from '../../../components/iconify';
 import useAuthStore from '../../../zustand/useAuthStore';
 import useApiHandlerStore from "../../../zustand/useApiHandlerStore";
 import useMessagesSnackbar from "../../../hooks/messages/useMessagesSnackbar";
+import useNavigateTo from "../../../hooks/navigateTo";
 // ----------------------------------------------------------------------
 
 export default function LoginForm() {
-    const navigate = useNavigate();
+    const {navigateTo} = useNavigateTo();
     const {setCurrentUser} = useAuthStore((state) => state);
 
     const [showPassword, setShowPassword] = useState(false);
@@ -33,9 +33,8 @@ export default function LoginForm() {
         });
 
         if (userData) {
-            console.log(userData)
             setCurrentUser(userData.success)
-            navigate('/', {replace: true});
+            navigateTo('/');
         }
     };
 

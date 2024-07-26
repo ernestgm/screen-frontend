@@ -47,7 +47,6 @@ export default function Nav({ openNav, onCloseNav }) {
     const items = navConfig.filter((item) =>
         item.roles.includes(rol)
     );
-    console.log(items)
     setMenu(items);
   }
 

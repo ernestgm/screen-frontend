@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {useNavigate, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 // @mui
 import {Helmet} from 'react-helmet-async';
 import {
@@ -41,13 +41,11 @@ export default function DetailsAreasPage() {
             showSnackbarMessage(msg, 'error');
         });
         if (response) {
-            console.log(response)
             setArea(response.data);
         }
     }
 
     useEffect(() => {
-        console.log(id);
         getAreaDetails();
     }, [])
 

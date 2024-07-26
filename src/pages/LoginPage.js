@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 // @mui
 import { styled } from '@mui/material/styles';
@@ -14,6 +13,7 @@ import { LoginForm } from '../sections/auth/login';
 import useAuthStore from '../zustand/useAuthStore';
 import GlobalNotification from "../components/snackbar";
 import PROYECT_CONFIG from "../config/config";
+import useNavigateTo from "../hooks/navigateTo";
 
 // ----------------------------------------------------------------------
 
@@ -46,13 +46,13 @@ const StyledContent = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function LoginPage(props) {
-  const navigate = useNavigate();
+  const {navigateTo} = useNavigateTo();
   const mdUp = useResponsive('up', 'md');
   const { currentUser } = useAuthStore((state) => state);
 
   useEffect(() => {
     if (currentUser) {
-      navigate('/', { replace: true });
+      navigateTo('/');
     }
   }, []);
 

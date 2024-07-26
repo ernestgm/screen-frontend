@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {useNavigate, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 // @mui
 import {Helmet} from 'react-helmet-async';
 import {
@@ -17,6 +17,7 @@ import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import PROYECT_CONFIG from "../../config/config";
 import ProductsDataTable from "./table/ProductsDataTable";
 import {SaveImage} from "../../components/save-image";
+import useNavigateTo from "../../hooks/navigateTo";
 
 // ----------------------------------------------------------------------
 
@@ -29,7 +30,7 @@ const URL_GET_ITEM_FOR_UPDATE = PROYECT_CONFIG.API_CONFIG.IMAGE.GET;
 export default function CreateImagePage() {
     const showSnackbarMessage = useMessagesSnackbar();
     const {pscreen, pimage } = useParams();
-    const navigate = useNavigate();
+    const {navigateTo} = useNavigateTo();
     const {api} = useApiHandlerStore((state) => state);
     const [validator, setValidator] = useState({});
     const [formData, setFormData] = useState({
@@ -59,14 +60,12 @@ export default function CreateImagePage() {
     };
 
     const handleUploadImage = (images) => {
-        console.log(images);
 
         setFormData((prevFormData) => ({
             ...prevFormData,
             image: images
         }));
 
-        console.log(formData);
     }
 
     const handleSubmit = async (e) => {
@@ -87,7 +86,7 @@ export default function CreateImagePage() {
             if (response.success) {
                 const msg = pimage ? `${NAME_PAGE} updated successfully!` : `${NAME_PAGE} added successfully!`;
                 showSnackbarMessage(msg, 'success');
-                navigate(`${URL_BACK}${pscreen}`)
+                navigateTo(`${URL_BACK}${pscreen}`)
             } else {
                 setValidator(response && response.data)
             }
@@ -100,7 +99,6 @@ export default function CreateImagePage() {
         });
 
         if (response) {
-            console.log(response)
             setFormData({
                 name: response.data.name,
                 description: response.data.description,

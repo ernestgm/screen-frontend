@@ -5,6 +5,7 @@ import useAuthStore from "./useAuthStore";
 const useAccountHandlerStore = create(
     (set, get) => ({
         account: {
+            uid: `${useAuthStore.getState().currentUser ? useAuthStore.getState().currentUser.user.id : ''}`,
             displayName: `${
                 useAuthStore.getState().currentUser ? useAuthStore.getState().currentUser.user.name : ''
             } ${
@@ -18,6 +19,7 @@ const useAccountHandlerStore = create(
         // new ApiHandler(),
         setAccountData: (user) => set({
             account: {
+                uid: `${user.id}`,
                 displayName: `${user.name} ${user.lastname}`,
                 email: `${user.email}`,
                 role: user.role,

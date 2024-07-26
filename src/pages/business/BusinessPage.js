@@ -47,7 +47,7 @@ const TABLE_HEAD = [
 const PAGE_NAME = 'Business';
 const URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.BUSINESS.ALL;
 const URL_DELETE_ROW = PROYECT_CONFIG.API_CONFIG.BUSINESS.DELETE;
-const PATH_EDIT_ROW = `/dashboard/businessEdit/`;
+const PATH_EDIT_ROW = `/dashboard/business/edit/`;
 const PATH_NEW_ROW = '/dashboard/business/create';
 const PATH_DETAILS_ROW = '/dashboard/business/details/';
 

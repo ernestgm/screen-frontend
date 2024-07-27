@@ -4,10 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d4767243-8cf2-4570-929d-1212d7106fb6" name="Changes" comment="home info">
+    <list default="true" id="d4767243-8cf2-4570-929d-1212d7106fb6" name="Changes" comment="fixed route review">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/dashboard/nav/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/dashboard/nav/config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/protected/ProtectedLayout.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/protected/ProtectedLayout.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/business/BusinessPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/business/BusinessPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/business/CreateBusinessPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/business/CreateBusinessPage.js" afterDir="false" />
     </list>
     <list id="d4ad349c-1410-4760-87b2-6c449dfa42b6" name="ignore" comment="CRUD Business" />
     <option name="SHOW_DIALOG" value="false" />
@@ -28,7 +29,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="setup_home_info" />
+        <entry key="$PROJECT_DIR$" value="adonis/fix-routes" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />

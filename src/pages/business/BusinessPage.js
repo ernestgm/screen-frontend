@@ -32,6 +32,7 @@ import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import PROYECT_CONFIG from "../../config/config";
 import {applySortFilter, getComparator} from "../../utils/table/tableFunctions";
 import useNavigateTo from "../../hooks/navigateTo";
+import useAuthStore from "../../zustand/useAuthStore";
 
 
 // ----------------------------------------------------------------------
@@ -50,6 +51,7 @@ const URL_DELETE_ROW = PROYECT_CONFIG.API_CONFIG.BUSINESS.DELETE;
 const PATH_EDIT_ROW = `/dashboard/business/edit/`;
 const PATH_NEW_ROW = '/dashboard/business/create';
 const PATH_DETAILS_ROW = '/dashboard/business/details/';
+const ADMIN_TAG = PROYECT_CONFIG.API_CONFIG.ROLES.ADMIN
 
 // ----------------------------------------------------------------------
 
@@ -72,13 +74,14 @@ export default function UserPage() {
 
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
-
+    const { currentUser } = useAuthStore((state) => state);
     const {api} = useApiHandlerStore((state) => state);
     const showMessageAlert = useMessagesAlert();
     const showMessageSnackbar = useMessagesSnackbar()
 
     const getDataTable = async () => {
-        const response = await api.__get(URL_GET_DATA, (msg) => {
+        const params = (currentUser && currentUser.user.role.tag !== ADMIN_TAG) ? `?userId=${currentUser.user.id}` : ''
+        const response = await api.__get(`${URL_GET_DATA}${params}`, (msg) => {
             showMessageSnackbar(msg, 'error');
         })
 

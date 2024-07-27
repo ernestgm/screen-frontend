@@ -31,6 +31,7 @@ import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import PROYECT_CONFIG from "../../config/config";
 import { MapContainer } from "../../components/map";
 import useNavigateTo from "../../hooks/navigateTo";
+import useAuthStore from "../../zustand/useAuthStore";
 
 // ----------------------------------------------------------------------
 
@@ -39,18 +40,20 @@ const URL_UPDATE = PROYECT_CONFIG.API_CONFIG.BUSINESS.UPDATE;
 const URL_CREATE = PROYECT_CONFIG.API_CONFIG.BUSINESS.CREATE;
 const URL_TABLES_PAGE = '/dashboard/business';
 const URL_GET_ITEM_FOR_UPDATE = PROYECT_CONFIG.API_CONFIG.BUSINESS.GET;
+const ADMIN_TAG = PROYECT_CONFIG.API_CONFIG.ROLES.ADMIN
 
 export default function CreateBusinessPage() {
     const showSnackbarMessage = useMessagesSnackbar();
     const {id} = useParams();
     const { navigateTo } = useNavigateTo();
+    const { currentUser } = useAuthStore((state) => state);
     const {api} = useApiHandlerStore((state) => state);
     const [validator, setValidator] = useState({});
     const [formData, setFormData] = useState({
         name: '',
         description: '',
-        logo: '',
-        user_id: '',
+        logo: 'example.png',
+        user_id: (currentUser && currentUser.user.role.tag !== ADMIN_TAG) ? currentUser.user.id : '',
         address: '',
         latitude: '',
         longitude: ''
@@ -132,6 +135,7 @@ export default function CreateBusinessPage() {
         });
 
         if (response) {
+            console.log(response.data)
             setOwners(Object.values(response.data));
         }
     }
@@ -183,6 +187,7 @@ export default function CreateBusinessPage() {
                             onChange={handleChange}
                             error={validator.logo && true}
                             helperText={validator.logo}
+                            style={{display: "none"}}
                         />
                         <FormControl fullWidth>
                             <InputLabel id="role-select-label">Select Owner</InputLabel>
@@ -193,12 +198,12 @@ export default function CreateBusinessPage() {
                                 value={formData.user_id}
                                 label="Select Owner"
                                 onChange={handleChange}
+                                disabled={(currentUser && currentUser.user.role.tag !== ADMIN_TAG)}
                             >
                                 {
                                     owners.map((user) => {
                                         return (
-                                            <MenuItem key={user.id}
-                                                      value={user.id}>{user.name} {user.lastname}</MenuItem>
+                                            <MenuItem key={user.id} value={user.id}>{user.name} {user.lastname} - Role: {user.role.name}</MenuItem>
                                         )
                                     })
                                 }

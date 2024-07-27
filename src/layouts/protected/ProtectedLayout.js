@@ -16,11 +16,11 @@ export default function ProtectedLayout(props) {
 
   const redirectUser = useCallback(() => {
     const pathWithAccess = filter(navConfig, (item) => item.roles.find((tag) => tag === currentUser?.user?.role?.tag));
-
+    pathWithAccess.push({path: '/dashboard'})
     if (!pathWithAccess.some((item) => pathname.includes(item.path))) {
       navigateTo('/401');
     }
-  }, [pathname, currentUser.user.role.tag, navigateTo]);
+  }, [pathname, currentUser && currentUser.user.role.tag, navigateTo]);
 
   useEffect(() => {
     if (!currentUser) {

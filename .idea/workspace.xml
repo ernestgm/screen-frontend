@@ -5,34 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d4767243-8cf2-4570-929d-1212d7106fb6" name="Changes" comment="home info">
-      <change afterPath="$PROJECT_DIR$/src/hooks/navigateTo.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/logo/Logo.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/logo/Logo.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/dashboard/header/AccountPopover.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/dashboard/header/AccountPopover.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/dashboard/nav/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/dashboard/nav/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layouts/dashboard/nav/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/dashboard/nav/config.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/layouts/protected/ProtectedLayout.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/protected/ProtectedLayout.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/BlogPage.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LoginPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LoginPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/areas/DetailsAreasPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/areas/DetailsAreasPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/areas/table/ScreenDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/areas/table/ScreenDataTable.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/business/BusinessPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/business/BusinessPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/business/CreateBusinessPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/business/CreateBusinessPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/business/DetailsBusinessPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/business/DetailsBusinessPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/business/table/AreasDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/business/table/AreasDataTable.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/devices/DevicesPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/devices/DevicesPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/images/CreateImagePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/images/CreateImagePage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/images/table/ProductsDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/images/table/ProductsDataTable.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/screen/DetailsScreenPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/screen/DetailsScreenPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/screen/ImageDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/screen/ImageDataTable.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/screen/ScreensPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/screen/ScreensPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/user/CreateUserPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/user/CreateUserPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/user/UserPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/user/UserPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sections/@dashboard/app/AppBackButton.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sections/@dashboard/app/AppBackButton.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sections/@dashboard/app/AppTasks.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sections/@dashboard/app/AppTasks.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sections/@dashboard/business/BusinessResume.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sections/@dashboard/business/BusinessResume.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sections/auth/login/LoginForm.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sections/auth/login/LoginForm.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/handlers/ApiHandler.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/handlers/ApiHandler.js" afterDir="false" />
     </list>
     <list id="d4ad349c-1410-4760-87b2-6c449dfa42b6" name="ignore" comment="CRUD Business" />
     <option name="SHOW_DIALOG" value="false" />

@@ -37,7 +37,7 @@ const navConfig = [
     path: '/dashboard/devices',
     icon: icon('mdi:cast-variant'),
     roles: ['admin']
-  },
+  }
   // {
   //   title: 'Not found',
   //   path: '/404',

@@ -141,6 +141,9 @@ export default function BusinessDetailsCard({business}) {
                 <Typography gutterBottom variant="caption" sx={{color: 'common.white', display: 'block'}}>
                     Description: {description}
                 </Typography>
+                <Typography gutterBottom variant="caption" sx={{color: 'common.white', display: 'block'}}>
+                    Owner: {author.name}
+                </Typography>
             </CardContent>
         </Card>
     );

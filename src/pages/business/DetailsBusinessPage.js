@@ -58,7 +58,7 @@ export default function DetailsBusinessPage() {
         });
         if (response) {
             const data = response.data;
-            setBusiness((oldData) =>(
+            setBusiness((oldData) => (
                 {
                     ...oldData,
                     id: data.id,
@@ -70,9 +70,9 @@ export default function DetailsBusinessPage() {
                         avatarUrl: oldData.author.avatarUrl,
                     },
                     geolocation: {
-                        address: data.geolocation.address,
-                        latitude: data.geolocation.latitude,
-                        longitude: data.geolocation.longitude
+                        address: data.geolocation ? data.geolocation.address : '',
+                        latitude: data.geolocation ? data.geolocation.latitude : '',
+                        longitude: data.geolocation ? data.geolocation.longitude : ''
                     }
                 }
             ))
@@ -100,30 +100,34 @@ export default function DetailsBusinessPage() {
                 </Stack>
                 <Grid container spacing={2} mb={5}>
                     <Grid item xs={12} md={5} lg={5}>
-                        { business && <BusinessDetailsCard business={business} /> }
+                        {business && <BusinessDetailsCard business={business}/>}
                     </Grid>
+
                     <Grid item xs={12} md={7} lg={7}>
-                        <Grid item xs={12} md={12} lg={12}>
-                            <Typography variant="h6" gutterBottom>
-                                Address: { business.geolocation.address }
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={12} md={12} lg={12} sx={{
-                            width: '100%',
-                            height: '85%',
-                        }}>
-                            <Card sx={{
+                        {business.geolocation.address !== "" && <>
+                            <Grid item xs={12} md={12} lg={12}>
+                                <Typography variant="h6" gutterBottom>
+                                    Address: {business.geolocation.address}
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12} md={12} lg={12} sx={{
                                 width: '100%',
-                                height: '100%',
+                                height: '85%',
                             }}>
-                                <MapContainer map geolocation={business.geolocation} />
-                            </Card>
-                        </Grid>
+                                <Card sx={{
+                                    width: '100%',
+                                    height: '100%',
+                                }}>
+                                    <MapContainer map geolocation={business.geolocation}/>
+                                </Card>
+                            </Grid>
+                        </>
+                        }
                     </Grid>
                 </Grid>
                 <Stack>
                     <Grid item xs={12} md={6} lg={8}>
-                        <AreasDataTable business={id} />
+                        <AreasDataTable business={id}/>
                     </Grid>
                 </Stack>
             </Container>

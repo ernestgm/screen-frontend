@@ -117,15 +117,15 @@ export default function CreateBusinessPage() {
         if (response) {
             setFormData({
                 name: response.data.name,
-                description: response.data.description,
+                description: response.data.description ? response.data.description : '',
                 logo: response.data.logo,
                 user_id: response.data.user_id,
-                address: response.data.geolocation.address,
-                latitude: response.data.geolocation.latitude,
-                longitude: response.data.geolocation.longitude,
+                address: response.data.geolocation ? response.data.geolocation.address : '',
+                latitude: response.data.geolocation ? response.data.geolocation.latitude : '',
+                longitude: response.data.geolocation ? response.data.geolocation.longitude : '',
             });
             const input = document.getElementById("address");
-            input.value = response.data.geolocation.address;
+            input.value = response.data.geolocation ? response.data.geolocation.address : '';
         }
     }
 
@@ -135,7 +135,6 @@ export default function CreateBusinessPage() {
         });
 
         if (response) {
-            console.log(response.data)
             setOwners(Object.values(response.data));
         }
     }
@@ -189,7 +188,11 @@ export default function CreateBusinessPage() {
                             helperText={validator.logo}
                             style={{display: "none"}}
                         />
-                        <FormControl fullWidth>
+                        <FormControl
+                            fullWidth
+                            error={validator.user_id && true}
+                            helperText={validator.user_id}
+                        >
                             <InputLabel id="role-select-label">Select Owner</InputLabel>
                             <Select
                                 name="user_id"
@@ -198,6 +201,7 @@ export default function CreateBusinessPage() {
                                 value={formData.user_id}
                                 label="Select Owner"
                                 onChange={handleChange}
+
                                 disabled={(currentUser && currentUser.user.role.tag !== ADMIN_TAG)}
                             >
                                 {

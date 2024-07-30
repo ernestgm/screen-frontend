@@ -30,7 +30,7 @@ const navConfig = [
     title: 'screens',
     path: '/dashboard/screens',
     icon: icon('mdi:monitor-dashboard'),
-    roles: ['admin']
+    roles: ['admin', 'owner']
   },
   {
     title: 'Devices',

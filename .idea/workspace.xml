@@ -4,12 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d4767243-8cf2-4570-929d-1212d7106fb6" name="Changes" comment="add user owner for bussines">
-      <change afterPath="$PROJECT_DIR$/src/pages/business/table/AreaModalDialog.js" afterDir="false" />
+    <list default="true" id="d4767243-8cf2-4570-929d-1212d7106fb6" name="Changes" comment="add create area on businnes table">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/dashboard/nav/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/dashboard/nav/config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/business/BusinessPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/business/BusinessPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/business/table/AreasDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/business/table/AreasDataTable.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/areas/table/ScreenDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/areas/table/ScreenDataTable.js" afterDir="false" />
     </list>
     <list id="d4ad349c-1410-4760-87b2-6c449dfa42b6" name="ignore" comment="CRUD Business" />
     <option name="SHOW_DIALOG" value="false" />
@@ -124,7 +121,7 @@
       <workItem from="1721695189860" duration="500000" />
       <workItem from="1721869968317" duration="5611000" />
       <workItem from="1722004701353" duration="9892000" />
-      <workItem from="1722178201922" duration="17493000" />
+      <workItem from="1722178201922" duration="21188000" />
     </task>
     <task id="LOCAL-00001" summary="User login Complete">
       <created>1680980627562</created>
@@ -374,7 +371,15 @@
       <option name="project" value="LOCAL" />
       <updated>1722303455591</updated>
     </task>
-    <option name="localTasksCounter" value="36" />
+    <task id="LOCAL-00036" summary="add create area on businnes table">
+      <option name="closed" value="true" />
+      <created>1722318291067</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1722318291067</updated>
+    </task>
+    <option name="localTasksCounter" value="37" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -405,7 +410,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="New Current User" />
     <MESSAGE value="Fixed CUrrent User Login" />
     <MESSAGE value="Create User Form" />
     <MESSAGE value="Create User Form, complete register User" />
@@ -430,6 +434,7 @@
     <MESSAGE value="fixed bussines page create and edit for owners" />
     <MESSAGE value="remove description a address bussiness required" />
     <MESSAGE value="add user owner for bussines" />
-    <option name="LAST_COMMIT_MESSAGE" value="add user owner for bussines" />
+    <MESSAGE value="add create area on businnes table" />
+    <option name="LAST_COMMIT_MESSAGE" value="add create area on businnes table" />
   </component>
 </project>

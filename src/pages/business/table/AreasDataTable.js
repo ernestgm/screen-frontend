@@ -20,6 +20,7 @@ import useMessagesAlert from "../../../hooks/messages/useMessagesAlert";
 import useMessagesSnackbar from "../../../hooks/messages/useMessagesSnackbar";
 import {applySortFilter, getComparator} from "../../../utils/table/tableFunctions";
 import useNavigateTo from "../../../hooks/navigateTo";
+import AreaModalDialog from "./AreaModalDialog";
 
 
 // Area Table
@@ -168,7 +169,6 @@ export default function AreasDataTable({business}) {
         deleteRows([item.id])
     }
 
-    const [validator, setValidator] = useState({});
     const initialFormData = {
         name: '',
         business_id: business
@@ -184,45 +184,20 @@ export default function AreasDataTable({business}) {
             [name]: value,
         }));
     };
+
     const handleClickNewArea = () => {
         setOpenNewAreaDialog(true);
     };
 
-    const handleCloseNewArea = () => {
+    const handleCloseNewArea = (updateTable) => {
         setOpenNewAreaDialog(false);
-        setFormData(initialFormData);
         setUpdate(null);
-        setValidator([]);
+        setFormData(initialFormData);
+
+        if (updateTable) {
+            getAreas()
+        }
     };
-
-    const createNewAreaAction = async () => {
-        let response;
-
-        if (update) {
-            response = await api.__update(`${AREA_URL_UPDATE_ROW}${update}`, formData, (msg) => {
-                showMessageSnackbar(msg, 'error');
-            });
-        } else {
-            response = await api.__post(AREA_URL_CREATE_ROW, formData, (msg) => {
-                showMessageSnackbar(msg, 'error');
-            });
-        }
-
-
-        if (response) {
-            if (response.success) {
-                const msg = update ? `Area updated successfully!` : `Area added successfully!`;
-                showMessageSnackbar(msg, 'success');
-                setOpenNewAreaDialog(false);
-                getAreas();
-                setUpdate(null);
-                setFormData(initialFormData);
-                setValidator([]);
-            } else {
-                setValidator(response && response.data)
-            }
-        }
-    }
 
     const editAreaAction = async (id) => {
         setUpdate(id);
@@ -348,31 +323,14 @@ export default function AreasDataTable({business}) {
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
             </Card>
-            <Dialog open={openNewAreaDialog} onClose={handleCloseNewArea}>
-                <DialogTitle>{update ? 'Edit' : 'Create'} Area</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        {update ? 'Edit' : 'Create a new' } area for the screens!
-                    </DialogContentText>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        name="name"
-                        label="Name"
-                        value={formData.name}
-                        type="text"
-                        fullWidth
-                        variant="standard"
-                        onChange={handleChange}
-                        error={validator.name && true}
-                        helperText={validator.name}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseNewArea}>Cancel</Button>
-                    <Button onClick={createNewAreaAction}>{update ? 'Save' : 'Create'}</Button>
-                </DialogActions>
-            </Dialog>
+            <AreaModalDialog
+                updateAreaId={update}
+                areaFormData={formData}
+                openDialog={openNewAreaDialog}
+                bussinesId={business}
+                handleClose={handleCloseNewArea}
+                handleFormChange={handleChange}
+            />
             <Popover
                 open={Boolean(open)}
                 anchorEl={open}

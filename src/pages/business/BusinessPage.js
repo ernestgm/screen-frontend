@@ -33,6 +33,7 @@ import PROYECT_CONFIG from "../../config/config";
 import {applySortFilter, getComparator} from "../../utils/table/tableFunctions";
 import useNavigateTo from "../../hooks/navigateTo";
 import useAuthStore from "../../zustand/useAuthStore";
+import AreaModalDialog from "./table/AreaModalDialog";
 
 
 // ----------------------------------------------------------------------
@@ -73,6 +74,14 @@ export default function UserPage() {
     const [filterName, setFilterName] = useState('');
 
     const [rowsPerPage, setRowsPerPage] = useState(5);
+
+    const [openNewAreaDialog, setOpenNewAreaDialog] = useState(false);
+    const [newAreaBussinesId, setNewAreaBussinesId] = useState(null);
+    const initialFormData = {
+        name: '',
+        business_id: ''
+    }
+    const [formData, setFormData] = useState(initialFormData);
 
     const { currentUser } = useAuthStore((state) => state);
     const {api} = useApiHandlerStore((state) => state);
@@ -184,6 +193,26 @@ export default function UserPage() {
         handleCloseMenu()
         deleteRows([item.id])
     }
+
+    const handleCreateAreaClick = (item) => {
+        handleCloseMenu()
+        setNewAreaBussinesId(item.id)
+        setOpenNewAreaDialog(true)
+    }
+
+    const handleCloseCreateAreaDialog = () => {
+        handleCloseMenu()
+        setOpenNewAreaDialog(false)
+    }
+
+    const handleChange = (event) => {
+        const {name, value} = event.target;
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            [name]: value,
+            business_id: newAreaBussinesId
+        }));
+    };
 
     useEffect(() => {
         getDataTable()
@@ -304,7 +333,12 @@ export default function UserPage() {
                     />
                 </Card>
             </Container>
-
+            <AreaModalDialog
+                areaFormData={formData}
+                openDialog={openNewAreaDialog}
+                handleClose={handleCloseCreateAreaDialog}
+                handleFormChange={handleChange}
+            />
             <Popover
                 open={Boolean(open)}
                 anchorEl={open}
@@ -328,10 +362,17 @@ export default function UserPage() {
                     Details
                 </MenuItem>
 
+                <MenuItem onClick={() => handleCreateAreaClick(open)}>
+                    <Iconify icon="fluent-mdl2:build-queue" sx={{mr: 2}}/>
+                    Create Area
+                </MenuItem>
+
                 <MenuItem onClick={() => handleEditItemClick(open)}>
                     <Iconify icon={'eva:edit-fill'} sx={{mr: 2}}/>
                     Edit
                 </MenuItem>
+
+
 
                 <MenuItem onClick={() => handleDeleteItemClick(open)} sx={{color: 'error.main'}}>
                     <Iconify icon={'eva:trash-2-outline'} sx={{mr: 2}}/>

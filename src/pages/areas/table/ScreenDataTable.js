@@ -10,7 +10,7 @@ import {
     TableRow, TextField,
     Typography, InputLabel, Select, FormControl, FormControlLabel
 } from "@mui/material";
-
+import {filter} from "lodash";
 import PROYECT_CONFIG from "../../../config/config";
 import {UserListHead, UserListToolbar} from "../../../sections/@dashboard/user";
 import Scrollbar from "../../../components/scrollbar/Scrollbar";
@@ -22,7 +22,7 @@ import useMessagesSnackbar from "../../../hooks/messages/useMessagesSnackbar";
 import {applySortFilter, getComparator} from "../../../utils/table/tableFunctions";
 import palette from "../../../theme/palette";
 import useNavigateTo from "../../../hooks/navigateTo";
-
+import useAuthStore from "../../../zustand/useAuthStore";
 
 
 const AREA_URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.AREA.ALL;
@@ -59,6 +59,7 @@ export default function ScreenDataTable({area}) {
     const [disabledAreaField, setDisabledAreaField] = useState(false);
     const [changeCode, setChangeCode] = useState(false);
 
+    const {currentUser} = useAuthStore((state) => state);
     const {api} = useApiHandlerStore((state) => state);
     const showMessageAlert = useMessagesAlert();
     const showMessageSnackbar = useMessagesSnackbar();
@@ -69,7 +70,14 @@ export default function ScreenDataTable({area}) {
         })
 
         if (response) {
-            setAreas(Object.values(response.data));
+            if (area) {
+                setAreas(Object.values(response.data));
+            } else if (currentUser && currentUser.user.role.tag === PROYECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
+                setAreas(Object.values(response.data));
+            } else {
+                const filteredAreas = filter(response.data, (_area) => _area.business.user_id === currentUser.user.id)
+                setAreas(filteredAreas);
+            }
         }
     };
     const getScreens = async () => {
@@ -79,7 +87,14 @@ export default function ScreenDataTable({area}) {
         })
 
         if (response) {
-            setDataTable(Object.values(response.data));
+            if (area) {
+                setDataTable(Object.values(response.data));
+            } else if (currentUser && currentUser.user.role.tag === PROYECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
+                setDataTable(Object.values(response.data));
+            } else {
+                const filteredScreen = filter(response.data, (_screen) => _screen.area.business.user_id === currentUser.user.id)
+                setDataTable(filteredScreen);
+            }
         }
     };
 
@@ -334,7 +349,7 @@ export default function ScreenDataTable({area}) {
                                     const bgColorCell = row.enabled === 1 ? palette.success.lighter : palette.error.lighter
                                     return (
                                         <TableRow hover key={id} tabIndex={-1} role="checkbox"
-                                                  selected={selectedRow} sx={{ background: bgColorCell }}>
+                                                  selected={selectedRow} sx={{background: bgColorCell}}>
                                             <TableCell padding="checkbox">
                                                 <Checkbox checked={selectedRow}
                                                           onChange={(event) => handleClick(event, id)}/>
@@ -349,9 +364,9 @@ export default function ScreenDataTable({area}) {
                                                 </Stack>
                                             </TableCell>
 
-                                            <TableCell align="left">{ nameUser }</TableCell>
+                                            <TableCell align="left">{nameUser}</TableCell>
 
-                                            <TableCell align="left">{ nameBusiness}</TableCell>
+                                            <TableCell align="left">{nameBusiness}</TableCell>
 
                                             <TableCell align="left">
                                                 {
@@ -445,9 +460,9 @@ export default function ScreenDataTable({area}) {
                         sx={{pb: 2}}
                     />
                     <FormControlLabel
-                        control={<Checkbox name="changeCode" checked={changeCode} onChange={ handleChangeCode } />}
+                        control={<Checkbox name="changeCode" checked={changeCode} onChange={handleChangeCode}/>}
                         label="Change Code"
-                        sx={{ m: -1.5}}
+                        sx={{m: -1.5}}
                     />
                     <TextField
                         margin="dense"
@@ -467,7 +482,7 @@ export default function ScreenDataTable({area}) {
                         variant="standard"
                         fullWidth
                         disabled={disabledAreaField}
-                        sx={{ mb: 3}}
+                        sx={{mb: 3}}
                     >
                         <InputLabel id="role-select-label">Select Area</InputLabel>
                         <Select
@@ -489,9 +504,9 @@ export default function ScreenDataTable({area}) {
                         </Select>
                     </FormControl>
                     <FormControlLabel
-                        control={<Checkbox name="enabled" checked={formData.enabled === 1} onChange={ handleChange } />}
+                        control={<Checkbox name="enabled" checked={formData.enabled === 1} onChange={handleChange}/>}
                         label="Enabled"
-                        sx={{ m: -1.5}}
+                        sx={{m: -1.5}}
                     />
                 </DialogContent>
                 <DialogActions>

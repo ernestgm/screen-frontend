@@ -217,7 +217,7 @@ export default function ImageDataTable({screen}) {
             showMessageSnackbar(msg, 'error');
         }, () => { getData() })
 
-        if (response) {
+        if (response.data) {
             setRows(Object.values(response.data))
         }
     };

@@ -95,13 +95,13 @@ export default function CreateUserPage() {
             }, () => { handleSubmit(e) });
         }
 
-        if (response) {
+        if (response.data) {
             if (response.success) {
                 const msg = id ? 'User updated successfully!' : 'User added successfully!';
                 showSnackbarMessage(msg, 'success');
                 navigateTo('/dashboard/user')
             } else {
-                setValidator(response && response.data)
+                setValidator(response.data && response.data)
             }
         }
     };
@@ -110,7 +110,7 @@ export default function CreateUserPage() {
         const response = await api.__get(`/user/${id}`, null, (msg) => {
             showSnackbarMessage(msg, 'error');
         }, () => { getUser() });
-        if (response) {
+        if (response.data) {
             setFormData({
                 name: response.data.name,
                 lastname: response.data.lastname,
@@ -127,7 +127,7 @@ export default function CreateUserPage() {
         const response = await api.__get(`/roles`, (msg) => {
             showSnackbarMessage(msg, 'error');
         }, () => { getRoles() });
-        if (response) {
+        if (response.data) {
             setRoles(response.data);
         }
     };

@@ -102,7 +102,7 @@ export default function DevicePage() {
             showMessageSnackbar(msg, 'error');
         }, () => { getUsers() })
 
-        if (response) {
+        if (response.data) {
             setUsers(Object.values(response.data));
         }
     };
@@ -112,7 +112,7 @@ export default function DevicePage() {
             showMessageSnackbar(msg, 'error');
         }, () => { getDevices() })
 
-        if (response) {
+        if (response.data) {
             setDevices(Object.values(response.data));
         }
     };

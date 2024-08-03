@@ -104,7 +104,7 @@ export default function CreateBusinessPage() {
                 showSnackbarMessage(msg, 'success');
                 navigateTo(URL_TABLES_PAGE)
             } else {
-                setValidator(response && response.data)
+                setValidator(response.data && response.data)
             }
         }
     };
@@ -114,7 +114,7 @@ export default function CreateBusinessPage() {
             showSnackbarMessage(msg, 'error');
         }, () => { getItemForUpdate() });
 
-        if (response) {
+        if (response.data) {
             setFormData({
                 name: response.data.name,
                 description: response.data.description ? response.data.description : '',
@@ -134,7 +134,7 @@ export default function CreateBusinessPage() {
             showSnackbarMessage(msg, 'error');
         }, () => { getOwners() });
 
-        if (response) {
+        if (response.data) {
             setOwners(Object.values(response.data));
         }
     }

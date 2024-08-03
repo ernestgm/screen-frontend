@@ -40,7 +40,7 @@ export default function DetailsAreasPage() {
         const response = await api.__get(`${URL_GET_AREA}${id}`, null, (msg) => {
             showSnackbarMessage(msg, 'error');
         }, () => {getAreaDetails()});
-        if (response) {
+        if (response.data) {
             setArea(response.data);
         }
     }

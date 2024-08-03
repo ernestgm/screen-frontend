@@ -94,7 +94,7 @@ export default function UserPage() {
             showMessageSnackbar(msg, 'error');
         }, () => { getDataTable() })
 
-        if (response) {
+        if (response.data) {
             setDataTable(Object.values(response.data));
         }
     };

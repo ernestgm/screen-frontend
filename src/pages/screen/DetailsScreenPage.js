@@ -54,7 +54,7 @@ export default function DetailsScreenPage() {
         const response = await api.__get(`${URL_GET_PAGE}${id}`, null, (msg) => {
             showSnackbarMessage(msg, 'error');
         }, () => { getPageDetails() });
-        if (response) {
+        if (response.data) {
             setScreen(response.data);
         }
     }

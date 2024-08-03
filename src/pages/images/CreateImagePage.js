@@ -82,13 +82,13 @@ export default function CreateImagePage() {
             }, () => { handleSubmit(e) });
         }
 
-        if (response) {
+        if (response.data) {
             if (response.success) {
                 const msg = pimage ? `${NAME_PAGE} updated successfully!` : `${NAME_PAGE} added successfully!`;
                 showSnackbarMessage(msg, 'success');
                 navigateTo(`${URL_BACK}${pscreen}`)
             } else {
-                setValidator(response && response.data)
+                setValidator(response.data && response.data)
             }
         }
     };
@@ -98,7 +98,7 @@ export default function CreateImagePage() {
             showSnackbarMessage(msg, 'error');
         }, () => { getItemForUpdate() });
 
-        if (response) {
+        if (response.data) {
             setFormData({
                 name: response.data.name,
                 description: response.data.description,

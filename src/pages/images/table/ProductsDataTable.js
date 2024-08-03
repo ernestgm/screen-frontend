@@ -73,7 +73,7 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
             showMessageSnackbar(msg, 'error');
         }, () => { getProducts() })
 
-        if (response) {
+        if (response.data) {
             setDataTable(Object.values(response.data));
         }
     };
@@ -264,7 +264,7 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
                     setFormData(initialFormData);
                     setValidator([]);
                 } else {
-                    setValidator(response && response.data)
+                    setValidator(response.data && response.data)
                 }
             }
         }
@@ -281,7 +281,7 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
                 showMessageSnackbar(msg, 'error');
             }, () => { editAction(id) });
 
-            if (response) {
+            if (response.data) {
                 setFormData({
                     name: response.data.name,
                     description: response.data.description,

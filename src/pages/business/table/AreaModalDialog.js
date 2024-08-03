@@ -38,7 +38,7 @@ export default function AreaModalDialog({updateAreaId, areaFormData, openDialog,
                 showMessageSnackbar(msg, 'success');
                 handleCloseRefreshData()
             } else {
-                setValidator(response && response.data)
+                setValidator(response.data && response.data)
             }
         }
     }

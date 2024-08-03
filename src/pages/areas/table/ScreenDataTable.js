@@ -69,7 +69,7 @@ export default function ScreenDataTable({area}) {
             showMessageSnackbar(msg, 'error');
         }, () => { getAreas() })
 
-        if (response) {
+        if (response.data) {
             if (area) {
                 setAreas(Object.values(response.data));
             } else if (currentUser && currentUser.user.role.tag === PROYECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
@@ -86,7 +86,7 @@ export default function ScreenDataTable({area}) {
             showMessageSnackbar(msg, 'error');
         }, () => { getScreens() })
 
-        if (response) {
+        if (response.data) {
             if (area) {
                 setDataTable(Object.values(response.data));
             } else if (currentUser && currentUser.user.role.tag === PROYECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
@@ -278,7 +278,7 @@ export default function ScreenDataTable({area}) {
                 setFormData(initialFormData);
                 setValidator([]);
             } else {
-                setValidator(response && response.data)
+                setValidator(response.data && response.data)
             }
         }
     }
@@ -291,7 +291,7 @@ export default function ScreenDataTable({area}) {
             showMessageSnackbar(msg, 'error');
         }, () => { editAction(id) });
 
-        if (response) {
+        if (response.data) {
             setFormData({
                 name: response.data.name,
                 description: response.data.description,

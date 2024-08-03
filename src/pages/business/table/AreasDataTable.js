@@ -69,7 +69,7 @@ export default function AreasDataTable({business}) {
             showMessageSnackbar(msg, 'error');
         }, () => { getAreas() })
 
-        if (response) {
+        if (response.data) {
             setDataTable(Object.values(response.data));
         }
     };
@@ -205,7 +205,7 @@ export default function AreasDataTable({business}) {
             showMessageSnackbar(msg, 'error');
         }, () => { editAreaAction(id) });
 
-        if (response) {
+        if (response.data) {
             setFormData({
                 name: response.data.name,
                 business_id: business,

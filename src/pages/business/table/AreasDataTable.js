@@ -67,7 +67,7 @@ export default function AreasDataTable({business}) {
     const getAreas = async () => {
         const response = await api.__get(`${AREA_URL_GET_DATA}?business_id=${business}`, (msg) => {
             showMessageSnackbar(msg, 'error');
-        })
+        }, () => { getAreas() })
 
         if (response) {
             setDataTable(Object.values(response.data));
@@ -78,7 +78,7 @@ export default function AreasDataTable({business}) {
         const data = {'ids': ids};
         const response = await api.__delete(AREA_URL_DELETE_ROW, data, (msg) => {
             showMessageSnackbar(msg, 'error');
-        })
+        }, () => { deleteRows(ids) })
 
         if (response) {
             showMessageAlert(response.message, 'success');
@@ -203,7 +203,7 @@ export default function AreasDataTable({business}) {
         setUpdate(id);
         const response = await api.__get(`${AREA_URL_GET_DATA_UPDATE}${id}`, null, (msg) => {
             showMessageSnackbar(msg, 'error');
-        });
+        }, () => { editAreaAction(id) });
 
         if (response) {
             setFormData({

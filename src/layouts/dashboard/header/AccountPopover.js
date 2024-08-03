@@ -36,7 +36,7 @@ export default function AccountPopover() {
   const [open, setOpen] = useState(null);
   const { resetCurrentUser, userAccount } = useAuthStore((state) => state);
   const { account } = useAccontHandlerStore((state) => state);
-  const {api} = useApiHandlerStore((state) => state)
+  const {api, setApiToken} = useApiHandlerStore((state) => state)
   const showSnackbarMessage = useMessagesSnackbar();
 
 
@@ -54,17 +54,20 @@ export default function AccountPopover() {
     e.preventDefault()
     const response = await api.__post('/logout', null, (msg) => {
       showSnackbarMessage(msg, 'error');
-    });
+    }, () => { handleLogout(e) });
     if (response) {
       setOpen(null);
       resetCurrentUser();
+      setApiToken(null, null);
       navigateTo('/');
     }
   };
 
   const handleListItemClick = async (tag) => {
     if (tag === 'home') {
-      const response = await api.__get('/users');
+      const response = await api.__get('/users', () => {}, () => {
+        handleListItemClick(tag)
+      });
     }
   };
 

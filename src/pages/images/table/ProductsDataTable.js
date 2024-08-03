@@ -71,7 +71,7 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
     const getProducts = async () => {
         const response = await api.__get(`${PRODUCT_URL_GET_DATA}?image_id=${image}`, (msg) => {
             showMessageSnackbar(msg, 'error');
-        })
+        }, () => { getProducts() })
 
         if (response) {
             setDataTable(Object.values(response.data));
@@ -88,7 +88,7 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
             const data = {'ids': ids};
             const response = await api.__delete(PRODUCT_URL_DELETE_ROW, data, (msg) => {
                 showMessageSnackbar(msg, 'error');
-            })
+            }, () => { deleteRows(ids) })
 
             if (response) {
                 showMessageAlert(response.message, 'success');
@@ -247,11 +247,11 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
             if (update) {
                 response = await api.__update(`${PRODUCT_URL_UPDATE_ROW}${update}`, formData, (msg) => {
                     showMessageSnackbar(msg, 'error');
-                });
+                }, () => { createNewAction() });
             } else {
                 response = await api.__post(PRODUCT_URL_CREATE_ROW, formData, (msg) => {
                     showMessageSnackbar(msg, 'error');
-                });
+                }, () => { createNewAction() });
             }
 
             if (response) {
@@ -279,7 +279,7 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
         } else {
             const response = await api.__get(`${PRODUCT_URL_GET_DATA_UPDATE}${id}`, null, (msg) => {
                 showMessageSnackbar(msg, 'error');
-            });
+            }, () => { editAction(id) });
 
             if (response) {
                 setFormData({
@@ -297,7 +297,7 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
     const handleCopyClick = async (id, field, attr) => {
         const response = await api.__get(`${URL_GET_ROUTE_JSON}?id=${id}&field=${field}&attr=${attr}`, null, (msg) => {
             showMessageSnackbar(msg, 'error');
-        });
+        }, () => { handleCopyClick(id, field, attr) });
         if (response) {
             navigator.clipboard.writeText(response.route);
             showMessageSnackbar(`Copy to clipboard: ${response.route}`, 'success');

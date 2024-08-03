@@ -31,9 +31,9 @@ function Row(props) {
     const {api} = useApiHandlerStore((state) => state);
 
     const handleCopyClick = async (id, field, attr) => {
-        const response = await api.__get(`${URL_GET_ROUTE_JSON}?id=${id}&field=${field}&attr=${attr}`, null, (msg) => {
+        const response = await api.__get(`${URL_GET_ROUTE_JSON}?id=${id}&field=${field}&attr=${attr}`, (msg) => {
             showSnackbarMessage(msg, 'error');
-        });
+        }, () => { handleCopyClick(id, field, attr) });
         if (response) {
             navigator.clipboard.writeText(response.route);
             showSnackbarMessage(`Copy to clipboard: ${response.route}`, 'success');
@@ -187,7 +187,7 @@ export default function ImageDataTable({screen}) {
         const data = {'ids': ids};
         const response = await api.__delete(URL_DELETE_DATA, data, (msg) => {
             showMessageSnackbar(msg, 'error');
-        })
+        }, () => { deleteRows(ids) })
 
         if (response) {
             showMessageAlert(response.message, 'success');
@@ -215,7 +215,7 @@ export default function ImageDataTable({screen}) {
     const getData = async () => {
         const response = await api.__get(`${URL_GET_DATA}?screen_id=${screen}`, (msg) => {
             showMessageSnackbar(msg, 'error');
-        })
+        }, () => { getData() })
 
         if (response) {
             setRows(Object.values(response.data))

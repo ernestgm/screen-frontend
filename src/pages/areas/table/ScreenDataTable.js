@@ -67,7 +67,7 @@ export default function ScreenDataTable({area}) {
     const getAreas = async () => {
         const response = await api.__get(`${AREA_URL_GET_DATA}`, (msg) => {
             showMessageSnackbar(msg, 'error');
-        })
+        }, () => { getAreas() })
 
         if (response) {
             if (area) {
@@ -84,7 +84,7 @@ export default function ScreenDataTable({area}) {
         const urlApi = area ? `${SCREEN_URL_GET_DATA}?area_id=${area}` : SCREEN_URL_GET_DATA;
         const response = await api.__get(urlApi, (msg) => {
             showMessageSnackbar(msg, 'error');
-        })
+        }, () => { getScreens() })
 
         if (response) {
             if (area) {
@@ -102,7 +102,7 @@ export default function ScreenDataTable({area}) {
         const data = {'ids': ids};
         const response = await api.__delete(SCREEN_URL_DELETE_ROW, data, (msg) => {
             showMessageSnackbar(msg, 'error');
-        })
+        }, () => { deleteRows(ids) })
 
         if (response) {
             showMessageAlert(response.message, 'success');
@@ -259,11 +259,11 @@ export default function ScreenDataTable({area}) {
 
             response = await api.__update(`${SCREEN_URL_UPDATE_ROW}${update}`, editFormData, (msg) => {
                 showMessageSnackbar(msg, 'error');
-            });
+            }, () => { createNewAction() });
         } else {
             response = await api.__post(SCREEN_URL_CREATE_ROW, formData, (msg) => {
                 showMessageSnackbar(msg, 'error');
-            });
+            }, () => { createNewAction() });
         }
 
 
@@ -287,9 +287,9 @@ export default function ScreenDataTable({area}) {
         setDisabledAreaField(true);
         setUpdate(id);
         setChangeCode(update)
-        const response = await api.__get(`${SCREEN_URL_GET_DATA_UPDATE}${id}`, null, (msg) => {
+        const response = await api.__get(`${SCREEN_URL_GET_DATA_UPDATE}${id}`,  (msg) => {
             showMessageSnackbar(msg, 'error');
-        });
+        }, () => { editAction(id) });
 
         if (response) {
             setFormData({

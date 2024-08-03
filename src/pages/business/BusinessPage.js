@@ -92,7 +92,7 @@ export default function UserPage() {
         const params = (currentUser && currentUser.user.role.tag !== ADMIN_TAG) ? `?userId=${currentUser.user.id}` : ''
         const response = await api.__get(`${URL_GET_DATA}${params}`, (msg) => {
             showMessageSnackbar(msg, 'error');
-        })
+        }, () => { getDataTable() })
 
         if (response) {
             setDataTable(Object.values(response.data));
@@ -103,7 +103,7 @@ export default function UserPage() {
         const data = { 'ids': ids };
         const response = await api.__delete(URL_DELETE_ROW, data, (msg) => {
             showMessageSnackbar(msg, 'error');
-        })
+        }, () => { deleteRows(ids) })
 
         if (response) {
             showMessageAlert(response.message, 'success');

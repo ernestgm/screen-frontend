@@ -91,11 +91,11 @@ export default function CreateBusinessPage() {
         if (id) {
             response = await api.__update(`${URL_UPDATE}${id}`, formData, (msg) => {
                 showSnackbarMessage(msg, 'error');
-            });
+            }, () => { handleSubmit(e) });
         } else {
             response = await api.__post(URL_CREATE, formData, (msg) => {
                 showSnackbarMessage(msg, 'error');
-            });
+            }, () => { handleSubmit(e) });
         }
 
         if (response) {
@@ -112,7 +112,7 @@ export default function CreateBusinessPage() {
     const getItemForUpdate = async () => {
         const response = await api.__get(`${URL_GET_ITEM_FOR_UPDATE}${id}`, null, (msg) => {
             showSnackbarMessage(msg, 'error');
-        });
+        }, () => { getItemForUpdate() });
 
         if (response) {
             setFormData({
@@ -132,7 +132,7 @@ export default function CreateBusinessPage() {
     const getOwners = async () => {
         const response = await api.__get(PROYECT_CONFIG.API_CONFIG.USERS.ALL, null, (msg) => {
             showSnackbarMessage(msg, 'error');
-        });
+        }, () => { getOwners() });
 
         if (response) {
             setOwners(Object.values(response.data));

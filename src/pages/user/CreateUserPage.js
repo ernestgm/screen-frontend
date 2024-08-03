@@ -88,11 +88,11 @@ export default function CreateUserPage() {
             }
             response = await api.__update(`/user/update/${id}`, editFormData, (msg) => {
                 showSnackbarMessage(msg, 'error');
-            });
+            }, () => { handleSubmit(e) });
         } else {
             response = await api.__post('/user', formData, (msg) => {
                 showSnackbarMessage(msg, 'error');
-            });
+            }, () => { handleSubmit(e) });
         }
 
         if (response) {
@@ -109,7 +109,7 @@ export default function CreateUserPage() {
     const getUser = async () => {
         const response = await api.__get(`/user/${id}`, null, (msg) => {
             showSnackbarMessage(msg, 'error');
-        });
+        }, () => { getUser() });
         if (response) {
             setFormData({
                 name: response.data.name,
@@ -124,9 +124,9 @@ export default function CreateUserPage() {
     };
 
     const getRoles = async () => {
-        const response = await api.__get(`/roles`, null, (msg) => {
+        const response = await api.__get(`/roles`, (msg) => {
             showSnackbarMessage(msg, 'error');
-        });
+        }, () => { getRoles() });
         if (response) {
             setRoles(response.data);
         }

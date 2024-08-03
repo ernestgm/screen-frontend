@@ -30,7 +30,7 @@ export default function LoginForm() {
 
         const userData = await api.__post('/login', formData, (msg) => {
             showSnackbarMessage(msg, 'error');
-        });
+        }, () => { handleClick(e) });
 
         if (userData) {
             setCurrentUser(userData.success)

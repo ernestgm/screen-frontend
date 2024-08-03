@@ -100,7 +100,7 @@ export default function DevicePage() {
     const getUsers = async () => {
         const response = await api.__get('/users', (msg) => {
             showMessageSnackbar(msg, 'error');
-        })
+        }, () => { getUsers() })
 
         if (response) {
             setUsers(Object.values(response.data));
@@ -110,7 +110,7 @@ export default function DevicePage() {
     const getDevices = async () => {
         const response = await api.__get('/devices', (msg) => {
             showMessageSnackbar(msg, 'error');
-        })
+        }, () => { getDevices() })
 
         if (response) {
             setDevices(Object.values(response.data));
@@ -121,7 +121,7 @@ export default function DevicePage() {
         const data = { 'ids': ids };
         const response = await api.__delete('/devices', data, (msg) => {
             showMessageSnackbar(msg, 'error');
-        })
+        }, () => { deleteDevices(ids) })
 
         if (response) {
             showMessageAlert(response.message, 'success');

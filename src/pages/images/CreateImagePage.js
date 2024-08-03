@@ -75,11 +75,11 @@ export default function CreateImagePage() {
         if (pimage) {
             response = await api.__update(`${URL_UPDATE}${pimage}`, formData, (msg) => {
                 showSnackbarMessage(msg, 'error');
-            });
+            }, () => { handleSubmit(e) });
         } else {
             response = await api.__post(URL_CREATE, formData, (msg) => {
                 showSnackbarMessage(msg, 'error');
-            });
+            }, () => { handleSubmit(e) });
         }
 
         if (response) {
@@ -94,9 +94,9 @@ export default function CreateImagePage() {
     };
 
     const getItemForUpdate = async () => {
-        const response = await api.__get(`${URL_GET_ITEM_FOR_UPDATE}${pimage}`, null, (msg) => {
+        const response = await api.__get(`${URL_GET_ITEM_FOR_UPDATE}${pimage}`, (msg) => {
             showSnackbarMessage(msg, 'error');
-        });
+        }, () => { getItemForUpdate() });
 
         if (response) {
             setFormData({

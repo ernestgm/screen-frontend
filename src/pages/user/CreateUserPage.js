@@ -95,7 +95,7 @@ export default function CreateUserPage() {
             }, () => { handleSubmit(e) });
         }
 
-        if (response.data) {
+        if (response) {
             if (response.success) {
                 const msg = id ? 'User updated successfully!' : 'User added successfully!';
                 showSnackbarMessage(msg, 'success');

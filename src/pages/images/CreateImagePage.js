@@ -82,7 +82,7 @@ export default function CreateImagePage() {
             }, () => { handleSubmit(e) });
         }
 
-        if (response.data) {
+        if (response) {
             if (response.success) {
                 const msg = pimage ? `${NAME_PAGE} updated successfully!` : `${NAME_PAGE} added successfully!`;
                 showSnackbarMessage(msg, 'success');

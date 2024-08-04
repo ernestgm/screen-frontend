@@ -6,18 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="d4767243-8cf2-4570-929d-1212d7106fb6" name="Changes" comment="Added refresh tokens!!!">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/areas/DetailsAreasPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/areas/DetailsAreasPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/areas/table/ScreenDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/areas/table/ScreenDataTable.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/business/BusinessPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/business/BusinessPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/business/CreateBusinessPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/business/CreateBusinessPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/business/DetailsBusinessPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/business/DetailsBusinessPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/business/table/AreaModalDialog.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/business/table/AreaModalDialog.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/business/table/AreasDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/business/table/AreasDataTable.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/devices/DevicesPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/devices/DevicesPage.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/images/CreateImagePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/images/CreateImagePage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/images/table/ProductsDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/images/table/ProductsDataTable.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/screen/DetailsScreenPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/screen/DetailsScreenPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/screen/ImageDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/screen/ImageDataTable.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/user/CreateUserPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/user/CreateUserPage.js" afterDir="false" />
     </list>
     <list id="d4ad349c-1410-4760-87b2-6c449dfa42b6" name="ignore" comment="CRUD Business" />
@@ -135,7 +124,7 @@
       <workItem from="1722004701353" duration="9892000" />
       <workItem from="1722178201922" duration="21990000" />
       <workItem from="1722395934844" duration="2624000" />
-      <workItem from="1722642391605" duration="17190000" />
+      <workItem from="1722642391605" duration="18474000" />
     </task>
     <task id="LOCAL-00001" summary="User login Complete">
       <created>1680980627562</created>
@@ -409,7 +398,15 @@
       <option name="project" value="LOCAL" />
       <updated>1722662330437</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="Added refresh tokens!!!">
+      <option name="closed" value="true" />
+      <created>1722663249217</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1722663249217</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

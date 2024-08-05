@@ -17,7 +17,6 @@ import Iconify from "../../components/iconify";
 
 const NAME_PAGE = 'Screens';
 export default function ScreensPage() {
-    const {id} = useParams();
     useMessagesSnackbar();
 
     return (
@@ -34,7 +33,7 @@ export default function ScreensPage() {
                 </Stack>
                 <Stack>
                     <Grid item xs={12} md={6} lg={8}>
-                        <ScreenDataTable business={id} />
+                        <ScreenDataTable />
                     </Grid>
                 </Stack>
             </Container>

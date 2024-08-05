@@ -59,6 +59,7 @@ export default function ScreenDataTable({ business }) {
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [areas, setAreas] = useState([]);
     const [businesses, setBusinesses] = useState([]);
+    const [businessesIds, setBusinessesIds] = useState([]);
     const [disabledAreaField, setDisabledAreaField] = useState(false);
     const [changeCode, setChangeCode] = useState(false);
 
@@ -74,30 +75,30 @@ export default function ScreenDataTable({ business }) {
         }, () => { getAreas(pBusiness) })
 
         if (response.data) {
-            if (pBusiness) {
-                setAreas(Object.values(response.data));
-            } else if (currentUser && currentUser.user.role.tag === PROYECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
-                setAreas(Object.values(response.data));
-            } else {
-                const filteredAreas = filter(response.data, (_area) => businesses.find( (_business) => _area.business_id === _business.id))
-                setAreas(filteredAreas);
-            }
+            getBusiness(Object.values(response.data))
         }
     };
 
-    const getBusiness = async () => {
+    const getBusiness = async (_areas) => {
         const response = await api.__get(`${BUSINESS_URL_GET_DATA}`, (msg) => {
             showMessageSnackbar(msg, 'error');
         }, () => { getBusiness() })
 
         if (response.data) {
             if (business) {
+                setAreas(_areas)
                 setBusinesses(Object.values(response.data));
             } else if (currentUser && currentUser.user.role.tag === PROYECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
+                setAreas(_areas)
                 setBusinesses(Object.values(response.data));
             } else {
                 const filteredBusiness = filter(response.data, (_business) => _business.user_id === currentUser.user.id)
                 setBusinesses(filteredBusiness);
+                const businessIds = filteredBusiness.map(mBusiness => mBusiness.id);
+                console.log(businessIds)
+                const filteredAreas = filter(_areas, (_area) => businessIds.includes( _area.business_id))
+                console.log(filteredAreas)
+                setAreas(filteredAreas);
             }
         }
     };
@@ -319,7 +320,6 @@ export default function ScreenDataTable({ business }) {
     }
 
     const editAction = async (id) => {
-        setDisabledAreaField(true);
         setUpdate(id);
         setChangeCode(update)
         const response = await api.__get(`${SCREEN_URL_GET_DATA_UPDATE}${id}`,  (msg) => {
@@ -345,8 +345,7 @@ export default function ScreenDataTable({ business }) {
     }
 
     useEffect(() => {
-        getBusiness();
-        getAreas(business);
+        getAreas(business)
         getScreens();
     }, []);
 
@@ -520,7 +519,6 @@ export default function ScreenDataTable({ business }) {
                         defaultValue={''}
                         sx={{mb: 3}}
                         error={validator.business_id && true}
-                        helperText={validator.business_id}
                     >
                         <InputLabel id="role-select-label">Select Business</InputLabel>
                         <Select

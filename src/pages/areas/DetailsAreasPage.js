@@ -69,11 +69,6 @@ export default function DetailsAreasPage() {
                         <TitlePageDetails title={area.name} createdAt={area.created_at} icon={'fluent-mdl2:build-queue'}/>
                     </Grid>
                 </Grid>
-                <Stack>
-                    <Grid item xs={12} md={6} lg={8}>
-                        <ScreenDataTable area={id} />
-                    </Grid>
-                </Stack>
             </Container>
         </>
     );

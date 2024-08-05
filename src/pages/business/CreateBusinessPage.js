@@ -166,7 +166,7 @@ export default function CreateBusinessPage() {
                         <TextField
                             name="name"
                             error={validator.name && true}
-                            value={formData.name}
+                            value={formData.name ?? ''}
                             onChange={handleChange}
                             label="Name"
                             helperText={validator.name}
@@ -174,7 +174,7 @@ export default function CreateBusinessPage() {
                         <TextField
                             name="description"
                             label="Description"
-                            value={formData.description}
+                            value={formData.description ?? ''}
                             onChange={handleChange}
                             error={validator.description && true}
                             helperText={validator.description}
@@ -182,7 +182,7 @@ export default function CreateBusinessPage() {
                         <TextField
                             name="logo"
                             label="Logo"
-                            value={formData.logo}
+                            value={formData.logo ?? ''}
                             onChange={handleChange}
                             error={validator.logo && true}
                             helperText={validator.logo}
@@ -198,7 +198,7 @@ export default function CreateBusinessPage() {
                                 name="user_id"
                                 labelId="user-select-label"
                                 id="user-select"
-                                value={formData.user_id}
+                                value={formData.user_id ?? ''}
                                 label="Select Owner"
                                 onChange={handleChange}
 

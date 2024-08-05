@@ -23,16 +23,18 @@ import useNavigateTo from "../../hooks/navigateTo";
 
 const NAME_PAGE = 'Screen Details';
 const URL_GET_PAGE = PROYECT_CONFIG.API_CONFIG.SCREEN.GET;
-const URL_TABLES_PAGE = '/dashboard/area/details/';
+const URL_TABLES_PAGE = '/dashboard/business/details/';
+const URL_MENU_SCREEN_PAGE = '/dashboard/screens';
 const URL_CREATE_IMAGE = '/dashboard/image/create/';
 
 export default function DetailsScreenPage() {
     const {navigateTo} = useNavigateTo();
     const showSnackbarMessage = useMessagesSnackbar();
-    const {id} = useParams();
+    const {id, menu} = useParams();
     const {api} = useApiHandlerStore((state) => state);
     const [screen, setScreen] = useState({
         area_id : '',
+        business_id: '',
         created_at : '',
         id: '',
         name: '',
@@ -44,6 +46,13 @@ export default function DetailsScreenPage() {
                     name: '',
                     lastname: ''
                 }
+            }
+        },
+        business: {
+            name: '',
+            user: {
+                name: '',
+                lastname: ''
             }
         },
         description: '',
@@ -76,7 +85,9 @@ export default function DetailsScreenPage() {
             <Container>
                 <Stack direction="row" alignItems="left" justifyContent="space-between" mb={5}>
                     <Stack>
-                        <BackButton path={`${URL_TABLES_PAGE}${screen.area_id}`}/>
+                        {
+                            menu ? (<BackButton path={`${URL_MENU_SCREEN_PAGE}`}/>) : (<BackButton path={`${URL_TABLES_PAGE}${screen.business_id}`}/>)
+                        }
                     </Stack>
                     <Typography variant="h4" gutterBottom>
                         {NAME_PAGE}
@@ -106,10 +117,10 @@ export default function DetailsScreenPage() {
                                 Device Code: { screen.code }
                             </Typography>
                             <Typography variant="h4" gutterBottom>
-                                Business Name: { screen.area.business.name }
+                                Business Name: { screen.business.name }
                             </Typography>
                             <Typography variant="h4" gutterBottom>
-                                Owner: { screen.area.business.user.name } { screen.area.business.user.lastname }
+                                Owner: { screen.business.user.name } { screen.business.user.lastname }
                             </Typography>
 
                         </Card>

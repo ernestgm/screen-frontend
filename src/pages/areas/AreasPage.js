@@ -8,15 +8,14 @@ import {
 import {useParams} from "react-router-dom";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import PROYECT_CONFIG from "../../config/config";
-import ScreenDataTable from "../areas/table/ScreenDataTable";
-import Iconify from "../../components/iconify";
+import AreasDataTable from "../business/table/AreasDataTable";
 
 
 
 // ----------------------------------------------------------------------
 
-const NAME_PAGE = 'Screens';
-export default function ScreensPage() {
+const NAME_PAGE = 'Areas';
+export default function AreasPage() {
     const {id} = useParams();
     useMessagesSnackbar();
 
@@ -34,7 +33,7 @@ export default function ScreensPage() {
                 </Stack>
                 <Stack>
                     <Grid item xs={12} md={6} lg={8}>
-                        <ScreenDataTable business={id} />
+                        <AreasDataTable business={id} />
                     </Grid>
                 </Stack>
             </Container>

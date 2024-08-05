@@ -161,7 +161,7 @@ export default function CreateUserPage() {
                         <TextField
                             name="name"
                             error={validator.name && true}
-                            value={formData.name}
+                            value={formData.name ?? ''}
                             onChange={handleChange}
                             label="Name"
                             helperText={validator.name}
@@ -169,7 +169,7 @@ export default function CreateUserPage() {
                         <TextField
                             name="lastname"
                             label="Lastname"
-                            value={formData.lastname}
+                            value={formData.lastname ?? ''}
                             onChange={handleChange}
                             error={validator.lastname && true}
                             helperText={validator.lastname}
@@ -177,7 +177,7 @@ export default function CreateUserPage() {
                         <TextField
                             name="email"
                             label="Email"
-                            value={formData.email}
+                            value={formData.email ?? ''}
                             onChange={handleChange}
                             error={validator.email && true}
                             helperText={validator.email}
@@ -189,7 +189,7 @@ export default function CreateUserPage() {
                                 name="role_id"
                                 labelId="role-select-label"
                                 id="role-select"
-                                value={formData.role_id}
+                                value={formData.role_id ?? ''}
                                 label="Role"
                                 onChange={handleChange}
                             >
@@ -208,7 +208,7 @@ export default function CreateUserPage() {
                         <TextField
                             name="password"
                             label="Password"
-                            value={formData.password}
+                            value={formData.password ?? ''}
                             type={showPassword ? 'text' : 'password'}
                             onChange={handleChange}
                             error={validator.password && true}
@@ -227,7 +227,7 @@ export default function CreateUserPage() {
                         <TextField
                             name="c_password"
                             label="Confirm Password"
-                            value={formData.c_password}
+                            value={formData.c_password ?? ''}
                             type={showPassword ? 'text' : 'password'}
                             onChange={handleChange}
                             error={validator.c_password && true}

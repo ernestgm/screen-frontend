@@ -10,7 +10,7 @@ import {
     TableRow, TextField,
     Typography, InputLabel, Select, FormControl, FormControlLabel
 } from "@mui/material";
-import {filter} from "lodash";
+import {filter, flatMap} from "lodash";
 import PROYECT_CONFIG from "../../../config/config";
 import {UserListHead, UserListToolbar} from "../../../sections/@dashboard/user";
 import Scrollbar from "../../../components/scrollbar/Scrollbar";
@@ -23,9 +23,11 @@ import {applySortFilter, getComparator} from "../../../utils/table/tableFunction
 import palette from "../../../theme/palette";
 import useNavigateTo from "../../../hooks/navigateTo";
 import useAuthStore from "../../../zustand/useAuthStore";
+import BackButton from "../../../sections/@dashboard/app/AppBackButton";
 
 
 const AREA_URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.AREA.ALL;
+const BUSINESS_URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.BUSINESS.ALL;
 const SCREEN_URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.SCREEN.ALL;
 const SCREEN_URL_GET_DATA_UPDATE = PROYECT_CONFIG.API_CONFIG.SCREEN.GET;
 const SCREEN_URL_DELETE_ROW = PROYECT_CONFIG.API_CONFIG.SCREEN.DELETE;
@@ -44,8 +46,8 @@ const TABLE_HEAD = [
 ];
 
 
-export default function ScreenDataTable({area}) {
-    const {navigateTo} = useNavigateTo();
+export default function ScreenDataTable({ business }) {
+    const { navigateTo } = useNavigateTo();
     const [dataTable, setDataTable] = useState([]);
     const [open, setOpen] = useState(false);
     const [openNewDialog, setOpenNewDialog] = useState(false);
@@ -56,6 +58,7 @@ export default function ScreenDataTable({area}) {
     const [filterName, setFilterName] = useState('');
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [areas, setAreas] = useState([]);
+    const [businesses, setBusinesses] = useState([]);
     const [disabledAreaField, setDisabledAreaField] = useState(false);
     const [changeCode, setChangeCode] = useState(false);
 
@@ -64,35 +67,55 @@ export default function ScreenDataTable({area}) {
     const showMessageAlert = useMessagesAlert();
     const showMessageSnackbar = useMessagesSnackbar();
 
-    const getAreas = async () => {
-        const response = await api.__get(`${AREA_URL_GET_DATA}`, (msg) => {
+    const getAreas = async (pBusiness) => {
+        const path = pBusiness ? `${AREA_URL_GET_DATA}?business_id=${pBusiness}` : `${AREA_URL_GET_DATA}`
+        const response = await api.__get(path, (msg) => {
             showMessageSnackbar(msg, 'error');
-        }, () => { getAreas() })
+        }, () => { getAreas(pBusiness) })
 
         if (response.data) {
-            if (area) {
+            if (pBusiness) {
                 setAreas(Object.values(response.data));
             } else if (currentUser && currentUser.user.role.tag === PROYECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
                 setAreas(Object.values(response.data));
             } else {
-                const filteredAreas = filter(response.data, (_area) => _area.business.user_id === currentUser.user.id)
+                const filteredAreas = filter(response.data, (_area) => businesses.find( (_business) => _area.business_id === _business.id))
                 setAreas(filteredAreas);
             }
         }
     };
+
+    const getBusiness = async () => {
+        const response = await api.__get(`${BUSINESS_URL_GET_DATA}`, (msg) => {
+            showMessageSnackbar(msg, 'error');
+        }, () => { getBusiness() })
+
+        if (response.data) {
+            if (business) {
+                setBusinesses(Object.values(response.data));
+            } else if (currentUser && currentUser.user.role.tag === PROYECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
+                setBusinesses(Object.values(response.data));
+            } else {
+                const filteredBusiness = filter(response.data, (_business) => _business.user_id === currentUser.user.id)
+                setBusinesses(filteredBusiness);
+            }
+        }
+    };
+
+
     const getScreens = async () => {
-        const urlApi = area ? `${SCREEN_URL_GET_DATA}?area_id=${area}` : SCREEN_URL_GET_DATA;
+        const urlApi = business ? `${SCREEN_URL_GET_DATA}?business_id=${business}` : SCREEN_URL_GET_DATA;
         const response = await api.__get(urlApi, (msg) => {
             showMessageSnackbar(msg, 'error');
         }, () => { getScreens() })
 
         if (response.data) {
-            if (area) {
+            if (business) {
                 setDataTable(Object.values(response.data));
             } else if (currentUser && currentUser.user.role.tag === PROYECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
                 setDataTable(Object.values(response.data));
             } else {
-                const filteredScreen = filter(response.data, (_screen) => _screen.area.business.user_id === currentUser.user.id)
+                const filteredScreen = filter(response.data, (_screen) => _screen.business.user_id === currentUser.user.id)
                 setDataTable(filteredScreen);
             }
         }
@@ -185,7 +208,12 @@ export default function ScreenDataTable({area}) {
 
     const handleDetailsItemClick = (item) => {
         handleCloseMenu()
-        navigateTo(`${ROUTE_DETAILS_ROW}${item.id}`)
+        if (business) {
+            navigateTo(`${ROUTE_DETAILS_ROW}${item.id}`)
+        } else {
+            navigateTo(`${ROUTE_DETAILS_ROW}${item.id}/menu`)
+        }
+
     }
 
     const handleDeleteItemClick = (item) => {
@@ -199,6 +227,7 @@ export default function ScreenDataTable({area}) {
         description: '',
         code: '',
         area_id: '',
+        business_id: '',
         enabled: 1
     }
     const [formData, setFormData] = useState(initialFormData);
@@ -218,9 +247,13 @@ export default function ScreenDataTable({area}) {
                 "enabled": formData.enabled === 0 ? 1 : 0,
             }));
         }
+
+        if (name === "business_id") {
+            getAreas(value)
+        }
     };
     const handleClickNewArea = () => {
-        if (area) {
+        if (business) {
             setDisabledAreaField(true);
         } else {
             setDisabledAreaField(false);
@@ -230,7 +263,8 @@ export default function ScreenDataTable({area}) {
             name: '',
             description: '',
             code: '',
-            area_id: area,
+            area_id: '',
+            business_id: business,
             enabled: 1
         })
         setOpenNewDialog(true);
@@ -251,6 +285,7 @@ export default function ScreenDataTable({area}) {
             editFormData.name = formData.name
             editFormData.description = formData.description
             editFormData.area_id = formData.area_id
+            editFormData.business_id = formData.business_id
             editFormData.enabled = formData.enabled
 
             if (changeCode) {
@@ -296,6 +331,7 @@ export default function ScreenDataTable({area}) {
                 name: response.data.name,
                 description: response.data.description,
                 area_id: response.data.area_id,
+                business_id: response.data.business_id,
                 code: response.data.code,
                 enabled: response.data.enabled
             })
@@ -309,15 +345,16 @@ export default function ScreenDataTable({area}) {
     }
 
     useEffect(() => {
-        getAreas();
+        getBusiness();
+        getAreas(business);
         getScreens();
     }, []);
 
     return (
         <>
-            <Stack direction="row" alignItems="left" justifyContent="space-between" mb={5}>
+            <Stack direction="row" alignItems="start" justifyContent="space-between" mb={5}>
                 <Typography variant="h4" gutterBottom>
-                    Screens
+                    { business ?  'Screens' : '' }
                 </Typography>
                 <Button variant="outlined" onClick={handleClickNewArea}
                         startIcon={<Iconify icon="eva:plus-fill"/>}>
@@ -344,8 +381,8 @@ export default function ScreenDataTable({area}) {
                                 {filteredDataTable.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                                     const {id, name} = row;
                                     const selectedRow = selected.indexOf(id) !== -1;
-                                    const nameUser = row.area.business.user.name
-                                    const nameBusiness = row.area.business.name
+                                    const nameUser = row.business ? row.business.user.name : ''
+                                    const nameBusiness = row.business ? row.business.name : ''
                                     const bgColorCell = row.enabled === 1 ? palette.success.lighter : palette.error.lighter
                                     return (
                                         <TableRow hover key={id} tabIndex={-1} role="checkbox"
@@ -438,7 +475,7 @@ export default function ScreenDataTable({area}) {
                         margin="dense"
                         name="name"
                         label="Name"
-                        value={formData.name}
+                        value={formData.name ?? ''}
                         type="text"
                         fullWidth
                         variant="standard"
@@ -450,13 +487,11 @@ export default function ScreenDataTable({area}) {
                         margin="dense"
                         name="description"
                         label="Description"
-                        value={formData.description}
+                        value={formData.description ?? ''}
                         type="text"
                         fullWidth
                         variant="standard"
                         onChange={handleChange}
-                        error={validator.description && true}
-                        helperText={validator.description}
                         sx={{pb: 2}}
                     />
                     <FormControlLabel
@@ -468,7 +503,7 @@ export default function ScreenDataTable({area}) {
                         margin="dense"
                         name="code"
                         label="Device Code"
-                        value={formData.code}
+                        value={formData.code ?? ''}
                         type="text"
                         fullWidth
                         variant="standard"
@@ -482,14 +517,42 @@ export default function ScreenDataTable({area}) {
                         variant="standard"
                         fullWidth
                         disabled={disabledAreaField}
+                        defaultValue={''}
                         sx={{mb: 3}}
+                        error={validator.business_id && true}
+                        helperText={validator.business_id}
                     >
-                        <InputLabel id="role-select-label">Select Area</InputLabel>
+                        <InputLabel id="role-select-label">Select Business</InputLabel>
+                        <Select
+                            name="business_id"
+                            labelId="business-select-label"
+                            id="business-select"
+                            value={formData.business_id ?? ''}
+                            label="Select Business"
+                            onChange={handleChange}
+                        >
+                            {
+                                businesses.map((item) => {
+                                    return (
+                                        <MenuItem key={item.id}
+                                                  value={item.id}>{item.name}</MenuItem>
+                                    )
+                                })
+                            }
+                        </Select>
+                    </FormControl>
+                    <FormControl
+                        variant="standard"
+                        fullWidth
+                        sx={{mb: 3}}
+                        defaultValue={''}
+                    >
+                        <InputLabel id="role-select-label">Select Area (optional)</InputLabel>
                         <Select
                             name="area_id"
-                            labelId="user-select-label"
+                            labelId="area-select-label"
                             id="area-select"
-                            value={formData.area_id}
+                            value={formData.area_id ?? ''}
                             label="Select Area"
                             onChange={handleChange}
                         >

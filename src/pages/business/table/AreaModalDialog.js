@@ -66,7 +66,7 @@ export default function AreaModalDialog({updateAreaId, areaFormData, openDialog,
                         margin="dense"
                         name="name"
                         label="Name"
-                        value={areaFormData.name}
+                        value={areaFormData.name ?? ''}
                         type="text"
                         fullWidth
                         variant="standard"

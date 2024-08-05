@@ -151,7 +151,7 @@ export default function CreateImagePage() {
                         <TextField
                             name="description"
                             label="Description"
-                            value={formData.description}
+                            value={formData.description ?? ''}
                             onChange={handleChange}
                             error={validator.description && true}
                             helperText={validator.description}
@@ -160,7 +160,7 @@ export default function CreateImagePage() {
                         <TextField
                             name="duration"
                             label="Duration (5s by default)"
-                            value={formData.duration}
+                            value={formData.duration ?? ''}
                             onChange={handleChange}
                             error={validator.duration && true}
                             helperText={validator.duration}

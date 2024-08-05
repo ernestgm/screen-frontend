@@ -16,6 +16,7 @@ import PROYECT_CONFIG from "../../config/config";
 import BusinessDetailsCard from "../../sections/@dashboard/business/BusinessDetailsCard";
 import {MapContainer} from "../../components/map";
 import AreasDataTable from "./table/AreasDataTable";
+import ScreenDataTable from "../areas/table/ScreenDataTable";
 
 
 // ----------------------------------------------------------------------
@@ -127,7 +128,7 @@ export default function DetailsBusinessPage() {
                 </Grid>
                 <Stack>
                     <Grid item xs={12} md={6} lg={8}>
-                        <AreasDataTable business={id}/>
+                        <ScreenDataTable business={id} />
                     </Grid>
                 </Stack>
             </Container>

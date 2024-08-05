@@ -5,9 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d4767243-8cf2-4570-929d-1212d7106fb6" name="Changes" comment="Implement add screen to business.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/areas/table/ScreenDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/areas/table/ScreenDataTable.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/screen/ScreensPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/screen/ScreensPage.js" afterDir="false" />
     </list>
     <list id="d4ad349c-1410-4760-87b2-6c449dfa42b6" name="ignore" comment="CRUD Business" />
     <option name="SHOW_DIALOG" value="false" />
@@ -124,7 +122,7 @@
       <workItem from="1722004701353" duration="9892000" />
       <workItem from="1722178201922" duration="21990000" />
       <workItem from="1722395934844" duration="2624000" />
-      <workItem from="1722642391605" duration="36172000" />
+      <workItem from="1722642391605" duration="36527000" />
     </task>
     <task id="LOCAL-00001" summary="User login Complete">
       <created>1680980627562</created>
@@ -422,7 +420,15 @@
       <option name="project" value="LOCAL" />
       <updated>1722824074938</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="Implement add screen to business.">
+      <option name="closed" value="true" />
+      <created>1722829329601</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1722829329601</updated>
+    </task>
+    <option name="localTasksCounter" value="43" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

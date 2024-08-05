@@ -335,6 +335,7 @@ export default function ScreenDataTable({ business }) {
                 code: response.data.code,
                 enabled: response.data.enabled
             })
+            getAreas(response.data.business_id)
             setOpenNewDialog(true);
         }
     }

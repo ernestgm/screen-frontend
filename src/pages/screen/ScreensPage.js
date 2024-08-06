@@ -8,7 +8,7 @@ import {
 import {useParams} from "react-router-dom";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import PROYECT_CONFIG from "../../config/config";
-import ScreenDataTable from "../areas/table/ScreenDataTable";
+import ScreenDataTable from "./ScreenDataTable";
 import Iconify from "../../components/iconify";
 
 

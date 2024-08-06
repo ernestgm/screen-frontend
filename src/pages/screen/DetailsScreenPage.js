@@ -6,7 +6,7 @@ import {
     Stack,
     Container,
     Typography,
-    Grid, Button, Card,
+    Grid, Button, Card, ListItem,
 } from '@mui/material';
 import BackButton from "../../sections/@dashboard/app/AppBackButton";
 import useApiHandlerStore from "../../zustand/useApiHandlerStore";
@@ -55,6 +55,7 @@ export default function DetailsScreenPage() {
                 lastname: ''
             }
         },
+        devices: [],
         description: '',
         screens: []
     })
@@ -101,6 +102,25 @@ export default function DetailsScreenPage() {
                             createdAt={screen.created_at}
                             icon={'material-symbols:live-tv-outline-rounded'}
                         />
+                        <Card
+                            sx={{
+                                py: 3,
+                                px: 5,
+                                mt:2,
+                                boxShadow: 0,
+                                textAlign: 'left',
+                                color: (theme) => theme.palette.primary.darker,
+                                bgcolor: (theme) => theme.palette.primary.lighter,
+                            }}
+                        >
+                            <Typography variant="h4" gutterBottom>
+                                Business Name: { screen.business.name }
+                            </Typography>
+                            <Typography variant="h4" gutterBottom>
+                                Owner: { screen.business.user.name } { screen.business.user.lastname }
+                            </Typography>
+
+                        </Card>
                     </Grid>
                     <Grid item xs={12} sm={6} md={6}>
                         <Card
@@ -114,15 +134,13 @@ export default function DetailsScreenPage() {
                             }}
                         >
                             <Typography variant="h4" gutterBottom>
-                                Device Code: { screen.code }
+                                Active on { screen.devices.length } Device(s)
                             </Typography>
-                            <Typography variant="h4" gutterBottom>
-                                Business Name: { screen.business.name }
-                            </Typography>
-                            <Typography variant="h4" gutterBottom>
-                                Owner: { screen.business.user.name } { screen.business.user.lastname }
-                            </Typography>
-
+                            {screen.devices.map((device) => (
+                                <ListItem>
+                                    <>Device code: {device.code}</>
+                                </ListItem>
+                            ))}
                         </Card>
                     </Grid>
                 </Grid>

@@ -11,19 +11,19 @@ import {
     Typography, InputLabel, Select, FormControl, FormControlLabel
 } from "@mui/material";
 import {filter, flatMap} from "lodash";
-import PROYECT_CONFIG from "../../../config/config";
-import {UserListHead, UserListToolbar} from "../../../sections/@dashboard/user";
-import Scrollbar from "../../../components/scrollbar/Scrollbar";
-import {formatDate} from "../../../utils/formatTime";
-import Iconify from "../../../components/iconify";
-import useApiHandlerStore from "../../../zustand/useApiHandlerStore";
-import useMessagesAlert from "../../../hooks/messages/useMessagesAlert";
-import useMessagesSnackbar from "../../../hooks/messages/useMessagesSnackbar";
-import {applySortFilter, getComparator} from "../../../utils/table/tableFunctions";
-import palette from "../../../theme/palette";
-import useNavigateTo from "../../../hooks/navigateTo";
-import useAuthStore from "../../../zustand/useAuthStore";
-import BackButton from "../../../sections/@dashboard/app/AppBackButton";
+import PROYECT_CONFIG from "../../config/config";
+import {UserListHead, UserListToolbar} from "../../sections/@dashboard/user";
+import Scrollbar from "../../components/scrollbar/Scrollbar";
+import {formatDate} from "../../utils/formatTime";
+import Iconify from "../../components/iconify";
+import useApiHandlerStore from "../../zustand/useApiHandlerStore";
+import useMessagesAlert from "../../hooks/messages/useMessagesAlert";
+import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
+import {applySortFilter, getComparator} from "../../utils/table/tableFunctions";
+import palette from "../../theme/palette";
+import useNavigateTo from "../../hooks/navigateTo";
+import useAuthStore from "../../zustand/useAuthStore";
+import BackButton from "../../sections/@dashboard/app/AppBackButton";
 
 
 const AREA_URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.AREA.ALL;
@@ -39,7 +39,7 @@ const TABLE_HEAD = [
     {id: 'name', label: 'Name', alignRight: false},
     {id: 'user', label: 'User', alignRight: false},
     {id: 'business', label: 'Business', alignRight: false},
-    {id: 'code', label: 'Device Code', alignRight: false},
+    {id: 'actives', label: 'Active On', alignRight: false},
     {id: 'created_at', label: 'Create At', alignRight: false},
     {id: 'updated_at', label: 'Update At', alignRight: false},
     {id: 'actions', label: 'Actions'},
@@ -61,7 +61,6 @@ export default function ScreenDataTable({ business }) {
     const [businesses, setBusinesses] = useState([]);
     const [businessesIds, setBusinessesIds] = useState([]);
     const [disabledAreaField, setDisabledAreaField] = useState(false);
-    const [changeCode, setChangeCode] = useState(false);
 
     const {currentUser} = useAuthStore((state) => state);
     const {api} = useApiHandlerStore((state) => state);
@@ -95,9 +94,7 @@ export default function ScreenDataTable({ business }) {
                 const filteredBusiness = filter(response.data, (_business) => _business.user_id === currentUser.user.id)
                 setBusinesses(filteredBusiness);
                 const businessIds = filteredBusiness.map(mBusiness => mBusiness.id);
-                console.log(businessIds)
                 const filteredAreas = filter(_areas, (_area) => businessIds.includes( _area.business_id))
-                console.log(filteredAreas)
                 setAreas(filteredAreas);
             }
         }
@@ -226,7 +223,6 @@ export default function ScreenDataTable({ business }) {
     const initialFormData = {
         name: '',
         description: '',
-        code: '',
         area_id: '',
         business_id: '',
         enabled: 1
@@ -253,17 +249,15 @@ export default function ScreenDataTable({ business }) {
             getAreas(value)
         }
     };
-    const handleClickNewArea = () => {
+    const handleClickNewScreen = () => {
         if (business) {
             setDisabledAreaField(true);
         } else {
             setDisabledAreaField(false);
         }
-        setChangeCode(!update)
         setFormData({
             name: '',
             description: '',
-            code: '',
             area_id: '',
             business_id: business,
             enabled: 1
@@ -288,10 +282,6 @@ export default function ScreenDataTable({ business }) {
             editFormData.area_id = formData.area_id
             editFormData.business_id = formData.business_id
             editFormData.enabled = formData.enabled
-
-            if (changeCode) {
-                editFormData.code = formData.code
-            }
 
             response = await api.__update(`${SCREEN_URL_UPDATE_ROW}${update}`, editFormData, (msg) => {
                 showMessageSnackbar(msg, 'error');
@@ -321,7 +311,6 @@ export default function ScreenDataTable({ business }) {
 
     const editAction = async (id) => {
         setUpdate(id);
-        setChangeCode(update)
         const response = await api.__get(`${SCREEN_URL_GET_DATA_UPDATE}${id}`,  (msg) => {
             showMessageSnackbar(msg, 'error');
         }, () => { editAction(id) });
@@ -332,17 +321,11 @@ export default function ScreenDataTable({ business }) {
                 description: response.data.description,
                 area_id: response.data.area_id,
                 business_id: response.data.business_id,
-                code: response.data.code,
                 enabled: response.data.enabled
             })
             getAreas(response.data.business_id)
             setOpenNewDialog(true);
         }
-    }
-
-    const handleChangeCode = (event) => {
-        const {name, value} = event.target;
-        setChangeCode(!changeCode)
     }
 
     useEffect(() => {
@@ -356,7 +339,7 @@ export default function ScreenDataTable({ business }) {
                 <Typography variant="h4" gutterBottom>
                     { business ?  'Screens' : '' }
                 </Typography>
-                <Button variant="outlined" onClick={handleClickNewArea}
+                <Button variant="outlined" onClick={handleClickNewScreen}
                         startIcon={<Iconify icon="eva:plus-fill"/>}>
                     New Screen
                 </Button>
@@ -379,11 +362,17 @@ export default function ScreenDataTable({ business }) {
                             />
                             <TableBody>
                                 {filteredDataTable.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                    const {id, name} = row;
+                                    const {id, name, business, devices} = row;
                                     const selectedRow = selected.indexOf(id) !== -1;
-                                    const nameUser = row.business ? row.business.user.name : ''
-                                    const nameBusiness = row.business ? row.business.name : ''
-                                    const bgColorCell = row.enabled === 1 ? palette.success.lighter : palette.error.lighter
+                                    const nameUser = business ? business.user.name : ''
+                                    const nameBusiness = business ? business.name : ''
+                                    let bgColorCell = row.enabled === 1 ? palette.success.lighter : palette.error.lighter
+                                    const ActiveOn = devices ? devices.length : 0
+
+                                    if (ActiveOn === 0) {
+                                        bgColorCell = palette.warning.lighter
+                                    }
+
                                     return (
                                         <TableRow hover key={id} tabIndex={-1} role="checkbox"
                                                   selected={selectedRow} sx={{background: bgColorCell}}>
@@ -406,9 +395,7 @@ export default function ScreenDataTable({ business }) {
                                             <TableCell align="left">{nameBusiness}</TableCell>
 
                                             <TableCell align="left">
-                                                {
-                                                    row.code
-                                                }
+                                                { row.devices ? row.devices.length : 0 } Device(s)
                                             </TableCell>
 
                                             <TableCell align="left">{formatDate(row.created_at)}</TableCell>
@@ -493,25 +480,6 @@ export default function ScreenDataTable({ business }) {
                         variant="standard"
                         onChange={handleChange}
                         sx={{pb: 2}}
-                    />
-                    <FormControlLabel
-                        control={<Checkbox name="changeCode" checked={changeCode} onChange={handleChangeCode}/>}
-                        label="Change Code"
-                        sx={{m: -1.5}}
-                    />
-                    <TextField
-                        margin="dense"
-                        name="code"
-                        label="Device Code"
-                        value={formData.code ?? ''}
-                        type="text"
-                        fullWidth
-                        variant="standard"
-                        onChange={handleChange}
-                        error={validator.code && true}
-                        helperText={validator.code}
-                        sx={{pb: 2}}
-                        disabled={!changeCode}
                     />
                     <FormControl
                         variant="standard"

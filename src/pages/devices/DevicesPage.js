@@ -57,6 +57,8 @@ const TABLE_HEAD = [
     { id: 'actions', label: 'Actions' },
 ];
 
+const NAME_PAGE = 'Devices';
+
 // ----------------------------------------------------------------------
 
 function descendingComparator(a, b, orderBy) {
@@ -327,14 +329,14 @@ export default function DevicePage() {
     return (
         <>
             <Helmet>
-                <title> User | { PROYECT_CONFIG.NAME } </title>
+                <title> {NAME_PAGE} | { PROYECT_CONFIG.NAME } </title>
             </Helmet>
 
             <Container>
 
                 <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
                     <Typography variant="h4" gutterBottom>
-                        User
+                        {NAME_PAGE}
                     </Typography>
                 </Stack>
 

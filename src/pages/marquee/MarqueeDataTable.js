@@ -1,0 +1,460 @@
+import React, {useEffect, useState} from "react";
+import {
+    Button, Card, Dialog,
+    Checkbox, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, MenuItem, Paper, Popover,
+    Stack,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer, TablePagination,
+    TableRow, TextField,
+    Typography, InputLabel, Select, FormControl, FormControlLabel
+} from "@mui/material";
+import {filter, flatMap} from "lodash";
+import PROYECT_CONFIG from "../../config/config";
+import {UserListHead, UserListToolbar} from "../../sections/@dashboard/user";
+import Scrollbar from "../../components/scrollbar/Scrollbar";
+import {formatDate} from "../../utils/formatTime";
+import Iconify from "../../components/iconify";
+import useApiHandlerStore from "../../zustand/useApiHandlerStore";
+import useMessagesAlert from "../../hooks/messages/useMessagesAlert";
+import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
+import {applySortFilter, getComparator} from "../../utils/table/tableFunctions";
+import palette from "../../theme/palette";
+import useNavigateTo from "../../hooks/navigateTo";
+import useAuthStore from "../../zustand/useAuthStore";
+import BackButton from "../../sections/@dashboard/app/AppBackButton";
+
+
+const AREA_URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.AREA.ALL;
+const BUSINESS_URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.BUSINESS.ALL;
+const SCREEN_URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.SCREEN.ALL;
+const SCREEN_URL_GET_DATA_UPDATE = PROYECT_CONFIG.API_CONFIG.SCREEN.GET;
+const SCREEN_URL_DELETE_ROW = PROYECT_CONFIG.API_CONFIG.SCREEN.DELETE;
+const SCREEN_URL_CREATE_ROW = PROYECT_CONFIG.API_CONFIG.SCREEN.CREATE;
+const SCREEN_URL_UPDATE_ROW = PROYECT_CONFIG.API_CONFIG.SCREEN.UPDATE;
+const ROUTE_DETAILS_ROW = '/dashboard/screen/details/';
+
+const TABLE_HEAD = [
+    {id: 'name', label: 'Name', alignRight: false},
+    {id: 'bg_color', label: 'Background Color', alignRight: false},
+    {id: 'text_color', label: 'Text Color', alignRight: false},
+    {id: 'created_at', label: 'Create At', alignRight: false},
+    {id: 'updated_at', label: 'Update At', alignRight: false},
+    {id: 'actions', label: 'Actions'},
+];
+
+
+export default function MarqueeDataTable() {
+    const { navigateTo } = useNavigateTo();
+    const [dataTable, setDataTable] = useState([]);
+    const [open, setOpen] = useState(false);
+    const [openNewDialog, setOpenNewDialog] = useState(false);
+    const [page, setPage] = useState(0);
+    const [order, setOrder] = useState('asc');
+    const [selected, setSelected] = useState([]);
+    const [orderBy, setOrderBy] = useState('name');
+    const [filterName, setFilterName] = useState('');
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [areas, setAreas] = useState([]);
+    const [businesses, setBusinesses] = useState([]);
+    const [disabledAreaField, setDisabledAreaField] = useState(false);
+
+    const {currentUser} = useAuthStore((state) => state);
+    const {api} = useApiHandlerStore((state) => state);
+    const showMessageAlert = useMessagesAlert();
+    const showMessageSnackbar = useMessagesSnackbar();
+
+
+    const getMarquees = async () => {
+
+    };
+
+    const deleteRows = async (ids) => {
+        const data = {'ids': ids};
+        const response = await api.__delete(SCREEN_URL_DELETE_ROW, data, (msg) => {
+            showMessageSnackbar(msg, 'error');
+        }, () => { deleteRows(ids) })
+
+        if (response) {
+            showMessageAlert(response.message, 'success');
+            getMarquees();
+            setSelected([]);
+        }
+    }
+
+    const handleDeleteSelected = () => {
+        deleteRows(selected)
+    }
+
+
+    const handleOpenMenu = (event) => {
+        setOpen(event.currentTarget);
+    };
+
+    const handleCloseMenu = () => {
+        setOpen(null);
+    };
+
+    const handleRequestSort = (event, property) => {
+        const isAsc = orderBy === property && order === 'asc';
+        setOrder(isAsc ? 'desc' : 'asc');
+        setOrderBy(property);
+    };
+
+    const handleSelectAllClick = (event) => {
+        if (event.target.checked) {
+            const newSelecteds = dataTable.map((n) => n.id);
+            setSelected(newSelecteds);
+            return;
+        }
+        setSelected([]);
+    };
+
+    const handleClick = (event, id) => {
+        const selectedIndex = selected.indexOf(id);
+        let newSelected = [];
+        if (selectedIndex === -1) {
+            newSelected = newSelected.concat(selected, id);
+        } else if (selectedIndex === 0) {
+            newSelected = newSelected.concat(selected.slice(1));
+        } else if (selectedIndex === selected.length - 1) {
+            newSelected = newSelected.concat(selected.slice(0, -1));
+        } else if (selectedIndex > 0) {
+            newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
+        }
+        setSelected(newSelected);
+    };
+
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        setPage(0);
+        setRowsPerPage(parseInt(event.target.value, 10));
+    };
+
+    const handleFilterByName = (event) => {
+        setPage(0);
+        setFilterName(event.target.value);
+    };
+
+    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - dataTable.length) : 0;
+
+    const filteredDataTable = applySortFilter({
+        array: dataTable,
+        comparator: getComparator({_order: order, _orderBy: orderBy}),
+        query: filterName
+    });
+
+    const isNotFound = !filteredDataTable.length && !!filterName;
+
+    const handleEditItemClick = (item) => {
+        handleCloseMenu()
+        editAction(item.id)
+    }
+
+    const handleDetailsItemClick = (item) => {
+        handleCloseMenu()
+        navigateTo(`${ROUTE_DETAILS_ROW}${item.id}`)
+    }
+
+    const handleDeleteItemClick = (item) => {
+        handleCloseMenu()
+        deleteRows([item.id])
+    }
+
+    const [validator, setValidator] = useState({});
+    const initialFormData = {
+        name: '',
+        bg_color: '',
+        text_color: '',
+        enabled: 1
+    }
+    const [formData, setFormData] = useState(initialFormData);
+
+    const [update, setUpdate] = useState(null);
+
+    const handleChange = (event) => {
+        const {name, value} = event.target;
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            [name]: value,
+        }));
+
+        if (name === "enabled") {
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                "enabled": formData.enabled === 0 ? 1 : 0,
+            }));
+        }
+    };
+    const handleClickNewScreen = () => {
+        setFormData({
+            name: '',
+            bg_color: '',
+            text_color: '',
+            enabled: 1
+        })
+        setOpenNewDialog(true);
+    };
+
+    const handleCloseNew = () => {
+        setOpenNewDialog(false);
+        setFormData(initialFormData);
+        setUpdate(null);
+        setValidator([]);
+    };
+
+    const createNewAction = async () => {
+
+    }
+
+    const editAction = async (id) => {
+
+    }
+
+    useEffect(() => {
+        getMarquees()
+    }, []);
+
+    return (
+        <>
+            <Stack direction="row" alignItems="end" justifyContent="space-between" mb={5}>
+                <Button variant="outlined" onClick={handleClickNewScreen}
+                        startIcon={<Iconify icon="eva:plus-fill"/>}>
+                    New Marquee
+                </Button>
+            </Stack>
+            <Card>
+                <UserListToolbar numSelected={selected.length} filterName={filterName}
+                                 onFilterName={handleFilterByName} onDeleteSelect={handleDeleteSelected}/>
+
+                <Scrollbar>
+                    <TableContainer sx={{minWidth: 800}}>
+                        <Table>
+                            <UserListHead
+                                order={order}
+                                orderBy={orderBy}
+                                headLabel={TABLE_HEAD}
+                                rowCount={filteredDataTable.length}
+                                numSelected={selected.length}
+                                onRequestSort={handleRequestSort}
+                                onSelectAllClick={handleSelectAllClick}
+                            />
+                            <TableBody>
+                                {filteredDataTable.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                                    const {id, name, business, devices} = row;
+                                    const selectedRow = selected.indexOf(id) !== -1;
+                                    const nameUser = business ? business.user.name : ''
+                                    const nameBusiness = business ? business.name : ''
+                                    let bgColorCell = row.enabled === 1 ? palette.success.lighter : palette.error.lighter
+                                    const ActiveOn = devices ? devices.length : 0
+
+                                    if (ActiveOn === 0) {
+                                        bgColorCell = palette.warning.lighter
+                                    }
+
+                                    return (
+                                        <TableRow hover key={id} tabIndex={-1} role="checkbox"
+                                                  selected={selectedRow} sx={{background: bgColorCell}}>
+                                            <TableCell padding="checkbox">
+                                                <Checkbox checked={selectedRow}
+                                                          onChange={(event) => handleClick(event, id)}/>
+                                            </TableCell>
+
+                                            <TableCell component="th" scope="row" padding="none">
+                                                <Stack direction="row" alignItems="center" spacing={2}>
+                                                    <Iconify icon="material-symbols:live-tv-outline-rounded"/>
+                                                    <Typography variant="subtitle2" noWrap>
+                                                        {name}
+                                                    </Typography>
+                                                </Stack>
+                                            </TableCell>
+
+                                            <TableCell align="left">{nameUser}</TableCell>
+
+                                            <TableCell align="left">{nameBusiness}</TableCell>
+
+                                            <TableCell align="left">
+                                                { row.devices ? row.devices.length : 0 } Device(s)
+                                            </TableCell>
+
+                                            <TableCell align="left">{formatDate(row.created_at)}</TableCell>
+
+                                            <TableCell align="left">{formatDate(row.updated_at)}</TableCell>
+
+                                            <TableCell align="center">
+                                                <IconButton id={id} size="large" color="inherit"
+                                                            onClick={handleOpenMenu}>
+                                                    <Iconify icon={'eva:more-vertical-fill'}/>
+                                                </IconButton>
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                })}
+                                {emptyRows > 0 && (
+                                    <TableRow style={{height: 53 * emptyRows}}>
+                                        <TableCell colSpan={6}/>
+                                    </TableRow>
+                                )}
+                            </TableBody>
+
+                            {isNotFound && (
+                                <TableBody>
+                                    <TableRow>
+                                        <TableCell align="center" colSpan={6} sx={{py: 3}}>
+                                            <Paper
+                                                sx={{
+                                                    textAlign: 'center',
+                                                }}
+                                            >
+                                                <Typography variant="h6" paragraph>
+                                                    Not found
+                                                </Typography>
+
+                                                <Typography variant="body2">
+                                                    No results found for &nbsp;
+                                                    <strong>&quot;{filterName}&quot;</strong>.
+                                                    <br/> Try checking for typos or using complete words.
+                                                </Typography>
+                                            </Paper>
+                                        </TableCell>
+                                    </TableRow>
+                                </TableBody>
+                            )}
+                        </Table>
+                    </TableContainer>
+                </Scrollbar>
+
+                <TablePagination
+                    rowsPerPageOptions={[5, 10, 25]}
+                    component="div"
+                    count={filteredDataTable.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+            </Card>
+            <Dialog open={openNewDialog} onClose={handleCloseNew}>
+                <DialogTitle>{update ? 'Edit' : 'Create a new'} Screen</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        margin="dense"
+                        name="name"
+                        label="Name"
+                        value={formData.name ?? ''}
+                        type="text"
+                        fullWidth
+                        variant="standard"
+                        onChange={handleChange}
+                        error={validator.name && true}
+                        helperText={validator.name}
+                    />
+                    <TextField
+                        margin="dense"
+                        name="description"
+                        label="Description"
+                        value={formData.description ?? ''}
+                        type="text"
+                        fullWidth
+                        variant="standard"
+                        onChange={handleChange}
+                        sx={{pb: 2}}
+                    />
+                    <FormControl
+                        variant="standard"
+                        fullWidth
+                        disabled={disabledAreaField}
+                        defaultValue={''}
+                        sx={{mb: 3}}
+                        error={validator.business_id && true}
+                    >
+                        <InputLabel id="role-select-label">Select Business</InputLabel>
+                        <Select
+                            name="business_id"
+                            labelId="business-select-label"
+                            id="business-select"
+                            value={formData.business_id ?? ''}
+                            label="Select Business"
+                            onChange={handleChange}
+                        >
+                            {
+                                businesses.map((item) => {
+                                    return (
+                                        <MenuItem key={item.id}
+                                                  value={item.id}>{item.name}</MenuItem>
+                                    )
+                                })
+                            }
+                        </Select>
+                    </FormControl>
+                    <FormControl
+                        variant="standard"
+                        fullWidth
+                        sx={{mb: 3}}
+                        defaultValue={''}
+                    >
+                        <InputLabel id="role-select-label">Select Area (optional)</InputLabel>
+                        <Select
+                            name="area_id"
+                            labelId="area-select-label"
+                            id="area-select"
+                            value={formData.area_id ?? ''}
+                            label="Select Area"
+                            onChange={handleChange}
+                        >
+                            {
+                                areas.map((item) => {
+                                    return (
+                                        <MenuItem key={item.id}
+                                                  value={item.id}>{item.name}</MenuItem>
+                                    )
+                                })
+                            }
+                        </Select>
+                    </FormControl>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseNew}>Cancel</Button>
+                    <Button onClick={createNewAction}>{update ? 'Save' : 'Create'}</Button>
+                </DialogActions>
+            </Dialog>
+            <Popover
+                open={Boolean(open)}
+                anchorEl={open}
+                onClose={handleCloseMenu}
+                anchorOrigin={{vertical: 'top', horizontal: 'left'}}
+                transformOrigin={{vertical: 'top', horizontal: 'right'}}
+                PaperProps={{
+                    sx: {
+                        p: 1,
+                        width: 140,
+                        '& .MuiMenuItem-root': {
+                            px: 1,
+                            typography: 'body2',
+                            borderRadius: 0.75,
+                        },
+                    },
+                }}
+            >
+                <MenuItem onClick={() => handleDetailsItemClick(open)}>
+                    <Iconify icon={'tabler:list-details'} sx={{mr: 2}}/>
+                    Details
+                </MenuItem>
+
+                <MenuItem onClick={() => handleEditItemClick(open)}>
+                    <Iconify icon={'eva:edit-fill'} sx={{mr: 2}}/>
+                    Edit
+                </MenuItem>
+
+                <MenuItem onClick={() => handleDeleteItemClick(open)} sx={{color: 'error.main'}}>
+                    <Iconify icon={'eva:trash-2-outline'} sx={{mr: 2}}/>
+                    Delete
+                </MenuItem>
+            </Popover>
+        </>
+    );
+}

@@ -54,6 +54,20 @@ const PROYECT_CONFIG = {
             DELETE: '/devices',
             ALL: '/devices',
         },
+        MARQUEE: {
+            CREATE: '/marquee',
+            GET: '/marquee/',
+            UPDATE: '/marquee/update/',
+            DELETE: '/marquees',
+            ALL: '/marquees',
+        },
+        AD: {
+            CREATE: '/ad',
+            GET: '/ad/',
+            UPDATE: '/ad/update/',
+            DELETE: '/ads',
+            ALL: '/ads',
+        },
         GOOGLE_API_KEY: process.env.GOOGLE_API_KEY,
         ROLES: {
             ADMIN: 'admin'

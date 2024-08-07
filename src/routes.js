@@ -19,6 +19,7 @@ import Dashboard from "./pages/main/Dashboard";
 import ScreensPage from "./pages/screen/ScreensPage";
 import DevicePage from "./pages/devices/DevicesPage";
 import AreasPage from "./pages/areas/AreasPage";
+import MarqueesPage from "./pages/marquee/MarqueesPage";
 
 // ----------------------------------------------------------------------
 
@@ -56,6 +57,9 @@ export default function Router() {
 
             // Devices
             { path: 'devices', element: <DevicePage /> },
+
+            // Marquee
+            { path: 'marquees', element: <MarqueesPage /> },
 
             // Others
             { path: 'products', element: <ProductsPage /> },

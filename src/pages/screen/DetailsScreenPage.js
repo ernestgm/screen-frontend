@@ -136,9 +136,16 @@ export default function DetailsScreenPage() {
                             <Typography variant="h4" gutterBottom>
                                 Active on { screen.devices.length } Device(s)
                             </Typography>
-                            {screen.devices.map((device) => (
+                            { screen.devices.map((device) => (
                                 <ListItem>
-                                    <>Device code: {device.code}</>
+                                    <Stack direction="column" alignItems="left" justifyContent="space-between">
+                                        <Typography variant="caption" gutterBottom>
+                                            <b>Name:</b> { device.name }
+                                        </Typography>
+                                        <Typography variant="caption" gutterBottom>
+                                            <b>Code:</b>  {device.code}
+                                        </Typography>
+                                    </Stack>
                                 </ListItem>
                             ))}
                         </Card>

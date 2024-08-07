@@ -533,11 +533,6 @@ export default function ScreenDataTable({ business }) {
                             }
                         </Select>
                     </FormControl>
-                    <FormControlLabel
-                        control={<Checkbox name="enabled" checked={formData.enabled === 1} onChange={handleChange}/>}
-                        label="Enabled"
-                        sx={{m: -1.5}}
-                    />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseNew}>Cancel</Button>

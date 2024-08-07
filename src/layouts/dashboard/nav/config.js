@@ -38,12 +38,6 @@ const navConfig = [
     icon: icon('mdi:cast-variant'),
     roles: ['admin', 'owner']
   }
-  // {
-  //   title: 'Not found',
-  //   path: '/404',
-  //   icon: icon('ic_disabled'),
-  //   roles: ['admin']
-  // },
 ];
 
 export default navConfig;

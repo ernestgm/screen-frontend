@@ -33,9 +33,9 @@ export default function Dashboard() {
         if (rol !== 'admin') {
             params = `?userId=${user}`
         }
-        const response = await api.__get(`${URL_GET_BUSINESS_RESUME}${params}`, null, (msg) => {
+        const response = await api.__get(`${URL_GET_BUSINESS_RESUME}${params}`, (msg) => {
             showSnackbarMessage(msg, 'error');
-        });
+        }, () => { getBusinessDetails() });
         if (response) {
             setBussinesCount(response.bussines)
             setScreenCount(response.screens)

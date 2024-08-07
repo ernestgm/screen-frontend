@@ -50,6 +50,7 @@ const PAGE_NAME = 'Business';
 const URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.BUSINESS.ALL;
 const URL_DELETE_ROW = PROYECT_CONFIG.API_CONFIG.BUSINESS.DELETE;
 const PATH_EDIT_ROW = `/dashboard/business/edit/`;
+const PATH_GO_AREAS_ROW = `/dashboard/business/areas/`;
 const PATH_NEW_ROW = '/dashboard/business/create';
 const PATH_DETAILS_ROW = '/dashboard/business/details/';
 const ADMIN_TAG = PROYECT_CONFIG.API_CONFIG.ROLES.ADMIN
@@ -92,9 +93,9 @@ export default function UserPage() {
         const params = (currentUser && currentUser.user.role.tag !== ADMIN_TAG) ? `?userId=${currentUser.user.id}` : ''
         const response = await api.__get(`${URL_GET_DATA}${params}`, (msg) => {
             showMessageSnackbar(msg, 'error');
-        })
+        }, () => { getDataTable() })
 
-        if (response) {
+        if (response.data) {
             setDataTable(Object.values(response.data));
         }
     };
@@ -103,7 +104,7 @@ export default function UserPage() {
         const data = { 'ids': ids };
         const response = await api.__delete(URL_DELETE_ROW, data, (msg) => {
             showMessageSnackbar(msg, 'error');
-        })
+        }, () => { deleteRows(ids) })
 
         if (response) {
             showMessageAlert(response.message, 'success');
@@ -217,6 +218,11 @@ export default function UserPage() {
     useEffect(() => {
         getDataTable()
     }, []);
+
+    const handleViewAreasClick = (item) => {
+        handleCloseMenu()
+        navigateTo(`${PATH_GO_AREAS_ROW}${item.id}`)
+    }
 
     return (
         <>
@@ -360,6 +366,11 @@ export default function UserPage() {
                 <MenuItem onClick={() => handleDetailsItemClick(open)}>
                     <Iconify icon={'tabler:list-details'} sx={{mr: 2}}/>
                     Details
+                </MenuItem>
+
+                <MenuItem onClick={() => handleViewAreasClick(open)}>
+                    <Iconify icon="fluent-mdl2:build-queue" sx={{mr: 2}}/>
+                    View Areas
                 </MenuItem>
 
                 <MenuItem onClick={() => handleCreateAreaClick(open)}>

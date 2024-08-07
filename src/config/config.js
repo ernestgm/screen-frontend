@@ -47,6 +47,13 @@ const PROYECT_CONFIG = {
             DELETE: '/products',
             ALL: '/products',
         },
+        DEVICE: {
+            CREATE: '/device',
+            GET: '/device/',
+            UPDATE: '/device/update/',
+            DELETE: '/devices',
+            ALL: '/devices',
+        },
         GOOGLE_API_KEY: process.env.GOOGLE_API_KEY,
         ROLES: {
             ADMIN: 'admin'

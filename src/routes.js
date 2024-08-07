@@ -18,6 +18,7 @@ import CreateImagePage from "./pages/images/CreateImagePage";
 import Dashboard from "./pages/main/Dashboard";
 import ScreensPage from "./pages/screen/ScreensPage";
 import DevicePage from "./pages/devices/DevicesPage";
+import AreasPage from "./pages/areas/AreasPage";
 
 // ----------------------------------------------------------------------
 
@@ -37,10 +38,12 @@ export default function Router() {
             { path: 'business/create', element: <CreateBusinessPage /> },
             { path: 'business/edit/:id', element: <CreateBusinessPage /> },
             { path: 'business/details/:id', element: <DetailsBusinessPage /> },
+            { path: 'business/areas/:id', element: <AreasPage /> },
               // Areas
             { path: 'area/details/:id', element: <DetailsAreasPage /> },
               // Screen
             { path: 'screen/details/:id', element: <DetailsScreenPage /> },
+            { path: 'screen/details/:id/:menu', element: <DetailsScreenPage /> },
             { path: 'screens', element: <ScreensPage /> },
               // Images
             { path: 'image/edit/:pscreen/:pimage', element: <CreateImagePage /> },

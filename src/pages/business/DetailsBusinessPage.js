@@ -16,6 +16,7 @@ import PROYECT_CONFIG from "../../config/config";
 import BusinessDetailsCard from "../../sections/@dashboard/business/BusinessDetailsCard";
 import {MapContainer} from "../../components/map";
 import AreasDataTable from "./table/AreasDataTable";
+import ScreenDataTable from "../screen/ScreenDataTable";
 
 
 // ----------------------------------------------------------------------
@@ -55,8 +56,8 @@ export default function DetailsBusinessPage() {
     const getBusinessDetails = async () => {
         const response = await api.__get(`${URL_GET_BUSINESS}${id}`, null, (msg) => {
             showSnackbarMessage(msg, 'error');
-        });
-        if (response) {
+        }, () => { getBusinessDetails() });
+        if (response.data) {
             const data = response.data;
             setBusiness((oldData) => (
                 {
@@ -127,7 +128,7 @@ export default function DetailsBusinessPage() {
                 </Grid>
                 <Stack>
                     <Grid item xs={12} md={6} lg={8}>
-                        <AreasDataTable business={id}/>
+                        <ScreenDataTable business={id} />
                     </Grid>
                 </Stack>
             </Container>

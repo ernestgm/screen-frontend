@@ -88,11 +88,11 @@ export default function CreateUserPage() {
             }
             response = await api.__update(`/user/update/${id}`, editFormData, (msg) => {
                 showSnackbarMessage(msg, 'error');
-            });
+            }, () => { handleSubmit(e) });
         } else {
             response = await api.__post('/user', formData, (msg) => {
                 showSnackbarMessage(msg, 'error');
-            });
+            }, () => { handleSubmit(e) });
         }
 
         if (response) {
@@ -101,7 +101,7 @@ export default function CreateUserPage() {
                 showSnackbarMessage(msg, 'success');
                 navigateTo('/dashboard/user')
             } else {
-                setValidator(response && response.data)
+                setValidator(response.data && response.data)
             }
         }
     };
@@ -109,8 +109,8 @@ export default function CreateUserPage() {
     const getUser = async () => {
         const response = await api.__get(`/user/${id}`, null, (msg) => {
             showSnackbarMessage(msg, 'error');
-        });
-        if (response) {
+        }, () => { getUser() });
+        if (response.data) {
             setFormData({
                 name: response.data.name,
                 lastname: response.data.lastname,
@@ -124,10 +124,10 @@ export default function CreateUserPage() {
     };
 
     const getRoles = async () => {
-        const response = await api.__get(`/roles`, null, (msg) => {
+        const response = await api.__get(`/roles`, (msg) => {
             showSnackbarMessage(msg, 'error');
-        });
-        if (response) {
+        }, () => { getRoles() });
+        if (response.data) {
             setRoles(response.data);
         }
     };
@@ -161,7 +161,7 @@ export default function CreateUserPage() {
                         <TextField
                             name="name"
                             error={validator.name && true}
-                            value={formData.name}
+                            value={formData.name ?? ''}
                             onChange={handleChange}
                             label="Name"
                             helperText={validator.name}
@@ -169,7 +169,7 @@ export default function CreateUserPage() {
                         <TextField
                             name="lastname"
                             label="Lastname"
-                            value={formData.lastname}
+                            value={formData.lastname ?? ''}
                             onChange={handleChange}
                             error={validator.lastname && true}
                             helperText={validator.lastname}
@@ -177,7 +177,7 @@ export default function CreateUserPage() {
                         <TextField
                             name="email"
                             label="Email"
-                            value={formData.email}
+                            value={formData.email ?? ''}
                             onChange={handleChange}
                             error={validator.email && true}
                             helperText={validator.email}
@@ -189,7 +189,7 @@ export default function CreateUserPage() {
                                 name="role_id"
                                 labelId="role-select-label"
                                 id="role-select"
-                                value={formData.role_id}
+                                value={formData.role_id ?? ''}
                                 label="Role"
                                 onChange={handleChange}
                             >
@@ -208,7 +208,7 @@ export default function CreateUserPage() {
                         <TextField
                             name="password"
                             label="Password"
-                            value={formData.password}
+                            value={formData.password ?? ''}
                             type={showPassword ? 'text' : 'password'}
                             onChange={handleChange}
                             error={validator.password && true}
@@ -227,7 +227,7 @@ export default function CreateUserPage() {
                         <TextField
                             name="c_password"
                             label="Confirm Password"
-                            value={formData.c_password}
+                            value={formData.c_password ?? ''}
                             type={showPassword ? 'text' : 'password'}
                             onChange={handleChange}
                             error={validator.c_password && true}

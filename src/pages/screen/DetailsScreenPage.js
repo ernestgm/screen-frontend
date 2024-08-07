@@ -6,7 +6,7 @@ import {
     Stack,
     Container,
     Typography,
-    Grid, Button, Card,
+    Grid, Button, Card, ListItem,
 } from '@mui/material';
 import BackButton from "../../sections/@dashboard/app/AppBackButton";
 import useApiHandlerStore from "../../zustand/useApiHandlerStore";
@@ -23,16 +23,18 @@ import useNavigateTo from "../../hooks/navigateTo";
 
 const NAME_PAGE = 'Screen Details';
 const URL_GET_PAGE = PROYECT_CONFIG.API_CONFIG.SCREEN.GET;
-const URL_TABLES_PAGE = '/dashboard/area/details/';
+const URL_TABLES_PAGE = '/dashboard/business/details/';
+const URL_MENU_SCREEN_PAGE = '/dashboard/screens';
 const URL_CREATE_IMAGE = '/dashboard/image/create/';
 
 export default function DetailsScreenPage() {
     const {navigateTo} = useNavigateTo();
     const showSnackbarMessage = useMessagesSnackbar();
-    const {id} = useParams();
+    const {id, menu} = useParams();
     const {api} = useApiHandlerStore((state) => state);
     const [screen, setScreen] = useState({
         area_id : '',
+        business_id: '',
         created_at : '',
         id: '',
         name: '',
@@ -46,6 +48,14 @@ export default function DetailsScreenPage() {
                 }
             }
         },
+        business: {
+            name: '',
+            user: {
+                name: '',
+                lastname: ''
+            }
+        },
+        devices: [],
         description: '',
         screens: []
     })
@@ -53,8 +63,8 @@ export default function DetailsScreenPage() {
     const getPageDetails = async () => {
         const response = await api.__get(`${URL_GET_PAGE}${id}`, null, (msg) => {
             showSnackbarMessage(msg, 'error');
-        });
-        if (response) {
+        }, () => { getPageDetails() });
+        if (response.data) {
             setScreen(response.data);
         }
     }
@@ -76,7 +86,9 @@ export default function DetailsScreenPage() {
             <Container>
                 <Stack direction="row" alignItems="left" justifyContent="space-between" mb={5}>
                     <Stack>
-                        <BackButton path={`${URL_TABLES_PAGE}${screen.area_id}`}/>
+                        {
+                            menu ? (<BackButton path={`${URL_MENU_SCREEN_PAGE}`}/>) : (<BackButton path={`${URL_TABLES_PAGE}${screen.business_id}`}/>)
+                        }
                     </Stack>
                     <Typography variant="h4" gutterBottom>
                         {NAME_PAGE}
@@ -90,6 +102,25 @@ export default function DetailsScreenPage() {
                             createdAt={screen.created_at}
                             icon={'material-symbols:live-tv-outline-rounded'}
                         />
+                        <Card
+                            sx={{
+                                py: 3,
+                                px: 5,
+                                mt:2,
+                                boxShadow: 0,
+                                textAlign: 'left',
+                                color: (theme) => theme.palette.primary.darker,
+                                bgcolor: (theme) => theme.palette.primary.lighter,
+                            }}
+                        >
+                            <Typography variant="h4" gutterBottom>
+                                Business Name: { screen.business.name }
+                            </Typography>
+                            <Typography variant="h4" gutterBottom>
+                                Owner: { screen.business.user.name } { screen.business.user.lastname }
+                            </Typography>
+
+                        </Card>
                     </Grid>
                     <Grid item xs={12} sm={6} md={6}>
                         <Card
@@ -103,15 +134,20 @@ export default function DetailsScreenPage() {
                             }}
                         >
                             <Typography variant="h4" gutterBottom>
-                                Device Code: { screen.code }
+                                Active on { screen.devices.length } Device(s)
                             </Typography>
-                            <Typography variant="h4" gutterBottom>
-                                Business Name: { screen.area.business.name }
-                            </Typography>
-                            <Typography variant="h4" gutterBottom>
-                                Owner: { screen.area.business.user.name } { screen.area.business.user.lastname }
-                            </Typography>
-
+                            { screen.devices.map((device) => (
+                                <ListItem>
+                                    <Stack direction="column" alignItems="left" justifyContent="space-between">
+                                        <Typography variant="caption" gutterBottom>
+                                            <b>Name:</b> { device.name }
+                                        </Typography>
+                                        <Typography variant="caption" gutterBottom>
+                                            <b>Code:</b>  {device.code}
+                                        </Typography>
+                                    </Stack>
+                                </ListItem>
+                            ))}
                         </Card>
                     </Grid>
                 </Grid>

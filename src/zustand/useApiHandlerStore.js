@@ -7,8 +7,14 @@ import ApiHandler from "../utils/handlers/ApiHandler";
 
 const useApiHandlerStore = create(
     (set, get) => ({
-        api: new ApiHandler(useAuthStore.getState().currentUser ? useAuthStore.getState().currentUser.token : null),
-        setApiToken: (token) => set({ api: get().api.setUserToken(token)}),
+        api: new ApiHandler(
+            useAuthStore.getState().currentUser ? useAuthStore.getState().currentUser.token : null,
+            useAuthStore.getState().currentUser ? useAuthStore.getState().currentUser.refresh_token : null
+        ),
+        setApiToken: (token, refreshToken) => set({
+            api: get().api.setUserToken(token).setUserRefreshToken(refreshToken)
+        }
+        ),
     })
 );
 

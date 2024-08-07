@@ -26,7 +26,7 @@ export default function BusinessResume({...other}) {
     const getBusinesses = async () => {
         const response = await api.__get(URL_GET_DATA, (msg) => {
             showMessageSnackbar(msg, 'error');
-        })
+        }, () => { getBusinesses() })
 
         if (response) {
             setBusinesses(Object.values(response.data));
@@ -36,7 +36,7 @@ export default function BusinessResume({...other}) {
     const generateJson = async (id) => {
         const response = await api.__get(`${URL_GENERATE_JSON}${id}`, (msg) => {
             showMessageSnackbar(msg, 'error');
-        })
+        }, () => { generateJson(id) })
 
         if (response) {
             showMessageAlert(`JSON URL: ${response.json_url}`, 'success')

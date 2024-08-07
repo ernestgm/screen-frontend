@@ -18,6 +18,14 @@ import {
     IconButton,
     TableContainer,
     TablePagination,
+    DialogTitle,
+    DialogContent,
+    TextField,
+    FormControl,
+    InputLabel,
+    Select,
+    FormControlLabel,
+    DialogActions, Button, Dialog,
 } from '@mui/material';
 // table
 import Iconify from '../../components/iconify';
@@ -29,18 +37,27 @@ import {formatDate} from "../../utils/formatTime";
 import useMessagesAlert from "../../hooks/messages/useMessagesAlert";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import PROYECT_CONFIG from "../../config/config";
+import useAuthStore from "../../zustand/useAuthStore";
 
 
 // ----------------------------------------------------------------------
+const DEVICE_URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.DEVICE.ALL;
+const DEVICE_URL_GET_DATA_UPDATE = PROYECT_CONFIG.API_CONFIG.DEVICE.GET;
+const DEVICE_URL_DELETE_ROW = PROYECT_CONFIG.API_CONFIG.DEVICE.DELETE;
+const DEVICE_URL_UPDATE_ROW = PROYECT_CONFIG.API_CONFIG.DEVICE.UPDATE;
 
 const TABLE_HEAD = [
     {id: 'code', label: 'Device Code', alignRight: false},
+    {id: 'name', label: 'Name', alignRight: false},
     {id: 'device_id', label: 'Device ID', alignRight: false},
     {id: 'user', label: 'User', alignRight: false },
+    {id: 'screen', label: 'Screen', alignRight: false },
     {id: 'created_at', label: 'Create At', alignRight: false},
     {id: 'updated_at', label: 'Update At', alignRight: false},
     { id: 'actions', label: 'Actions' },
 ];
+
+const NAME_PAGE = 'Devices';
 
 // ----------------------------------------------------------------------
 
@@ -75,53 +92,157 @@ function applySortFilter(array, comparator, query) {
 
 export default function DevicePage() {
     const [devices, setDevices] = useState([]);
-
     const [users, setUsers] = useState([]);
-
+    const [screens, setScreens] = useState([]);
+    const [filteredScreen, setFilteredScreens] = useState([]);
     const [open, setOpen] = useState(null);
-
     const [page, setPage] = useState(0);
-
     const [order, setOrder] = useState('asc');
-
     const [selected, setSelected] = useState([]);
-
     const [orderBy, setOrderBy] = useState('code');
-
     const [filterName, setFilterName] = useState('');
-
     const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [openNewDialog, setOpenNewDialog] = useState(false);
+    const [update, setUpdate] = useState(null);
+    const [validator, setValidator] = useState({});
+    const [disabledUserField, setDisabledUserField] = useState(false);
 
 
+    const {currentUser} = useAuthStore((state) => state);
     const {api} = useApiHandlerStore((state) => state);
     const showMessageAlert = useMessagesAlert();
     const showMessageSnackbar = useMessagesSnackbar()
 
+    const initialFormData = {
+        name: '',
+        user_id: '',
+        screen_id: '',
+    }
+    const [formData, setFormData] = useState(initialFormData);
+
+    const handleChange = (event) => {
+        const {name, value} = event.target;
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            [name]: value,
+        }));
+
+        if (name === 'user_id') {
+            filterScreenByUser(value)
+        }
+    };
+
+    const filterScreenByUser = (id) => {
+      if (id) {
+          const filtered = filter(screens, (_screen) => _screen.business.user_id === id)
+          setFilteredScreens(filtered)
+      } else {
+          setFilteredScreens(screens)
+      }
+    }
+
     const getUsers = async () => {
         const response = await api.__get('/users', (msg) => {
             showMessageSnackbar(msg, 'error');
-        })
+        }, () => { getUsers() })
 
-        if (response) {
+        if (response.data) {
             setUsers(Object.values(response.data));
         }
     };
 
-    const getDevices = async () => {
-        const response = await api.__get('/devices', (msg) => {
+    const getScreens = async () => {
+        const response = await api.__get('/screens', (msg) => {
             showMessageSnackbar(msg, 'error');
-        })
+        }, () => { getScreens() })
+
+        if (response.data) {
+            setScreens(Object.values(response.data));
+            if (currentUser && currentUser.user.role.tag === PROYECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
+                filterScreenByUser(null)
+            } else {
+                filterScreenByUser(currentUser.user.id)
+            }
+        }
+    };
+
+    const getDevices = async () => {
+        const response = await api.__get(`${DEVICE_URL_GET_DATA}`, (msg) => {
+            showMessageSnackbar(msg, 'error');
+        }, () => { getDevices() })
+
+        if (response.data) {
+            if (currentUser && currentUser.user.role.tag === PROYECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
+                setDevices(Object.values(response.data));
+            } else {
+                const filteredDevices = filter(response.data, (_device) => _device.user_id === currentUser.user.id)
+                setDevices(filteredDevices);
+            }
+        }
+    };
+
+    const handleEditItemClick = (item) => {
+        handleCloseMenu()
+        if (currentUser && currentUser.user.role.tag === PROYECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
+            setDisabledUserField(false)
+        } else {
+            setDisabledUserField(true)
+        }
+        editAction(item.id)
+    }
+
+    const editAction = async (id) => {
+        setUpdate(id)
+        const response = await api.__get(`${DEVICE_URL_GET_DATA_UPDATE}${id}`,  (msg) => {
+            showMessageSnackbar(msg, 'error');
+        }, () => { editAction(id) });
+
+        if (response.data) {
+            setFormData({
+                name: response.data.name,
+                user_id: response.data.user_id,
+                screen_id: response.data.screen_id
+            })
+            filterScreenByUser(response.data.user_id)
+            setOpenNewDialog(true);
+        }
+    }
+
+    const createNewAction = async () => {
+        const editFormData = {
+            name: formData.name,
+            user_id: formData.user_id,
+            screen_id: formData.screen_id,
+        };
+
+        const response = await api.__update(`${DEVICE_URL_UPDATE_ROW}${update}`, editFormData, (msg) => {
+            showMessageSnackbar(msg, 'error');
+        }, () => { createNewAction() });
+
 
         if (response) {
-            setDevices(Object.values(response.data));
+            if (response.success) {
+                const msg = `Device updated successfully!`;
+                showMessageSnackbar(msg, 'success');
+                setOpenNewDialog(false);
+                setUpdate(null);
+                getDevices();
+                setFormData(initialFormData);
+            } else {
+                setValidator(response.data && response.data)
+            }
         }
+    }
+    const handleCloseNew = () => {
+        setOpenNewDialog(false);
+        setFormData(initialFormData);
     };
 
     const deleteDevices = async (ids) => {
         const data = { 'ids': ids };
-        const response = await api.__delete('/devices', data, (msg) => {
+        const response = await api.__delete(`${DEVICE_URL_DELETE_ROW}`, data, (msg) => {
             showMessageSnackbar(msg, 'error');
-        })
+        }, () => { deleteDevices(ids) })
 
         if (response) {
             showMessageAlert(response.message, 'success');
@@ -141,6 +262,7 @@ export default function DevicePage() {
 
     const handleCloseMenu = () => {
         setOpen(null);
+        setUpdate(null);
     };
 
     const handleRequestSort = (event, property) => {
@@ -200,20 +322,21 @@ export default function DevicePage() {
 
     useEffect(() => {
         getUsers()
+        getScreens()
         getDevices()
     }, []);
 
     return (
         <>
             <Helmet>
-                <title> User | { PROYECT_CONFIG.NAME } </title>
+                <title> {NAME_PAGE} | { PROYECT_CONFIG.NAME } </title>
             </Helmet>
 
             <Container>
 
                 <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
                     <Typography variant="h4" gutterBottom>
-                        User
+                        {NAME_PAGE}
                     </Typography>
                 </Stack>
 
@@ -235,7 +358,7 @@ export default function DevicePage() {
                                 />
                                 <TableBody>
                                     {filteredDevices.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                        const {id, code} = row;
+                                        const {id, code, name} = row;
                                         const selectedDevices = selected.indexOf(id) !== -1;
                                         const user = (users.find((n) => n.id === row.user_id))
                                         return (
@@ -255,11 +378,19 @@ export default function DevicePage() {
                                                     </Stack>
                                                 </TableCell>
 
-                                                <TableCell align="left">{row.device_id}</TableCell>
+                                                <TableCell align="left">{ name }</TableCell>
+
+                                                <TableCell align="left">{ row.device_id && row.device_id }</TableCell>
 
                                                 <TableCell align="left">
                                                     {
                                                         user && user.name
+                                                    }
+                                                </TableCell>
+
+                                                <TableCell align="center">
+                                                    {
+                                                        row.screen ? row.screen.name : '------'
                                                     }
                                                 </TableCell>
 
@@ -320,7 +451,78 @@ export default function DevicePage() {
                     />
                 </Card>
             </Container>
-
+            <Dialog open={openNewDialog} onClose={handleCloseNew}>
+                <DialogTitle>{'Edit'} Devices</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        margin="dense"
+                        name="name"
+                        label="Name"
+                        value={formData.name ?? ''}
+                        type="text"
+                        fullWidth
+                        variant="standard"
+                        onChange={handleChange}
+                        error={validator.name && true}
+                        helperText={validator.name}
+                    />
+                    <FormControl
+                        variant="standard"
+                        fullWidth
+                        defaultValue={''}
+                        sx={{mb: 3}}
+                        disabled={disabledUserField}
+                    >
+                        <InputLabel id="role-select-label">Select User</InputLabel>
+                        <Select
+                            name="user_id"
+                            labelId="user-select-label"
+                            id="user-select"
+                            value={formData.user_id ?? ''}
+                            label="Select User"
+                            onChange={handleChange}
+                        >
+                            {
+                                users.map((item) => {
+                                    return (
+                                        <MenuItem key={item.id}
+                                                  value={item.id}>{item.name}</MenuItem>
+                                    )
+                                })
+                            }
+                        </Select>
+                    </FormControl>
+                    <FormControl
+                        variant="standard"
+                        fullWidth
+                        sx={{mb: 3}}
+                        defaultValue={''}
+                    >
+                        <InputLabel id="role-select-label">Select Screen</InputLabel>
+                        <Select
+                            name="screen_id"
+                            labelId="screen-select-label"
+                            id="screen-select"
+                            value={formData.screen_id ?? ''}
+                            label="Select Screen"
+                            onChange={handleChange}
+                        >
+                            {
+                                filteredScreen.map((item) => {
+                                    return (
+                                        <MenuItem key={item.id}
+                                                  value={item.id}>{item.name}</MenuItem>
+                                    )
+                                })
+                            }
+                        </Select>
+                    </FormControl>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseNew}>Cancel</Button>
+                    <Button onClick={createNewAction}>{'Save'}</Button>
+                </DialogActions>
+            </Dialog>
             <Popover
                 open={Boolean(open)}
                 anchorEl={open}
@@ -339,6 +541,10 @@ export default function DevicePage() {
                     },
                 }}
             >
+                <MenuItem onClick={() => handleEditItemClick(open)}>
+                    <Iconify icon={'eva:edit-fill'} sx={{mr: 2}}/>
+                    Edit
+                </MenuItem>
                 <MenuItem onClick={() => handleDeleteItemClick(open)} sx={{color: 'error.main'}}>
                     <Iconify icon={'eva:trash-2-outline'} sx={{mr: 2}}/>
                     Delete

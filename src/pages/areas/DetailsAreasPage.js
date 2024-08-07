@@ -14,7 +14,7 @@ import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import PROYECT_CONFIG from "../../config/config";
 import {AppWidgetSummary} from "../../sections/@dashboard/app";
 import TitlePageDetails from "../../sections/@dashboard/app/TitlePageDetails";
-import ScreenDataTable from "./table/ScreenDataTable";
+import ScreenDataTable from "../screen/ScreenDataTable";
 import Iconify from "../../components/iconify";
 
 
@@ -39,8 +39,8 @@ export default function DetailsAreasPage() {
     const getAreaDetails = async () => {
         const response = await api.__get(`${URL_GET_AREA}${id}`, null, (msg) => {
             showSnackbarMessage(msg, 'error');
-        });
-        if (response) {
+        }, () => {getAreaDetails()});
+        if (response.data) {
             setArea(response.data);
         }
     }
@@ -69,11 +69,6 @@ export default function DetailsAreasPage() {
                         <TitlePageDetails title={area.name} createdAt={area.created_at} icon={'fluent-mdl2:build-queue'}/>
                     </Grid>
                 </Grid>
-                <Stack>
-                    <Grid item xs={12} md={6} lg={8}>
-                        <ScreenDataTable area={id} />
-                    </Grid>
-                </Stack>
             </Container>
         </>
     );

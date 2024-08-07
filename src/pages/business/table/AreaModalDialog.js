@@ -24,11 +24,11 @@ export default function AreaModalDialog({updateAreaId, areaFormData, openDialog,
         if (updateAreaId) {
             response = await api.__update(`${AREA_URL_UPDATE_ROW}${updateAreaId}`, areaFormData, (msg) => {
                 showMessageSnackbar(msg, 'error');
-            });
+            }, () => { createNewAreaAction() });
         } else {
             response = await api.__post(AREA_URL_CREATE_ROW, areaFormData, (msg) => {
                 showMessageSnackbar(msg, 'error');
-            });
+            }, () => { createNewAreaAction() });
         }
 
 
@@ -38,7 +38,7 @@ export default function AreaModalDialog({updateAreaId, areaFormData, openDialog,
                 showMessageSnackbar(msg, 'success');
                 handleCloseRefreshData()
             } else {
-                setValidator(response && response.data)
+                setValidator(response.data && response.data)
             }
         }
     }
@@ -66,7 +66,7 @@ export default function AreaModalDialog({updateAreaId, areaFormData, openDialog,
                         margin="dense"
                         name="name"
                         label="Name"
-                        value={areaFormData.name}
+                        value={areaFormData.name ?? ''}
                         type="text"
                         fullWidth
                         variant="standard"

@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {
     Avatar, Button, Card, Dialog,
     Checkbox, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, MenuItem, Paper, Popover,
@@ -21,6 +21,7 @@ import useMessagesSnackbar from "../../../hooks/messages/useMessagesSnackbar";
 import {applySortFilter, getComparator} from "../../../utils/table/tableFunctions";
 import useNavigateTo from "../../../hooks/navigateTo";
 import AreaModalDialog from "./AreaModalDialog";
+import BackButton from "../../../sections/@dashboard/app/AppBackButton";
 
 
 // Area Table
@@ -31,6 +32,7 @@ const AREA_URL_DELETE_ROW = PROYECT_CONFIG.API_CONFIG.AREA.DELETE;
 const AREA_URL_CREATE_ROW = PROYECT_CONFIG.API_CONFIG.AREA.CREATE;
 const AREA_URL_UPDATE_ROW = PROYECT_CONFIG.API_CONFIG.AREA.UPDATE;
 const ROUTE_DETAILS_ROW = '/dashboard/area/details/';
+const URL_TABLES_PAGE = '/dashboard/business';
 
 const AREA_TABLE_HEAD = [
     {id: 'name', label: 'Name', alignRight: false},
@@ -67,9 +69,9 @@ export default function AreasDataTable({business}) {
     const getAreas = async () => {
         const response = await api.__get(`${AREA_URL_GET_DATA}?business_id=${business}`, (msg) => {
             showMessageSnackbar(msg, 'error');
-        })
+        }, () => { getAreas() })
 
-        if (response) {
+        if (response.data) {
             setDataTable(Object.values(response.data));
         }
     };
@@ -78,7 +80,7 @@ export default function AreasDataTable({business}) {
         const data = {'ids': ids};
         const response = await api.__delete(AREA_URL_DELETE_ROW, data, (msg) => {
             showMessageSnackbar(msg, 'error');
-        })
+        }, () => { deleteRows(ids) })
 
         if (response) {
             showMessageAlert(response.message, 'success');
@@ -203,9 +205,9 @@ export default function AreasDataTable({business}) {
         setUpdate(id);
         const response = await api.__get(`${AREA_URL_GET_DATA_UPDATE}${id}`, null, (msg) => {
             showMessageSnackbar(msg, 'error');
-        });
+        }, () => { editAreaAction(id) });
 
-        if (response) {
+        if (response.data) {
             setFormData({
                 name: response.data.name,
                 business_id: business,
@@ -221,9 +223,13 @@ export default function AreasDataTable({business}) {
     return (
         <>
             <Stack direction="row" alignItems="left" justifyContent="space-between" mb={5}>
-                <Typography variant="h4" gutterBottom>
-                    Areas
-                </Typography>
+                { business ? (
+                    <>
+                        <Stack>
+                            <BackButton path={`${URL_TABLES_PAGE}`}/>
+                        </Stack>
+                    </>
+                ) : ( <></> )}
                 <Button variant="outlined" onClick={handleClickNewArea}
                         startIcon={<Iconify icon="eva:plus-fill"/>}>
                     New Area

@@ -36,14 +36,8 @@ const navConfig = [
     title: 'Devices',
     path: '/dashboard/devices',
     icon: icon('mdi:cast-variant'),
-    roles: ['admin']
+    roles: ['admin', 'owner']
   }
-  // {
-  //   title: 'Not found',
-  //   path: '/404',
-  //   icon: icon('ic_disabled'),
-  //   roles: ['admin']
-  // },
 ];
 
 export default navConfig;

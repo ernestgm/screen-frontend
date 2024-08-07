@@ -91,11 +91,11 @@ export default function CreateBusinessPage() {
         if (id) {
             response = await api.__update(`${URL_UPDATE}${id}`, formData, (msg) => {
                 showSnackbarMessage(msg, 'error');
-            });
+            }, () => { handleSubmit(e) });
         } else {
             response = await api.__post(URL_CREATE, formData, (msg) => {
                 showSnackbarMessage(msg, 'error');
-            });
+            }, () => { handleSubmit(e) });
         }
 
         if (response) {
@@ -104,7 +104,7 @@ export default function CreateBusinessPage() {
                 showSnackbarMessage(msg, 'success');
                 navigateTo(URL_TABLES_PAGE)
             } else {
-                setValidator(response && response.data)
+                setValidator(response.data && response.data)
             }
         }
     };
@@ -112,9 +112,9 @@ export default function CreateBusinessPage() {
     const getItemForUpdate = async () => {
         const response = await api.__get(`${URL_GET_ITEM_FOR_UPDATE}${id}`, null, (msg) => {
             showSnackbarMessage(msg, 'error');
-        });
+        }, () => { getItemForUpdate() });
 
-        if (response) {
+        if (response.data) {
             setFormData({
                 name: response.data.name,
                 description: response.data.description ? response.data.description : '',
@@ -132,9 +132,9 @@ export default function CreateBusinessPage() {
     const getOwners = async () => {
         const response = await api.__get(PROYECT_CONFIG.API_CONFIG.USERS.ALL, null, (msg) => {
             showSnackbarMessage(msg, 'error');
-        });
+        }, () => { getOwners() });
 
-        if (response) {
+        if (response.data) {
             setOwners(Object.values(response.data));
         }
     }
@@ -166,7 +166,7 @@ export default function CreateBusinessPage() {
                         <TextField
                             name="name"
                             error={validator.name && true}
-                            value={formData.name}
+                            value={formData.name ?? ''}
                             onChange={handleChange}
                             label="Name"
                             helperText={validator.name}
@@ -174,7 +174,7 @@ export default function CreateBusinessPage() {
                         <TextField
                             name="description"
                             label="Description"
-                            value={formData.description}
+                            value={formData.description ?? ''}
                             onChange={handleChange}
                             error={validator.description && true}
                             helperText={validator.description}
@@ -182,7 +182,7 @@ export default function CreateBusinessPage() {
                         <TextField
                             name="logo"
                             label="Logo"
-                            value={formData.logo}
+                            value={formData.logo ?? ''}
                             onChange={handleChange}
                             error={validator.logo && true}
                             helperText={validator.logo}
@@ -198,7 +198,7 @@ export default function CreateBusinessPage() {
                                 name="user_id"
                                 labelId="user-select-label"
                                 id="user-select"
-                                value={formData.user_id}
+                                value={formData.user_id ?? ''}
                                 label="Select Owner"
                                 onChange={handleChange}
 

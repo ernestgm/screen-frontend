@@ -26,7 +26,7 @@ export default function ProtectedLayout(props) {
     if (!currentUser) {
       navigateTo('/login');
     } else {
-      setApiToken(currentUser.token);
+      setApiToken(currentUser.token, currentUser.refresh_token);
       setAccountData(currentUser.user);
 
       redirectUser();

@@ -102,11 +102,17 @@ export default function UserPage() {
     const showMessageSnackbar = useMessagesSnackbar()
 
     const getUsers = async () => {
-        const response = await api.__get('/users', (msg) => {
+        const response = await api.__get(
+            '/users',
+            (msg) => {
             showMessageSnackbar(msg, 'error');
-        })
+            },
+            () => {
+                getUsers()
+            }
+        )
 
-        if (response) {
+        if (response.data) {
             setUsers(Object.values(response.data));
         }
     };
@@ -115,7 +121,7 @@ export default function UserPage() {
         const data = { 'ids': ids };
         const response = await api.__delete('/users', data, (msg) => {
             showMessageSnackbar(msg, 'error');
-        })
+        }, () => { deleteUsers(ids) })
 
         if (response) {
             showMessageAlert(response.message, 'success');

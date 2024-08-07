@@ -75,11 +75,11 @@ export default function CreateImagePage() {
         if (pimage) {
             response = await api.__update(`${URL_UPDATE}${pimage}`, formData, (msg) => {
                 showSnackbarMessage(msg, 'error');
-            });
+            }, () => { handleSubmit(e) });
         } else {
             response = await api.__post(URL_CREATE, formData, (msg) => {
                 showSnackbarMessage(msg, 'error');
-            });
+            }, () => { handleSubmit(e) });
         }
 
         if (response) {
@@ -88,17 +88,17 @@ export default function CreateImagePage() {
                 showSnackbarMessage(msg, 'success');
                 navigateTo(`${URL_BACK}${pscreen}`)
             } else {
-                setValidator(response && response.data)
+                setValidator(response.data && response.data)
             }
         }
     };
 
     const getItemForUpdate = async () => {
-        const response = await api.__get(`${URL_GET_ITEM_FOR_UPDATE}${pimage}`, null, (msg) => {
+        const response = await api.__get(`${URL_GET_ITEM_FOR_UPDATE}${pimage}`, (msg) => {
             showSnackbarMessage(msg, 'error');
-        });
+        }, () => { getItemForUpdate() });
 
-        if (response) {
+        if (response.data) {
             setFormData({
                 name: response.data.name,
                 description: response.data.description,
@@ -151,7 +151,7 @@ export default function CreateImagePage() {
                         <TextField
                             name="description"
                             label="Description"
-                            value={formData.description}
+                            value={formData.description ?? ''}
                             onChange={handleChange}
                             error={validator.description && true}
                             helperText={validator.description}
@@ -160,7 +160,7 @@ export default function CreateImagePage() {
                         <TextField
                             name="duration"
                             label="Duration (5s by default)"
-                            value={formData.duration}
+                            value={formData.duration ?? ''}
                             onChange={handleChange}
                             error={validator.duration && true}
                             helperText={validator.duration}

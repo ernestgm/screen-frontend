@@ -13,51 +13,36 @@ import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import PROYECT_CONFIG from "../../config/config";
 import TitlePageDetails from "../../sections/@dashboard/app/TitlePageDetails";
-import ImageDataTable from "./ImageDataTable";
 import Iconify from "../../components/iconify";
 import useNavigateTo from "../../hooks/navigateTo";
+import AdDataTable from "./AdDataTable";
 
 
 
 // ----------------------------------------------------------------------
 
-const NAME_PAGE = 'Screen Details';
-const URL_GET_PAGE = PROYECT_CONFIG.API_CONFIG.SCREEN.GET;
+const NAME_PAGE = 'Marquee Details';
+const URL_GET_PAGE = PROYECT_CONFIG.API_CONFIG.MARQUEE.GET;
 const URL_TABLES_PAGE = '/dashboard/business/details/';
-const URL_MENU_SCREEN_PAGE = '/dashboard/screens';
+const URL_MENU_MARQUEE_PAGE = '/dashboard/marquees';
 const URL_CREATE_IMAGE = '/dashboard/image/create/';
 
-export default function DetailsScreenPage() {
+export default function DetailsMarqueePage() {
     const {navigateTo} = useNavigateTo();
     const showSnackbarMessage = useMessagesSnackbar();
-    const {id, menu} = useParams();
+    const {id} = useParams();
     const {api} = useApiHandlerStore((state) => state);
-    const [screen, setScreen] = useState({
-        area_id : '',
+    const [marquee, setMarquee] = useState({
         business_id: '',
         created_at : '',
         id: '',
         name: '',
-        code: '',
-        area: {
-            business: {
-                name: '',
-                user: {
-                    name: '',
-                    lastname: ''
-                }
-            }
-        },
+        bg_color: '',
+        text_color: '',
         business: {
             name: '',
-            user: {
-                name: '',
-                lastname: ''
-            }
         },
         devices: [],
-        description: '',
-        screens: []
     })
 
     const getPageDetails = async () => {
@@ -65,17 +50,13 @@ export default function DetailsScreenPage() {
             showSnackbarMessage(msg, 'error');
         }, () => { getPageDetails() });
         if (response.data) {
-            setScreen(response.data);
+            setMarquee(response.data);
         }
     }
 
     useEffect(() => {
         getPageDetails();
     }, [])
-
-    const handleClickNew = () => {
-        navigateTo(`${URL_CREATE_IMAGE}${id}`);
-    }
 
     return (
         <>
@@ -87,7 +68,7 @@ export default function DetailsScreenPage() {
                 <Stack direction="row" alignItems="left" justifyContent="space-between" mb={5}>
                     <Stack>
                         {
-                            menu ? (<BackButton path={`${URL_MENU_SCREEN_PAGE}`}/>) : (<BackButton path={`${URL_TABLES_PAGE}${screen.business_id}`}/>)
+                            <BackButton path={`${URL_MENU_MARQUEE_PAGE}`}/>
                         }
                     </Stack>
                     <Typography variant="h4" gutterBottom>
@@ -97,10 +78,10 @@ export default function DetailsScreenPage() {
                 <Grid container spacing={2} mb={5}>
                     <Grid item xs={12} sm={6} md={6}>
                         <TitlePageDetails
-                            title={screen.name}
-                            description={screen.description}
-                            createdAt={screen.created_at}
-                            icon={'material-symbols:live-tv-outline-rounded'}
+                            title={marquee.name}
+                            description=''
+                            createdAt={marquee.created_at}
+                            icon={'material-symbols:rtt'}
                         />
                         <Card
                             sx={{
@@ -114,12 +95,8 @@ export default function DetailsScreenPage() {
                             }}
                         >
                             <Typography variant="h4" gutterBottom>
-                                Business Name: { screen.business.name }
+                                Business Name: { marquee.business.name }
                             </Typography>
-                            <Typography variant="h4" gutterBottom>
-                                Owner: { screen.business.user.name } { screen.business.user.lastname }
-                            </Typography>
-
                         </Card>
                     </Grid>
                     <Grid item xs={12} sm={6} md={6}>
@@ -134,9 +111,9 @@ export default function DetailsScreenPage() {
                             }}
                         >
                             <Typography variant="h4" gutterBottom>
-                                Active on { screen.devices.length } Device(s)
+                                Active on { marquee.devices.length } Device(s)
                             </Typography>
-                            { screen.devices.map((device) => (
+                            { marquee.devices.map((device) => (
                                 <ListItem>
                                     <Stack direction="column" alignItems="left" justifyContent="space-between">
                                         <Typography variant="caption" gutterBottom>
@@ -150,18 +127,25 @@ export default function DetailsScreenPage() {
                             ))}
                         </Card>
                     </Grid>
+                    <Grid item xs={12} sm={12} md={12}>
+                        <Card
+                            sx={{
+                                p: 2,
+                                boxShadow: 0,
+                                textAlign: 'center',
+                                color: marquee.text_color,
+                                bgcolor: marquee.bg_color,
+                            }}
+                        >
+                            <Typography variant="h4" gutterBottom>
+                                Your marquee use this color palette
+                            </Typography>
+                        </Card>
+                    </Grid>
                 </Grid>
                 <Stack>
-                    <Stack direction="row" alignItems="left" justifyContent="space-between" mb={5}>
-                        <Typography variant="h4" gutterBottom>
-                            Image List
-                        </Typography>
-                        <Button variant="outlined" onClick={handleClickNew} startIcon={<Iconify icon="eva:plus-fill"/>}>
-                            New Image
-                        </Button>
-                    </Stack>
                     <Grid item xs={12} md={6} lg={8}>
-                        <ImageDataTable screen={id} />
+                        <AdDataTable marquee={id} />
                     </Grid>
                 </Stack>
             </Container>

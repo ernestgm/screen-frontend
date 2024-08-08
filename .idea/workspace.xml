@@ -4,14 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d4767243-8cf2-4570-929d-1212d7106fb6" name="Changes" comment="Fixed bugs">
-      <change afterPath="$PROJECT_DIR$/src/pages/marquee/AdDataTable.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/marquee/DetailsMarqueePage.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/marquee/MarqueeDataTable.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/marquee/MarqueesPage.js" afterDir="false" />
+    <list default="true" id="d4767243-8cf2-4570-929d-1212d7106fb6" name="Changes" comment="Implement Marquee">
+      <change afterPath="$PROJECT_DIR$/src/_mock/colors.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/color-utils/SingleColorPreview.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/dashboard/nav/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/dashboard/nav/config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/devices/DevicesPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/devices/DevicesPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/marquee/AdDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/marquee/AdDataTable.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/marquee/DetailsMarqueePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/marquee/DetailsMarqueePage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/marquee/MarqueeDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/marquee/MarqueeDataTable.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes.js" afterDir="false" />
     </list>
     <list id="d4ad349c-1410-4760-87b2-6c449dfa42b6" name="ignore" comment="CRUD Business" />
@@ -73,10 +73,10 @@
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\pages\marquee" />
+      <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\components\color-utils" />
+      <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\_mock" />
       <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\pages\areas" />
       <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend" />
-      <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\public\assets\illustrations" />
-      <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\build\assets\illustrations" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\pages\screen" />
@@ -131,7 +131,7 @@
       <workItem from="1722178201922" duration="21990000" />
       <workItem from="1722395934844" duration="2624000" />
       <workItem from="1722642391605" duration="49534000" />
-      <workItem from="1722989036110" duration="6441000" />
+      <workItem from="1722989036110" duration="22318000" />
     </task>
     <task id="LOCAL-00001" summary="User login Complete">
       <created>1680980627562</created>
@@ -461,7 +461,15 @@
       <option name="project" value="LOCAL" />
       <updated>1722994680892</updated>
     </task>
-    <option name="localTasksCounter" value="46" />
+    <task id="LOCAL-00046" summary="Implement Marquee">
+      <option name="closed" value="true" />
+      <created>1723003314590</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1723003314590</updated>
+    </task>
+    <option name="localTasksCounter" value="47" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -492,7 +500,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Create business CRUD" />
     <MESSAGE value="Fixed PAge Access" />
     <MESSAGE value="Build Page business details" />
     <MESSAGE value="CRUD Business" />
@@ -517,6 +524,7 @@
     <MESSAGE value="Implement add screen to business." />
     <MESSAGE value="Implement add screen in business" />
     <MESSAGE value="Fixed bugs" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed bugs" />
+    <MESSAGE value="Implement Marquee" />
+    <option name="LAST_COMMIT_MESSAGE" value="Implement Marquee" />
   </component>
 </project>

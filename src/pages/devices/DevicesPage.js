@@ -46,12 +46,17 @@ const DEVICE_URL_GET_DATA_UPDATE = PROYECT_CONFIG.API_CONFIG.DEVICE.GET;
 const DEVICE_URL_DELETE_ROW = PROYECT_CONFIG.API_CONFIG.DEVICE.DELETE;
 const DEVICE_URL_UPDATE_ROW = PROYECT_CONFIG.API_CONFIG.DEVICE.UPDATE;
 
+const USERS_URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.USERS.ALL;
+const SCREENS_URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.SCREEN.ALL;
+const MARQUEES_URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.MARQUEE.ALL;
+
 const TABLE_HEAD = [
     {id: 'code', label: 'Device Code', alignRight: false},
     {id: 'name', label: 'Name', alignRight: false},
-    {id: 'device_id', label: 'Device ID', alignRight: false},
+    // {id: 'device_id', label: 'Device ID', alignRight: false},
     {id: 'user', label: 'User', alignRight: false },
     {id: 'screen', label: 'Screen', alignRight: false },
+    {id: 'marquee', label: 'Marquee', alignRight: false },
     {id: 'created_at', label: 'Create At', alignRight: false},
     {id: 'updated_at', label: 'Update At', alignRight: false},
     { id: 'actions', label: 'Actions' },
@@ -94,7 +99,9 @@ export default function DevicePage() {
     const [devices, setDevices] = useState([]);
     const [users, setUsers] = useState([]);
     const [screens, setScreens] = useState([]);
+    const [marquees, setMarquees] = useState([]);
     const [filteredScreen, setFilteredScreens] = useState([]);
+    const [filteredMarquees, setFilteredMarquees] = useState([]);
     const [open, setOpen] = useState(null);
     const [page, setPage] = useState(0);
     const [order, setOrder] = useState('asc');
@@ -117,6 +124,7 @@ export default function DevicePage() {
         name: '',
         user_id: '',
         screen_id: '',
+        marquee_id: '',
     }
     const [formData, setFormData] = useState(initialFormData);
 
@@ -129,30 +137,18 @@ export default function DevicePage() {
 
         if (name === 'user_id') {
             filterScreenByUser(value)
+            filterMarqueByUser(value)
         }
-    };
-
-    const filterScreenByUser = (id) => {
-      if (id) {
-          const filtered = filter(screens, (_screen) => _screen.business.user_id === id)
-          setFilteredScreens(filtered)
-      } else {
-          setFilteredScreens(screens)
-      }
-    }
-
-    const getUsers = async () => {
-        const response = await api.__get('/users', (msg) => {
-            showMessageSnackbar(msg, 'error');
-        }, () => { getUsers() })
-
-        if (response.data) {
-            setUsers(Object.values(response.data));
-        }
+        // if (name === 'marquee_id') {
+        //     setFormData((prevFormData) => ({
+        //         ...prevFormData,
+        //         "marquee_id": formData.marquee_id === "No" ? -1 : formData.marquee_id,
+        //     }));
+        // }
     };
 
     const getScreens = async () => {
-        const response = await api.__get('/screens', (msg) => {
+        const response = await api.__get(SCREENS_URL_GET_DATA, (msg) => {
             showMessageSnackbar(msg, 'error');
         }, () => { getScreens() })
 
@@ -162,6 +158,21 @@ export default function DevicePage() {
                 filterScreenByUser(null)
             } else {
                 filterScreenByUser(currentUser.user.id)
+            }
+        }
+    };
+
+    const getMarquees = async () => {
+        const response = await api.__get(MARQUEES_URL_GET_DATA, (msg) => {
+            showMessageSnackbar(msg, 'error');
+        }, () => { getScreens() })
+
+        if (response.data) {
+            setMarquees(Object.values(response.data));
+            if (currentUser && currentUser.user.role.tag === PROYECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
+                filterMarqueByUser(null)
+            } else {
+                filterMarqueByUser(currentUser.user.id)
             }
         }
     };
@@ -180,6 +191,37 @@ export default function DevicePage() {
             }
         }
     };
+
+    const getUsers = async () => {
+        const response = await api.__get(USERS_URL_GET_DATA, (msg) => {
+            showMessageSnackbar(msg, 'error');
+        }, () => { getUsers() })
+
+        if (response.data) {
+            setUsers(Object.values(response.data));
+        }
+    };
+
+    const filterMarqueByUser = (id) => {
+        console.log(marquees)
+        if (id) {
+            const filtered = filter(marquees, (_marquee) => _marquee.business.user_id === id)
+            setFilteredMarquees(filtered)
+        } else {
+            setFilteredMarquees(marquees)
+        }
+    }
+
+    const filterScreenByUser = (id) => {
+        if (id) {
+            const filtered = filter(screens, (_screen) => _screen.business.user_id === id)
+            setFilteredScreens(filtered)
+        } else {
+            setFilteredScreens(screens)
+        }
+    }
+
+
 
     const handleEditItemClick = (item) => {
         handleCloseMenu()
@@ -201,9 +243,11 @@ export default function DevicePage() {
             setFormData({
                 name: response.data.name,
                 user_id: response.data.user_id,
-                screen_id: response.data.screen_id
+                screen_id: response.data.screen_id,
+                marquee_id: response.data.marquee_id ? response.data.marquee_id : 0
             })
             filterScreenByUser(response.data.user_id)
+            filterMarqueByUser(response.data.user_id)
             setOpenNewDialog(true);
         }
     }
@@ -213,6 +257,7 @@ export default function DevicePage() {
             name: formData.name,
             user_id: formData.user_id,
             screen_id: formData.screen_id,
+            marquee_id: formData.marquee_id === 0 ? null : formData.marquee_id,
         };
 
         const response = await api.__update(`${DEVICE_URL_UPDATE_ROW}${update}`, editFormData, (msg) => {
@@ -324,6 +369,7 @@ export default function DevicePage() {
         getUsers()
         getScreens()
         getDevices()
+        getMarquees()
     }, []);
 
     return (
@@ -380,8 +426,6 @@ export default function DevicePage() {
 
                                                 <TableCell align="left">{ name }</TableCell>
 
-                                                <TableCell align="left">{ row.device_id && row.device_id }</TableCell>
-
                                                 <TableCell align="left">
                                                     {
                                                         user && user.name
@@ -391,6 +435,12 @@ export default function DevicePage() {
                                                 <TableCell align="center">
                                                     {
                                                         row.screen ? row.screen.name : '------'
+                                                    }
+                                                </TableCell>
+
+                                                <TableCell align="center">
+                                                    {
+                                                        row.marquee ? row.marquee.name : 'No'
                                                     }
                                                 </TableCell>
 
@@ -509,6 +559,32 @@ export default function DevicePage() {
                         >
                             {
                                 filteredScreen.map((item) => {
+                                    return (
+                                        <MenuItem key={item.id}
+                                                  value={item.id}>{item.name}</MenuItem>
+                                    )
+                                })
+                            }
+                        </Select>
+                    </FormControl>
+                    <FormControl
+                        variant="standard"
+                        fullWidth
+                        sx={{mb: 3}}
+                        defaultValue={''}
+                    >
+                        <InputLabel id="marquee-select-label">Select Marquee</InputLabel>
+                        <Select
+                            name="marquee_id"
+                            labelId="marquee-select-label"
+                            id="marquee-select"
+                            value={formData.marquee_id ?? ''}
+                            label="Select Marquee"
+                            onChange={handleChange}
+                        >
+                            <MenuItem key={0} value={0}>{'No'}</MenuItem>
+                            {
+                                filteredMarquees.map((item) => {
                                     return (
                                         <MenuItem key={item.id}
                                                   value={item.id}>{item.name}</MenuItem>

@@ -20,6 +20,7 @@ import ScreensPage from "./pages/screen/ScreensPage";
 import DevicePage from "./pages/devices/DevicesPage";
 import AreasPage from "./pages/areas/AreasPage";
 import MarqueesPage from "./pages/marquee/MarqueesPage";
+import DetailsMarqueePage from "./pages/marquee/DetailsMarqueePage";
 
 // ----------------------------------------------------------------------
 
@@ -60,6 +61,7 @@ export default function Router() {
 
             // Marquee
             { path: 'marquees', element: <MarqueesPage /> },
+            { path: 'marquee/details/:id', element: <DetailsMarqueePage /> },
 
             // Others
             { path: 'products', element: <ProductsPage /> },

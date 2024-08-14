@@ -27,16 +27,12 @@ export default function SaveImage({ onChange, previewImage }) {
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            if (file.size > 1024 * 1024) { // 1MB = 1024 * 1024 bytes
-                showSnackbarMessage('File size should be less than 1MB', 'error');
-            } else {
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    setImage(file);
-                    onChange(reader.result);
-                };
-                reader.readAsDataURL(file);
-            }
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImage(file);
+                onChange(reader.result);
+            };
+            reader.readAsDataURL(file);
         }
     };
 

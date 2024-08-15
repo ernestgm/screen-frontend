@@ -33,10 +33,19 @@ class ApiHanler {
 
     // eslint-disable-next-line class-methods-use-this
     #__base(path, _method, data, errorCallback, refreshCallBack) {
-        const _header = {
+        let _header = {
             "Content-Type": "application/json",
             "Accept": "application/json"
         }
+
+        let postData = data && JSON.stringify(data)
+        if (data instanceof FormData) {
+            postData = data
+            _header = {
+                "Accept": "application/json"
+            }
+        }
+
         if (this._token) {
             _header.Authorization = `Bearer ${ this._token }`;
         }
@@ -44,7 +53,7 @@ class ApiHanler {
         return fetch(PROYECT_CONFIG.API_CONFIG.baseURL+path, {
               method: _method,
               headers: _header,
-              body: data && JSON.stringify(data)
+              body: postData
             })
             .then(response => {
                 if (response.status === 401 && this._refreshToken) {

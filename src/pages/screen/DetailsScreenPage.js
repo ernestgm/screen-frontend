@@ -137,7 +137,7 @@ export default function DetailsScreenPage() {
                                 Active on { screen.devices.length } Device(s)
                             </Typography>
                             { screen.devices.map((device) => (
-                                <ListItem>
+                                <ListItem key={device.id}>
                                     <Stack direction="column" alignItems="left" justifyContent="space-between">
                                         <Typography variant="caption" gutterBottom>
                                             <b>Name:</b> { device.name }

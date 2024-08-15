@@ -33,6 +33,7 @@ export default function CreateImagePage() {
     const {navigateTo} = useNavigateTo();
     const {api} = useApiHandlerStore((state) => state);
     const [validator, setValidator] = useState({});
+    const [preview, setPreview] = useState("");
     const [formData, setFormData] = useState({
         name: '',
         description: '',
@@ -40,7 +41,7 @@ export default function CreateImagePage() {
         duration: 5,
         screen_id: pscreen,
         image: '',
-        products: []
+        // products: []
     });
 
     const handleChange = (event) => {
@@ -59,25 +60,43 @@ export default function CreateImagePage() {
         }
     };
 
+    const showPreview = (base64) => {
+        setPreview(base64)
+    }
     const handleUploadImage = (images) => {
-
         setFormData((prevFormData) => ({
             ...prevFormData,
             image: images
         }));
-
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        let postData
+
+        if (formData.image instanceof File) {
+            postData = new FormData();
+            postData.append('name', formData.name);
+            postData.append('description', formData.description);
+            postData.append('is_static', formData.is_static);
+            postData.append('duration', formData.duration);
+            postData.append('screen_id', formData.screen_id);
+            postData.append('image', formData.image);
+            // const productsJson = JSON.stringify(formData.products);
+            // postData.append('products', productsJson);
+        } else {
+            postData = formData;
+        }
+
+
 
         let response;
         if (pimage) {
-            response = await api.__update(`${URL_UPDATE}${pimage}`, formData, (msg) => {
+            response = await api.__post(`${URL_UPDATE}${pimage}`, postData, (msg) => {
                 showSnackbarMessage(msg, 'error');
             }, () => { handleSubmit(e) });
         } else {
-            response = await api.__post(URL_CREATE, formData, (msg) => {
+            response = await api.__post(URL_CREATE, postData, (msg) => {
                 showSnackbarMessage(msg, 'error');
             }, () => { handleSubmit(e) });
         }
@@ -107,6 +126,7 @@ export default function CreateImagePage() {
                 duration: response.data.duration,
                 image: response.data.image,
             });
+            setPreview(response.data.image)
         }
     }
 
@@ -172,7 +192,7 @@ export default function CreateImagePage() {
                         {/*    sx={{ flexGrow: 1, m: 0 }} */}
                         {/* /> */}
 
-                        <SaveImage onChange={handleUploadImage} previewImage={formData.image}/>
+                        <SaveImage onChange={handleUploadImage} updatePreview={showPreview} previewImage={preview}/>
                     </Stack>
 
                     <Stack sx={{m: 2}}>

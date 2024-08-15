@@ -4,9 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d4767243-8cf2-4570-929d-1212d7106fb6" name="Changes" comment="Implement Marquee Datatables">
+    <list default="true" id="d4767243-8cf2-4570-929d-1212d7106fb6" name="Changes" comment="Upload images from phones and other devices">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/save-image/SaveImage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/save-image/SaveImage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/images/CreateImagePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/images/CreateImagePage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/marquee/DetailsMarqueePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/marquee/DetailsMarqueePage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/screen/DetailsScreenPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/screen/DetailsScreenPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/handlers/ApiHandler.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/handlers/ApiHandler.js" afterDir="false" />
     </list>
     <list id="d4ad349c-1410-4760-87b2-6c449dfa42b6" name="ignore" comment="CRUD Business" />
     <option name="SHOW_DIALOG" value="false" />
@@ -127,7 +131,10 @@
       <workItem from="1722642391605" duration="49534000" />
       <workItem from="1722989036110" duration="22318000" />
       <workItem from="1723262677427" duration="1204000" />
-      <workItem from="1723610310596" duration="1658000" />
+      <workItem from="1723610310596" duration="2307000" />
+      <workItem from="1723635809902" duration="2561000" />
+      <workItem from="1723676072490" duration="2140000" />
+      <workItem from="1723678456889" duration="7103000" />
     </task>
     <task id="LOCAL-00001" summary="User login Complete">
       <created>1680980627562</created>
@@ -465,7 +472,15 @@
       <option name="project" value="LOCAL" />
       <updated>1723003314590</updated>
     </task>
-    <option name="localTasksCounter" value="47" />
+    <task id="LOCAL-00047" summary="Upload images from phones and other devices">
+      <option name="closed" value="true" />
+      <created>1723612645818</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1723612645818</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -496,7 +511,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Fixed PAge Access" />
     <MESSAGE value="Build Page business details" />
     <MESSAGE value="CRUD Business" />
     <MESSAGE value="CRUD business" />
@@ -521,6 +535,7 @@
     <MESSAGE value="Implement add screen in business" />
     <MESSAGE value="Fixed bugs" />
     <MESSAGE value="Implement Marquee" />
-    <option name="LAST_COMMIT_MESSAGE" value="Implement Marquee" />
+    <MESSAGE value="Upload images from phones and other devices" />
+    <option name="LAST_COMMIT_MESSAGE" value="Upload images from phones and other devices" />
   </component>
 </project>

@@ -114,7 +114,7 @@ export default function DetailsMarqueePage() {
                                 Active on { marquee.devices.length } Device(s)
                             </Typography>
                             { marquee.devices.map((device) => (
-                                <ListItem>
+                                <ListItem key={device.id}>
                                     <Stack direction="column" alignItems="left" justifyContent="space-between">
                                         <Typography variant="caption" gutterBottom>
                                             <b>Name:</b> { device.name }

@@ -10,6 +10,7 @@ import {
     Typography,
     TextField, FormControlLabel,
 } from '@mui/material';
+import imageCompression from "browser-image-compression";
 import {LoadingButton} from "@mui/lab";
 import BackButton from "../../sections/@dashboard/app/AppBackButton";
 import useApiHandlerStore from "../../zustand/useApiHandlerStore";
@@ -63,40 +64,48 @@ export default function CreateImagePage() {
     const showPreview = (base64) => {
         setPreview(base64)
     }
-    const handleUploadImage = (images) => {
-        setFormData((prevFormData) => ({
-            ...prevFormData,
-            image: images
-        }));
+    const handleUploadImage = async (images) => {
+        let imageBase64 = ""
+        if (images) {
+            const options = {
+                maxSizeMB: 1, // Tamaño máximo en MB
+                maxWidthOrHeight: 1920, // Máxima altura o ancho
+                useWebWorker: true,
+            };
+
+            try {
+                const compressedFile = await imageCompression(images, options);
+                imageBase64 = await convertToBase64(compressedFile)
+
+                setFormData((prevFormData) => ({
+                    ...prevFormData,
+                    image: imageBase64
+                }));
+            } catch (error) {
+                console.error('Error al comprimir la imagen:', error);
+            }
+        }
     }
+
+    const convertToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = (error) => reject(error);
+        });
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        let postData
-
-        if (formData.image instanceof File) {
-            postData = new FormData();
-            postData.append('name', formData.name);
-            postData.append('description', formData.description);
-            postData.append('is_static', formData.is_static);
-            postData.append('duration', formData.duration);
-            postData.append('screen_id', formData.screen_id);
-            postData.append('image', formData.image);
-            // const productsJson = JSON.stringify(formData.products);
-            // postData.append('products', productsJson);
-        } else {
-            postData = formData;
-        }
-
-
 
         let response;
         if (pimage) {
-            response = await api.__post(`${URL_UPDATE}${pimage}`, postData, (msg) => {
+            response = await api.__post(`${URL_UPDATE}${pimage}`, formData, (msg) => {
                 showSnackbarMessage(msg, 'error');
             }, () => { handleSubmit(e) });
         } else {
-            response = await api.__post(URL_CREATE, postData, (msg) => {
+            response = await api.__post(URL_CREATE, formData, (msg) => {
                 showSnackbarMessage(msg, 'error');
             }, () => { handleSubmit(e) });
         }

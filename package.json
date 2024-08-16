@@ -48,6 +48,7 @@
     "@mui/material": "^5.15.20",
     "@react-google-maps/api": "^2.18.1",
     "apexcharts": "^3.49.1",
+    "browser-image-compression": "^2.0.2",
     "change-case": "^4.1.2",
     "crypto": "^1.0.1",
     "date-fns": "^2.30.0",

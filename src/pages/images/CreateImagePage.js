@@ -33,6 +33,7 @@ export default function CreateImagePage() {
     const {pscreen, pimage } = useParams();
     const {navigateTo} = useNavigateTo();
     const {api} = useApiHandlerStore((state) => state);
+    const [optimizing, setOptimizing] = useState(false);
     const [validator, setValidator] = useState({});
     const [preview, setPreview] = useState("");
     const [formData, setFormData] = useState({
@@ -74,8 +75,11 @@ export default function CreateImagePage() {
             };
 
             try {
+                setOptimizing(true)
                 const compressedFile = await imageCompression(images, options);
+                setOptimizing(false)
                 imageBase64 = await convertToBase64(compressedFile)
+                setOptimizing(false)
 
                 setFormData((prevFormData) => ({
                     ...prevFormData,
@@ -91,6 +95,7 @@ export default function CreateImagePage() {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.readAsDataURL(file);
+            reader.onprogress = () => setOptimizing(true)
             reader.onload = () => resolve(reader.result);
             reader.onerror = (error) => reject(error);
         });
@@ -209,8 +214,8 @@ export default function CreateImagePage() {
                     </Stack>
                 </Card>
                 <Stack sx={{m: 2}}>
-                    <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleSubmit}>
-                        {`Save ${NAME_PAGE}`}
+                    <LoadingButton disabled={optimizing} fullWidth size="large" type="submit" variant="contained" onClick={handleSubmit}>
+                        {optimizing ? `Loading...` : `Save ${NAME_PAGE}`}
                     </LoadingButton>
                 </Stack>
             </Container>

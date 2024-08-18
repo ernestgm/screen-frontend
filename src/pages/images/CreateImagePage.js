@@ -10,6 +10,7 @@ import {
     Typography,
     TextField, FormControlLabel,
 } from '@mui/material';
+import SaveIcon from '@mui/icons-material/Save';
 import imageCompression from "browser-image-compression";
 import {LoadingButton} from "@mui/lab";
 import BackButton from "../../sections/@dashboard/app/AppBackButton";
@@ -33,7 +34,6 @@ export default function CreateImagePage() {
     const {pscreen, pimage } = useParams();
     const {navigateTo} = useNavigateTo();
     const {api} = useApiHandlerStore((state) => state);
-    const [optimizing, setOptimizing] = useState(false);
     const [validator, setValidator] = useState({});
     const [preview, setPreview] = useState("");
     const [formData, setFormData] = useState({
@@ -45,6 +45,7 @@ export default function CreateImagePage() {
         image: '',
         // products: []
     });
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (event) => {
         const {name, value} = event.target;
@@ -75,11 +76,11 @@ export default function CreateImagePage() {
             };
 
             try {
-                setOptimizing(true)
+                setLoading(true)
                 const compressedFile = await imageCompression(images, options);
-                setOptimizing(false)
+                setLoading(false)
                 imageBase64 = await convertToBase64(compressedFile)
-                setOptimizing(false)
+                setLoading(false)
 
                 setFormData((prevFormData) => ({
                     ...prevFormData,
@@ -95,7 +96,7 @@ export default function CreateImagePage() {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.readAsDataURL(file);
-            reader.onprogress = () => setOptimizing(true)
+            reader.onprogress = () => setLoading(true)
             reader.onload = () => resolve(reader.result);
             reader.onerror = (error) => reject(error);
         });
@@ -108,11 +109,11 @@ export default function CreateImagePage() {
         if (pimage) {
             response = await api.__post(`${URL_UPDATE}${pimage}`, formData, (msg) => {
                 showSnackbarMessage(msg, 'error');
-            }, () => { handleSubmit(e) });
+            }, () => { handleSubmit(e) }, ( isLoading ) => { setLoading(isLoading) });
         } else {
             response = await api.__post(URL_CREATE, formData, (msg) => {
                 showSnackbarMessage(msg, 'error');
-            }, () => { handleSubmit(e) });
+            }, () => { handleSubmit(e) }, ( isLoading ) => { setLoading(isLoading) });
         }
 
         if (response) {
@@ -214,8 +215,15 @@ export default function CreateImagePage() {
                     </Stack>
                 </Card>
                 <Stack sx={{m: 2}}>
-                    <LoadingButton disabled={optimizing} fullWidth size="large" type="submit" variant="contained" onClick={handleSubmit}>
-                        {optimizing ? `Loading...` : `Save ${NAME_PAGE}`}
+                    <LoadingButton
+                        color="secondary"
+                        onClick={handleSubmit}
+                        loading={loading}
+                        loadingPosition="start"
+                        startIcon={<SaveIcon />}
+                        variant="contained"
+                    >
+                        <span>Save</span>
                     </LoadingButton>
                 </Stack>
             </Container>

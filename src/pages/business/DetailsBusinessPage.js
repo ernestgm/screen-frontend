@@ -54,7 +54,7 @@ export default function DetailsBusinessPage() {
     });
 
     const getBusinessDetails = async () => {
-        const response = await api.__get(`${URL_GET_BUSINESS}${id}`, null, (msg) => {
+        const response = await api.__get(`${URL_GET_BUSINESS}${id}`, (msg) => {
             showSnackbarMessage(msg, 'error');
         }, () => { getBusinessDetails() });
         if (response.data) {

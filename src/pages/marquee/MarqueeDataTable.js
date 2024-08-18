@@ -25,6 +25,8 @@ import {
     TextField,
     Typography
 } from "@mui/material";
+import {LoadingButton} from "@mui/lab";
+import SaveIcon from '@mui/icons-material/Save';
 import {filter} from "lodash";
 import PROYECT_CONFIG from "../../config/config";
 import {UserListHead, UserListToolbar} from "../../sections/@dashboard/user";
@@ -76,6 +78,7 @@ export default function MarqueeDataTable() {
     const [businesses, setBusinesses] = useState([]);
     const [disabledAreaField, setDisabledAreaField] = useState(false);
     const [update, setUpdate] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const {currentUser} = useAuthStore((state) => state);
     const {api} = useApiHandlerStore((state) => state);
@@ -247,11 +250,11 @@ export default function MarqueeDataTable() {
 
             response = await api.__update(`${MARQUEE_URL_UPDATE_ROW}${update}`, editFormData, (msg) => {
                 showMessageSnackbar(msg, 'error');
-            }, () => { createNewAction() });
+            }, () => { createNewAction() }, ( isLoading ) => { setLoading(isLoading) });
         } else {
             response = await api.__post(MARQUEE_URL_CREATE_ROW, formData, (msg) => {
                 showMessageSnackbar(msg, 'error');
-            }, () => { createNewAction() });
+            }, () => { createNewAction() }, ( isLoading ) => { setLoading(isLoading) });
         }
 
 
@@ -518,7 +521,16 @@ export default function MarqueeDataTable() {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseNew}>Cancel</Button>
-                    <Button onClick={createNewAction}>{update ? 'Save' : 'Create'}</Button>
+                    <LoadingButton
+                        color="secondary"
+                        onClick={createNewAction}
+                        loading={loading}
+                        loadingPosition="start"
+                        startIcon={<SaveIcon />}
+                        variant="contained"
+                    >
+                        <span>{update ? 'Save' : 'Create'}</span>
+                    </LoadingButton>
                 </DialogActions>
             </Dialog>
             <Popover

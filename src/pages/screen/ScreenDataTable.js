@@ -1,15 +1,17 @@
 import React, {useEffect, useState} from "react";
 import {
     Button, Card, Dialog,
-    Checkbox, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, MenuItem, Paper, Popover,
+    Checkbox, DialogActions, DialogContent, DialogTitle, IconButton, MenuItem, Paper, Popover,
     Stack,
     Table,
     TableBody,
     TableCell,
     TableContainer, TablePagination,
     TableRow, TextField,
-    Typography, InputLabel, Select, FormControl, FormControlLabel
+    Typography, InputLabel, Select, FormControl
 } from "@mui/material";
+import {LoadingButton} from "@mui/lab";
+import SaveIcon from '@mui/icons-material/Save';
 import {filter, flatMap} from "lodash";
 import PROYECT_CONFIG from "../../config/config";
 import {UserListHead, UserListToolbar} from "../../sections/@dashboard/user";
@@ -66,6 +68,7 @@ export default function ScreenDataTable({ business }) {
     const {api} = useApiHandlerStore((state) => state);
     const showMessageAlert = useMessagesAlert();
     const showMessageSnackbar = useMessagesSnackbar();
+    const [loading, setLoading] = useState(false);
 
     const getAreas = async (pBusiness) => {
         const path = pBusiness ? `${AREA_URL_GET_DATA}?business_id=${pBusiness}` : `${AREA_URL_GET_DATA}`
@@ -285,11 +288,13 @@ export default function ScreenDataTable({ business }) {
 
             response = await api.__update(`${SCREEN_URL_UPDATE_ROW}${update}`, editFormData, (msg) => {
                 showMessageSnackbar(msg, 'error');
-            }, () => { createNewAction() });
+            }, () => { createNewAction() },
+                ( isLoading ) => { setLoading(isLoading) });
         } else {
             response = await api.__post(SCREEN_URL_CREATE_ROW, formData, (msg) => {
                 showMessageSnackbar(msg, 'error');
-            }, () => { createNewAction() });
+            }, () => { createNewAction() },
+                ( isLoading ) => { setLoading(isLoading) });
         }
 
 
@@ -536,7 +541,16 @@ export default function ScreenDataTable({ business }) {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseNew}>Cancel</Button>
-                    <Button onClick={createNewAction}>{update ? 'Save' : 'Create'}</Button>
+                    <LoadingButton
+                        color="secondary"
+                        onClick={createNewAction}
+                        loading={loading}
+                        loadingPosition="start"
+                        startIcon={<SaveIcon />}
+                        variant="contained"
+                    >
+                        <span>{update ? 'Save' : 'Create'}</span>
+                    </LoadingButton>
                 </DialogActions>
             </Dialog>
             <Popover

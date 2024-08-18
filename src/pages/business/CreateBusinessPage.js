@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
+import SaveIcon from '@mui/icons-material/Save';
 // @mui
 import {Helmet} from 'react-helmet-async';
 import {
@@ -59,6 +60,7 @@ export default function CreateBusinessPage() {
         longitude: ''
     });
 
+    const [loading, setLoading] = useState(false);
     const [owners, setOwners] = useState([]);
     const [autocomplete, setAutocomplete] = useState(null);
 
@@ -91,11 +93,15 @@ export default function CreateBusinessPage() {
         if (id) {
             response = await api.__update(`${URL_UPDATE}${id}`, formData, (msg) => {
                 showSnackbarMessage(msg, 'error');
-            }, () => { handleSubmit(e) });
+            },
+                () => { handleSubmit(e) },
+                ( isLoading ) => { setLoading(isLoading) }
+            );
         } else {
             response = await api.__post(URL_CREATE, formData, (msg) => {
                 showSnackbarMessage(msg, 'error');
-            }, () => { handleSubmit(e) });
+            }, () => { handleSubmit(e) },
+                ( isLoading ) => { setLoading(isLoading) });
         }
 
         if (response) {
@@ -110,7 +116,7 @@ export default function CreateBusinessPage() {
     };
 
     const getItemForUpdate = async () => {
-        const response = await api.__get(`${URL_GET_ITEM_FOR_UPDATE}${id}`, null, (msg) => {
+        const response = await api.__get(`${URL_GET_ITEM_FOR_UPDATE}${id}`, (msg) => {
             showSnackbarMessage(msg, 'error');
         }, () => { getItemForUpdate() });
 
@@ -130,7 +136,7 @@ export default function CreateBusinessPage() {
     }
 
     const getOwners = async () => {
-        const response = await api.__get(PROYECT_CONFIG.API_CONFIG.USERS.ALL, null, (msg) => {
+        const response = await api.__get(PROYECT_CONFIG.API_CONFIG.USERS.ALL, (msg) => {
             showSnackbarMessage(msg, 'error');
         }, () => { getOwners() });
 
@@ -231,8 +237,15 @@ export default function CreateBusinessPage() {
                     </Stack>
                 </Card>
                 <Stack sx={{m: 2}}>
-                    <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleSubmit}>
-                        Save
+                    <LoadingButton
+                        color="secondary"
+                        onClick={handleSubmit}
+                        loading={loading}
+                        loadingPosition="start"
+                        startIcon={<SaveIcon />}
+                        variant="contained"
+                    >
+                        <span>Save</span>
                     </LoadingButton>
                 </Stack>
             </Container>

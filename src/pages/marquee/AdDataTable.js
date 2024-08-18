@@ -10,6 +10,8 @@ import {
     TableRow, TextField,
     Typography, FormControlLabel
 } from "@mui/material";
+import {LoadingButton} from "@mui/lab";
+import SaveIcon from '@mui/icons-material/Save';
 import PROYECT_CONFIG from "../../config/config";
 import useNavigateTo from "../../hooks/navigateTo";
 import useApiHandlerStore from "../../zustand/useApiHandlerStore";
@@ -40,28 +42,19 @@ const AREA_TABLE_HEAD = [
 
 export default function AdDataTable({ marquee }) {
     const {navigateTo} = useNavigateTo();
-
     const [dataTable, setDataTable] = useState([]);
-
     const [open, setOpen] = useState(false);
-
     const [openNewAdDialog, setOpenNewAdDialog] = useState(false);
-
     const [page, setPage] = useState(0);
-
     const [order, setOrder] = useState('asc');
-
     const [selected, setSelected] = useState([]);
-
     const [orderBy, setOrderBy] = useState('name');
-
     const [filterName, setFilterName] = useState('');
-
     const [rowsPerPage, setRowsPerPage] = useState(5);
-
     const {api} = useApiHandlerStore((state) => state);
     const showMessageAlert = useMessagesAlert();
     const showMessageSnackbar = useMessagesSnackbar();
+    const [loading, setLoading] = useState(false);
 
     const getAds = async () => {
         const response = await api.__get(`${AD_URL_GET_DATA}?marquee_id=${marquee}`, (msg) => {
@@ -200,7 +193,7 @@ export default function AdDataTable({ marquee }) {
 
     const editAdAction = async (id) => {
         setUpdate(id);
-        const response = await api.__get(`${AD_URL_GET_DATA_UPDATE}${id}`, null, (msg) => {
+        const response = await api.__get(`${AD_URL_GET_DATA_UPDATE}${id}`, (msg) => {
             showMessageSnackbar(msg, 'error');
         }, () => { editAdAction(id) });
 
@@ -225,11 +218,11 @@ export default function AdDataTable({ marquee }) {
 
             response = await api.__update(`${AD_URL_UPDATE_ROW}${update}`, editFormData, (msg) => {
                 showMessageSnackbar(msg, 'error');
-            }, () => { createNewAction() });
+            }, () => { createNewAction() }, ( isLoading ) => { setLoading(isLoading) });
         } else {
             response = await api.__post(AD_URL_CREATE_ROW, formData, (msg) => {
                 showMessageSnackbar(msg, 'error');
-            }, () => { createNewAction() });
+            }, () => { createNewAction() }, ( isLoading ) => { setLoading(isLoading) });
         }
 
         if (response) {
@@ -255,11 +248,11 @@ export default function AdDataTable({ marquee }) {
         <>
             <Stack direction="row" alignItems="left" justifyContent="space-between" mb={5}>
                 <Typography variant="h4" gutterBottom>
-                    Adver List
+                    Message List
                 </Typography>
                 <Button variant="outlined" onClick={handleClickNewAd}
                         startIcon={<Iconify icon="eva:plus-fill"/>}>
-                    New Ad
+                    New Message
                 </Button>
             </Stack>
 
@@ -359,7 +352,7 @@ export default function AdDataTable({ marquee }) {
                 />
             </Card>
             <Dialog open={openNewAdDialog} onClose={handleCloseNewAd}>
-                <DialogTitle>{update ? 'Edit' : 'Create a new'} Ad</DialogTitle>
+                <DialogTitle>{update ? 'Edit' : 'Create a new'} Message</DialogTitle>
                 <DialogContent>
                     <TextField
                         margin="dense"
@@ -381,7 +374,16 @@ export default function AdDataTable({ marquee }) {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseNewAd}>Cancel</Button>
-                    <Button onClick={createNewAction}>{update ? 'Save' : 'Create'}</Button>
+                    <LoadingButton
+                        color="secondary"
+                        onClick={createNewAction}
+                        loading={loading}
+                        loadingPosition="start"
+                        startIcon={<SaveIcon />}
+                        variant="contained"
+                    >
+                        <span>{update ? 'Save' : 'Create'}</span>
+                    </LoadingButton>
                 </DialogActions>
             </Dialog>
             <Popover

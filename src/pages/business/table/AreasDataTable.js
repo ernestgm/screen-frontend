@@ -203,7 +203,7 @@ export default function AreasDataTable({business}) {
 
     const editAreaAction = async (id) => {
         setUpdate(id);
-        const response = await api.__get(`${AREA_URL_GET_DATA_UPDATE}${id}`, null, (msg) => {
+        const response = await api.__get(`${AREA_URL_GET_DATA_UPDATE}${id}`, (msg) => {
             showMessageSnackbar(msg, 'error');
         }, () => { editAreaAction(id) });
 

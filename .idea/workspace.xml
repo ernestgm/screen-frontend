@@ -6,7 +6,21 @@
   <component name="ChangeListManager">
     <list default="true" id="d4767243-8cf2-4570-929d-1212d7106fb6" name="Changes" comment="Upload images from phones and other devices">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/areas/DetailsAreasPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/areas/DetailsAreasPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/business/CreateBusinessPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/business/CreateBusinessPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/business/DetailsBusinessPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/business/DetailsBusinessPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/business/table/AreaModalDialog.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/business/table/AreaModalDialog.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/business/table/AreasDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/business/table/AreasDataTable.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/devices/DevicesPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/devices/DevicesPage.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/images/CreateImagePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/images/CreateImagePage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/images/table/ProductsDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/images/table/ProductsDataTable.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/marquee/AdDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/marquee/AdDataTable.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/marquee/DetailsMarqueePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/marquee/DetailsMarqueePage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/marquee/MarqueeDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/marquee/MarqueeDataTable.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/screen/DetailsScreenPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/screen/DetailsScreenPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/screen/ScreenDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/screen/ScreenDataTable.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/user/CreateUserPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/user/CreateUserPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/handlers/ApiHandler.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/handlers/ApiHandler.js" afterDir="false" />
     </list>
     <list id="d4ad349c-1410-4760-87b2-6c449dfa42b6" name="ignore" comment="CRUD Business" />
     <option name="SHOW_DIALOG" value="false" />
@@ -130,7 +144,7 @@
       <workItem from="1723610310596" duration="2307000" />
       <workItem from="1723635809902" duration="2561000" />
       <workItem from="1723676072490" duration="2140000" />
-      <workItem from="1723678456889" duration="10408000" />
+      <workItem from="1723678456889" duration="19859000" />
     </task>
     <task id="LOCAL-00001" summary="User login Complete">
       <created>1680980627562</created>
@@ -356,14 +370,6 @@
       <option name="project" value="LOCAL" />
       <updated>1721878383814</updated>
     </task>
-    <task id="LOCAL-00033" summary="fixed bussines page create and edit for owners">
-      <option name="closed" value="true" />
-      <created>1722089964803</created>
-      <option name="number" value="00033" />
-      <option name="presentableId" value="LOCAL-00033" />
-      <option name="project" value="LOCAL" />
-      <updated>1722089964803</updated>
-    </task>
     <task id="LOCAL-00034" summary="remove description a address bussiness required">
       <option name="closed" value="true" />
       <created>1722299504769</created>
@@ -492,7 +498,15 @@
       <option name="project" value="LOCAL" />
       <updated>1723775740987</updated>
     </task>
-    <option name="localTasksCounter" value="50" />
+    <task id="LOCAL-00050" summary="Upload images from phones and other devices">
+      <option name="closed" value="true" />
+      <created>1723781752086</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1723781752117</updated>
+    </task>
+    <option name="localTasksCounter" value="51" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

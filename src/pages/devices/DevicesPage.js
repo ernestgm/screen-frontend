@@ -27,6 +27,8 @@ import {
     FormControlLabel,
     DialogActions, Button, Dialog,
 } from '@mui/material';
+import {LoadingButton} from "@mui/lab";
+import SaveIcon from '@mui/icons-material/Save';
 // table
 import Iconify from '../../components/iconify';
 import Scrollbar from '../../components/scrollbar';
@@ -113,6 +115,7 @@ export default function DevicePage() {
     const [update, setUpdate] = useState(null);
     const [validator, setValidator] = useState({});
     const [disabledUserField, setDisabledUserField] = useState(false);
+    const [loading, setLoading] = useState(false);
 
 
     const {currentUser} = useAuthStore((state) => state);
@@ -262,7 +265,7 @@ export default function DevicePage() {
 
         const response = await api.__update(`${DEVICE_URL_UPDATE_ROW}${update}`, editFormData, (msg) => {
             showMessageSnackbar(msg, 'error');
-        }, () => { createNewAction() });
+        }, () => { createNewAction() }, ( isLoading ) => { setLoading(isLoading) });
 
 
         if (response) {
@@ -596,7 +599,16 @@ export default function DevicePage() {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseNew}>Cancel</Button>
-                    <Button onClick={createNewAction}>{'Save'}</Button>
+                    <LoadingButton
+                        color="secondary"
+                        onClick={createNewAction}
+                        loading={loading}
+                        loadingPosition="start"
+                        startIcon={<SaveIcon />}
+                        variant="contained"
+                    >
+                        <span>{ 'Save' }</span>
+                    </LoadingButton>
                 </DialogActions>
             </Dialog>
             <Popover

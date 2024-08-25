@@ -37,6 +37,12 @@ const navConfig = [
     path: '/dashboard/devices',
     icon: icon('mdi:cast-variant'),
     roles: ['admin', 'owner']
+  },
+  {
+    title: 'Marquees',
+    path: '/dashboard/marquees',
+    icon: icon('material-symbols:rtt'),
+    roles: ['admin', 'owner']
   }
 ];
 

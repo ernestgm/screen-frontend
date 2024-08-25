@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
+import SaveIcon from '@mui/icons-material/Save';
 // @mui
 import {Helmet} from 'react-helmet-async';
 import {
@@ -39,6 +40,8 @@ export default function CreateUserPage() {
         c_password: '',
         enabled: 1
     });
+
+    const [loading, setLoading] = useState(false);
     const [roles, setRoles] = useState([]);
     const [editing, setEditing] = useState(false);
     const [changePassword, setChangePassword] = useState(false);
@@ -86,13 +89,22 @@ export default function CreateUserPage() {
                 editFormData.password = formData.password
                 editFormData.c_password = formData.c_password
             }
-            response = await api.__update(`/user/update/${id}`, editFormData, (msg) => {
-                showSnackbarMessage(msg, 'error');
-            }, () => { handleSubmit(e) });
+            response = await api.__update(
+                `/user/update/${id}`,
+                editFormData,
+                (msg) => {
+                    showSnackbarMessage(msg, 'error');
+                },
+                () => { handleSubmit(e)},
+                ( isLoading ) => { setLoading(isLoading) }
+
+            );
         } else {
             response = await api.__post('/user', formData, (msg) => {
                 showSnackbarMessage(msg, 'error');
-            }, () => { handleSubmit(e) });
+            }, () => { handleSubmit(e) },
+                ( isLoading ) => { setLoading(isLoading) }
+                )
         }
 
         if (response) {
@@ -107,8 +119,9 @@ export default function CreateUserPage() {
     };
 
     const getUser = async () => {
-        const response = await api.__get(`/user/${id}`, null, (msg) => {
-            showSnackbarMessage(msg, 'error');
+        const response = await api.__get(
+            `/user/${id}`, (msg) => {
+            showSnackbarMessage(msg, 'error')
         }, () => { getUser() });
         if (response.data) {
             setFormData({
@@ -251,8 +264,15 @@ export default function CreateUserPage() {
                     </Stack>
                 </Card>
                 <Stack sx={{m: 2}}>
-                    <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleSubmit}>
-                        Save
+                    <LoadingButton
+                        color="secondary"
+                        onClick={handleSubmit}
+                        loading={loading}
+                        loadingPosition="start"
+                        startIcon={<SaveIcon />}
+                        variant="contained"
+                    >
+                        <span>Save</span>
                     </LoadingButton>
                 </Stack>
             </Container>

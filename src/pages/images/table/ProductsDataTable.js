@@ -277,7 +277,7 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
             setFormData(item)
             setOpenNewDialog(true);
         } else {
-            const response = await api.__get(`${PRODUCT_URL_GET_DATA_UPDATE}${id}`, null, (msg) => {
+            const response = await api.__get(`${PRODUCT_URL_GET_DATA_UPDATE}${id}`, (msg) => {
                 showMessageSnackbar(msg, 'error');
             }, () => { editAction(id) });
 
@@ -295,7 +295,7 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
     }
 
     const handleCopyClick = async (id, field, attr) => {
-        const response = await api.__get(`${URL_GET_ROUTE_JSON}?id=${id}&field=${field}&attr=${attr}`, null, (msg) => {
+        const response = await api.__get(`${URL_GET_ROUTE_JSON}?id=${id}&field=${field}&attr=${attr}`, (msg) => {
             showMessageSnackbar(msg, 'error');
         }, () => { handleCopyClick(id, field, attr) });
         if (response) {

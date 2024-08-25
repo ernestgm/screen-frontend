@@ -1,75 +1,65 @@
 import React, {useEffect, useState} from "react";
 import {
-    Avatar, Button, Card, Dialog,
-    Checkbox, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, MenuItem, Paper, Popover,
+    Button, Card, Dialog,
+    Checkbox, DialogActions, DialogContent, DialogTitle, IconButton, MenuItem, Paper, Popover,
     Stack,
     Table,
     TableBody,
     TableCell,
     TableContainer, TablePagination,
     TableRow, TextField,
-    Typography, Box
+    Typography, FormControlLabel
 } from "@mui/material";
-import PROYECT_CONFIG from "../../../config/config";
-import {UserListHead, UserListToolbar} from "../../../sections/@dashboard/user";
-import Scrollbar from "../../../components/scrollbar/Scrollbar";
-import {formatDate} from "../../../utils/formatTime";
-import Iconify from "../../../components/iconify";
-import useApiHandlerStore from "../../../zustand/useApiHandlerStore";
-import useMessagesAlert from "../../../hooks/messages/useMessagesAlert";
-import useMessagesSnackbar from "../../../hooks/messages/useMessagesSnackbar";
-import {applySortFilter, getComparator} from "../../../utils/table/tableFunctions";
-import useNavigateTo from "../../../hooks/navigateTo";
-import AreaModalDialog from "./AreaModalDialog";
-import BackButton from "../../../sections/@dashboard/app/AppBackButton";
+import {LoadingButton} from "@mui/lab";
+import SaveIcon from '@mui/icons-material/Save';
+import PROYECT_CONFIG from "../../config/config";
+import useNavigateTo from "../../hooks/navigateTo";
+import useApiHandlerStore from "../../zustand/useApiHandlerStore";
+import useMessagesAlert from "../../hooks/messages/useMessagesAlert";
+import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
+import {applySortFilter, getComparator} from "../../utils/table/tableFunctions";
+import Iconify from "../../components/iconify";
+import {UserListHead, UserListToolbar} from "../../sections/@dashboard/user";
+import Scrollbar from "../../components/scrollbar";
+import {formatDate} from "../../utils/formatTime";
+import palette from "../../theme/palette";
 
 
 // Area Table
 
-const AREA_URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.AREA.ALL;
-const AREA_URL_GET_DATA_UPDATE = PROYECT_CONFIG.API_CONFIG.AREA.GET;
-const AREA_URL_DELETE_ROW = PROYECT_CONFIG.API_CONFIG.AREA.DELETE;
-const AREA_URL_CREATE_ROW = PROYECT_CONFIG.API_CONFIG.AREA.CREATE;
-const AREA_URL_UPDATE_ROW = PROYECT_CONFIG.API_CONFIG.AREA.UPDATE;
-const ROUTE_DETAILS_ROW = '/dashboard/area/details/';
-const URL_TABLES_PAGE = '/dashboard/business';
+const AD_URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.AD.ALL;
+const AD_URL_GET_DATA_UPDATE = PROYECT_CONFIG.API_CONFIG.AD.GET;
+const AD_URL_DELETE_ROW = PROYECT_CONFIG.API_CONFIG.AD.DELETE;
+const AD_URL_CREATE_ROW = PROYECT_CONFIG.API_CONFIG.AD.CREATE;
+const AD_URL_UPDATE_ROW = PROYECT_CONFIG.API_CONFIG.AD.UPDATE;
 
 const AREA_TABLE_HEAD = [
-    {id: 'name', label: 'Name', alignRight: false},
+    {id: 'message', label: 'Message', alignRight: false},
     {id: 'created_at', label: 'Create At', alignRight: false},
     {id: 'updated_at', label: 'Update At', alignRight: false},
     {id: 'actions', label: 'Actions'},
 ];
 
-export default function AreasDataTable({business}) {
+export default function AdDataTable({ marquee }) {
     const {navigateTo} = useNavigateTo();
-
     const [dataTable, setDataTable] = useState([]);
-
     const [open, setOpen] = useState(false);
-
-    const [openNewAreaDialog, setOpenNewAreaDialog] = useState(false);
-
+    const [openNewAdDialog, setOpenNewAdDialog] = useState(false);
     const [page, setPage] = useState(0);
-
     const [order, setOrder] = useState('asc');
-
     const [selected, setSelected] = useState([]);
-
     const [orderBy, setOrderBy] = useState('name');
-
     const [filterName, setFilterName] = useState('');
-
     const [rowsPerPage, setRowsPerPage] = useState(5);
-
     const {api} = useApiHandlerStore((state) => state);
     const showMessageAlert = useMessagesAlert();
     const showMessageSnackbar = useMessagesSnackbar();
+    const [loading, setLoading] = useState(false);
 
-    const getAreas = async () => {
-        const response = await api.__get(`${AREA_URL_GET_DATA}?business_id=${business}`, (msg) => {
+    const getAds = async () => {
+        const response = await api.__get(`${AD_URL_GET_DATA}?marquee_id=${marquee}`, (msg) => {
             showMessageSnackbar(msg, 'error');
-        }, () => { getAreas() })
+        }, () => { getAds() })
 
         if (response.data) {
             setDataTable(Object.values(response.data));
@@ -78,13 +68,13 @@ export default function AreasDataTable({business}) {
 
     const deleteRows = async (ids) => {
         const data = {'ids': ids};
-        const response = await api.__delete(AREA_URL_DELETE_ROW, data, (msg) => {
+        const response = await api.__delete(AD_URL_DELETE_ROW, data, (msg) => {
             showMessageSnackbar(msg, 'error');
         }, () => { deleteRows(ids) })
 
         if (response) {
             showMessageAlert(response.message, 'success');
-            getAreas();
+            getAds();
             setSelected([]);
         }
     }
@@ -158,12 +148,7 @@ export default function AreasDataTable({business}) {
 
     const handleEditItemClick = (item) => {
         handleCloseMenu()
-        editAreaAction(item.id)
-    }
-
-    const handleDetailsItemClick = (item) => {
-        handleCloseMenu()
-        navigateTo(`${ROUTE_DETAILS_ROW}${item.id}`)
+        editAdAction(item.id)
     }
 
     const handleDeleteItemClick = (item) => {
@@ -171,9 +156,11 @@ export default function AreasDataTable({business}) {
         deleteRows([item.id])
     }
 
+    const [validator, setValidator] = useState({});
     const initialFormData = {
-        name: '',
-        business_id: business
+        message: '',
+        marquee_id: marquee,
+        enabled: 1
     }
     const [formData, setFormData] = useState(initialFormData);
 
@@ -185,56 +172,90 @@ export default function AreasDataTable({business}) {
             ...prevFormData,
             [name]: value,
         }));
-    };
 
-    const handleClickNewArea = () => {
-        setOpenNewAreaDialog(true);
-    };
-
-    const handleCloseNewArea = (updateTable) => {
-        setOpenNewAreaDialog(false);
-        setUpdate(null);
-        setFormData(initialFormData);
-
-        if (updateTable) {
-            getAreas()
+        if (name === "enabled") {
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                "enabled": formData.enabled === 0 ? 1 : 0,
+            }));
         }
     };
 
-    const editAreaAction = async (id) => {
+    const handleClickNewAd = () => {
+        setOpenNewAdDialog(true);
+    };
+
+    const handleCloseNewAd = (updateTable) => {
+        setOpenNewAdDialog(false);
+        setUpdate(null);
+        setFormData(initialFormData);
+    };
+
+    const editAdAction = async (id) => {
         setUpdate(id);
-        const response = await api.__get(`${AREA_URL_GET_DATA_UPDATE}${id}`, (msg) => {
+        const response = await api.__get(`${AD_URL_GET_DATA_UPDATE}${id}`, (msg) => {
             showMessageSnackbar(msg, 'error');
-        }, () => { editAreaAction(id) });
+        }, () => { editAdAction(id) });
 
         if (response.data) {
             setFormData({
-                name: response.data.name,
-                business_id: business,
+                message: response.data.message,
+                marquee_id: marquee,
+                enabled: response.data.enabled,
             });
-            setOpenNewAreaDialog(true);
+            setOpenNewAdDialog(true);
+        }
+    }
+
+    const createNewAction = async () => {
+        let response;
+        const editFormData = {};
+
+        if (update) {
+            editFormData.message = formData.message
+            editFormData.marquee_id = formData.marquee_id
+            editFormData.enabled = formData.enabled
+
+            response = await api.__update(`${AD_URL_UPDATE_ROW}${update}`, editFormData, (msg) => {
+                showMessageSnackbar(msg, 'error');
+            }, () => { createNewAction() }, ( isLoading ) => { setLoading(isLoading) });
+        } else {
+            response = await api.__post(AD_URL_CREATE_ROW, formData, (msg) => {
+                showMessageSnackbar(msg, 'error');
+            }, () => { createNewAction() }, ( isLoading ) => { setLoading(isLoading) });
+        }
+
+        if (response) {
+            if (response.success) {
+                const msg = update ? `Ad updated successfully!` : `Ad added successfully!`;
+                showMessageSnackbar(msg, 'success');
+                setOpenNewAdDialog(false);
+                getAds();
+                setUpdate(null);
+                setFormData(initialFormData);
+                setValidator([]);
+            } else {
+                setValidator(response.data && response.data)
+            }
         }
     }
 
     useEffect(() => {
-        getAreas()
+        getAds()
     }, []);
 
     return (
         <>
             <Stack direction="row" alignItems="left" justifyContent="space-between" mb={5}>
-                { business ? (
-                    <>
-                        <Stack>
-                            <BackButton path={`${URL_TABLES_PAGE}`}/>
-                        </Stack>
-                    </>
-                ) : ( <></> )}
-                <Button variant="outlined" onClick={handleClickNewArea}
+                <Typography variant="h4" gutterBottom>
+                    Message List
+                </Typography>
+                <Button variant="outlined" onClick={handleClickNewAd}
                         startIcon={<Iconify icon="eva:plus-fill"/>}>
-                    New Area
+                    New Message
                 </Button>
             </Stack>
+
             <Card>
                 <UserListToolbar numSelected={selected.length} filterName={filterName}
                                  onFilterName={handleFilterByName} onDeleteSelect={handleDeleteSelected}/>
@@ -253,11 +274,12 @@ export default function AreasDataTable({business}) {
                             />
                             <TableBody>
                                 {filteredDataTable.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                    const {id, name} = row;
+                                    const {id, message, enabled} = row;
                                     const selectedRow = selected.indexOf(id) !== -1;
+                                    const bgColorCell = enabled === 1 ? palette.success.lighter : palette.error.lighter
                                     return (
                                         <TableRow hover key={id} tabIndex={-1} role="checkbox"
-                                                  selected={selectedRow}>
+                                                  selected={selectedRow} sx={{ background: bgColorCell }}>
                                             <TableCell padding="checkbox">
                                                 <Checkbox checked={selectedRow}
                                                           onChange={(event) => handleClick(event, id)}/>
@@ -267,7 +289,7 @@ export default function AreasDataTable({business}) {
                                                 <Stack direction="row" alignItems="center" spacing={2}>
                                                     <Iconify icon="fluent-mdl2:build-queue"/>
                                                     <Typography variant="subtitle2" noWrap>
-                                                        {name}
+                                                        {message}
                                                     </Typography>
                                                 </Stack>
                                             </TableCell>
@@ -329,14 +351,41 @@ export default function AreasDataTable({business}) {
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
             </Card>
-            <AreaModalDialog
-                updateAreaId={update}
-                areaFormData={formData}
-                openDialog={openNewAreaDialog}
-                bussinesId={business}
-                handleClose={handleCloseNewArea}
-                handleFormChange={handleChange}
-            />
+            <Dialog open={openNewAdDialog} onClose={handleCloseNewAd}>
+                <DialogTitle>{update ? 'Edit' : 'Create a new'} Message</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        margin="dense"
+                        name="message"
+                        label="Message"
+                        value={formData.message ?? ''}
+                        type="text"
+                        fullWidth
+                        variant="standard"
+                        onChange={handleChange}
+                        error={validator.message && true}
+                        helperText={validator.message}
+                    />
+                    <FormControlLabel
+                        control={<Checkbox name="enabled" checked={formData.enabled === 1} onChange={ handleChange } />}
+                        label="Enabled"
+                        sx={{ flexGrow: 1, m: 0 }}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseNewAd}>Cancel</Button>
+                    <LoadingButton
+                        color="secondary"
+                        onClick={createNewAction}
+                        loading={loading}
+                        loadingPosition="start"
+                        startIcon={<SaveIcon />}
+                        variant="contained"
+                    >
+                        <span>{update ? 'Save' : 'Create'}</span>
+                    </LoadingButton>
+                </DialogActions>
+            </Dialog>
             <Popover
                 open={Boolean(open)}
                 anchorEl={open}
@@ -355,11 +404,6 @@ export default function AreasDataTable({business}) {
                     },
                 }}
             >
-                <MenuItem onClick={() => handleDetailsItemClick(open)}>
-                    <Iconify icon={'tabler:list-details'} sx={{mr: 2}}/>
-                    Details
-                </MenuItem>
-
                 <MenuItem onClick={() => handleEditItemClick(open)}>
                     <Iconify icon={'eva:edit-fill'} sx={{mr: 2}}/>
                     Edit

@@ -12,7 +12,7 @@ import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import {useEffect, useState} from "react";
-import {MenuItem, Popover, Stack} from "@mui/material";
+import {Card, Checkbox, MenuItem, Popover, Stack, TablePagination} from "@mui/material";
 import Iconify from "../../components/iconify";
 import PROYECT_CONFIG from "../../config/config";
 import useApiHandlerStore from "../../zustand/useApiHandlerStore";
@@ -21,152 +21,22 @@ import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import {fCurrency} from "../../utils/formatNumber";
 import {formatDate} from "../../utils/formatTime";
 import useNavigateTo from "../../hooks/navigateTo";
-
-
-const URL_GET_ROUTE_JSON = PROYECT_CONFIG.API_CONFIG.BUSINESS.ROUTE_JSON;
-function Row(props) {
-    const {row, handleClickMenu} = props;
-    const [open, setOpen] = React.useState(false);
-    const showSnackbarMessage = useMessagesSnackbar();
-    const {api} = useApiHandlerStore((state) => state);
-
-    const handleCopyClick = async (id, field, attr) => {
-        const response = await api.__get(`${URL_GET_ROUTE_JSON}?id=${id}&field=${field}&attr=${attr}`, (msg) => {
-            showSnackbarMessage(msg, 'error');
-        }, () => { handleCopyClick(id, field, attr) });
-        if (response) {
-            navigator.clipboard.writeText(response.route);
-            showSnackbarMessage(`Copy to clipboard: ${response.route}`, 'success');
-        }
-    };
-
-    return (
-        <>
-            <TableRow sx={{'& > *': {borderBottom: 'unset'}}}>
-                {/* <TableCell> */}
-                {/*    <IconButton */}
-                {/*        aria-label="expand row" */}
-                {/*        size="small" */}
-                {/*        onClick={() => setOpen(!open)} */}
-                {/*    > */}
-                {/*        {open */}
-                {/*            ? */}
-                {/*            <Iconify icon='material-symbols:keyboard-arrow-up-rounded' width={24} height={24}/> */}
-                {/*            : */}
-                {/*            <Iconify icon='material-symbols:keyboard-arrow-down-rounded' width={24} height={24}/> */}
-                {/*        } */}
-                {/*    </IconButton> */}
-                {/* </TableCell> */}
-                <TableCell component="th" scope="row" align="center">
-                    <img src={row.image} alt={row.description} width="70px"/>
-                </TableCell>
-                <TableCell component="th" scope="row" align="center">
-                    {row.name}
-                </TableCell>
-                <TableCell align="center">{row.duration}s</TableCell>
-                <TableCell align="center">{formatDate(row.created_at)}</TableCell>
-                <TableCell align="center">{formatDate(row.updated_at)}</TableCell>
-                <TableCell align="right">
-                    <IconButton id={row.id} size="large" color="inherit"
-                                onClick={handleClickMenu}>
-                        <Iconify icon={'eva:more-vertical-fill'}/>
-                    </IconButton>
-                </TableCell>
-            </TableRow>
-            <TableRow>
-                <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={6}>
-                    <Collapse in={open} timeout="auto" unmountOnExit>
-                        <Box sx={{margin: 1}}>
-                            <Typography variant="h6" gutterBottom component="div">
-                                Products
-                            </Typography>
-                            <Table size="small" aria-label="purchases">
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>Name</TableCell>
-                                        <TableCell>Description</TableCell>
-                                        <TableCell>Price</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {row.products && row.products.map((productRow) => (
-                                        <TableRow key={productRow.id}>
-                                            <TableCell component="th" scope="row">
-                                                <Stack direction="row" alignItems="left" justifyContent="space-between"
-                                                       mb={5}>
-                                                    <Typography variant="inherit" alignSelf="center">
-                                                        {productRow.name && productRow.name}
-                                                    </Typography>
-                                                    <IconButton onClick={() => handleCopyClick(productRow.id, 'products', 'name')} aria-label="copy">
-                                                        <Iconify icon="material-symbols:file-copy-outline"/>
-                                                    </IconButton>
-                                                </Stack>
-                                            </TableCell>
-                                            <TableCell component="th" scope="row">
-                                                <Stack direction="row" alignItems="left" justifyContent="space-between"
-                                                       mb={5}>
-                                                    <Typography variant="inherit" alignSelf="center">
-                                                        {productRow.description && productRow.description}
-                                                    </Typography>
-                                                    <IconButton onClick={() => handleCopyClick(productRow.id, 'products', 'description')} aria-label="copy">
-                                                        <Iconify icon="material-symbols:file-copy-outline"/>
-                                                    </IconButton>
-                                                </Stack>
-                                            </TableCell>
-                                            <TableCell>
-                                                <Stack direction="row" alignItems="left" justifyContent="space-between"
-                                                       mb={5}>
-                                                    <Typography variant="inherit" alignSelf="center">
-                                                        {productRow.prices[0] && fCurrency(productRow.prices.slice(-1)[0].value)}
-                                                    </Typography>
-                                                    <IconButton
-                                                        aria-label="copy"
-                                                        onClick={() => handleCopyClick(productRow.prices.slice(-1)[0].id, 'prices', 'value')}
-                                                    >
-                                                        <Iconify icon="material-symbols:file-copy-outline"/>
-                                                    </IconButton>
-                                                </Stack>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </Box>
-                    </Collapse>
-                </TableCell>
-            </TableRow>
-        </>
-    );
-}
-
-Row.propTypes = {
-    row: PropTypes.shape({
-        id: PropTypes.number.isRequired,
-        name: PropTypes.string.isRequired,
-        description: PropTypes.string.isRequired,
-        created_at: PropTypes.string.isRequired,
-        updated_at: PropTypes.string.isRequired,
-        products: PropTypes.arrayOf(
-            PropTypes.shape({
-                id: PropTypes.number.isRequired,
-                name: PropTypes.string.isRequired,
-                prices: PropTypes.arrayOf(
-                    PropTypes.shape({
-                            id: PropTypes.number.isRequired,
-                            value: PropTypes.number.isRequired,
-                        }
-                    )
-                ).isRequired,
-            }),
-        ).isRequired,
-    }).isRequired,
-    handleClickMenu: PropTypes.func.isRequired
-};
+import {UserListHead, UserListToolbar} from "../../sections/@dashboard/user";
+import Scrollbar from "../../components/scrollbar/Scrollbar";
+import palette from "../../theme/palette";
+import {applySortFilter, getComparator} from "../../utils/table/tableFunctions";
 
 const URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.IMAGE.ALL;
 const URL_DELETE_DATA = PROYECT_CONFIG.API_CONFIG.IMAGE.DELETE;
 const URL_EDIT_IMAGE = '/dashboard/image/edit/';
 
+const TABLE_HEAD = [
+    {id: 'name', label: 'Name', alignRight: false},
+    {id: 'duration', label: 'Duration', alignRight: false},
+    {id: 'created_at', label: 'Create At', alignRight: false},
+    {id: 'updated_at', label: 'Update At', alignRight: false},
+    {id: 'actions', label: 'Actions'},
+];
 
 export default function ImageDataTable({screen}) {
     const {navigateTo} = useNavigateTo();
@@ -174,6 +44,69 @@ export default function ImageDataTable({screen}) {
     const {api} = useApiHandlerStore((state) => state);
     const showMessageAlert = useMessagesAlert();
     const showMessageSnackbar = useMessagesSnackbar();
+
+    const [dataTable, setDataTable] = useState([]);
+    const [openNewDialog, setOpenNewDialog] = useState(false);
+    const [page, setPage] = useState(0);
+    const [order, setOrder] = useState('asc');
+    const [selected, setSelected] = useState([]);
+    const [orderBy, setOrderBy] = useState('name');
+    const [filterName, setFilterName] = useState('');
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+
+    const handleRequestSort = (event, property) => {
+        const isAsc = orderBy === property && order === 'asc';
+        setOrder(isAsc ? 'desc' : 'asc');
+        setOrderBy(property);
+    };
+
+    const handleSelectAllClick = (event) => {
+        if (event.target.checked) {
+            const newSelecteds = dataTable.map((n) => n.id);
+            setSelected(newSelecteds);
+            return;
+        }
+        setSelected([]);
+    };
+
+    const handleClick = (event, id) => {
+        const selectedIndex = selected.indexOf(id);
+        let newSelected = [];
+        if (selectedIndex === -1) {
+            newSelected = newSelected.concat(selected, id);
+        } else if (selectedIndex === 0) {
+            newSelected = newSelected.concat(selected.slice(1));
+        } else if (selectedIndex === selected.length - 1) {
+            newSelected = newSelected.concat(selected.slice(0, -1));
+        } else if (selectedIndex > 0) {
+            newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
+        }
+        setSelected(newSelected);
+    };
+
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        setPage(0);
+        setRowsPerPage(parseInt(event.target.value, 10));
+    };
+
+    const handleFilterByName = (event) => {
+        setPage(0);
+        setFilterName(event.target.value);
+    };
+
+    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - dataTable.length) : 0;
+
+    const filteredDataTable = applySortFilter({
+        array: dataTable,
+        comparator: getComparator({_order: order, _orderBy: orderBy}),
+        query: filterName
+    });
+
+    const isNotFound = !filteredDataTable.length && !!filterName;
 
     const handleOpenMenu = (event) => {
         setOpen(event.currentTarget);
@@ -183,8 +116,12 @@ export default function ImageDataTable({screen}) {
         setOpen(null);
     };
 
+    const handleDeleteSelected = () => {
+        deleteRows(selected)
+    }
+
     const deleteRows = async (ids) => {
-        const data = {'ids': ids};
+        const data = {'ids': ids, 'screen_id': screen};
         const response = await api.__delete(URL_DELETE_DATA, data, (msg) => {
             showMessageSnackbar(msg, 'error');
         }, () => { deleteRows(ids) })
@@ -192,6 +129,7 @@ export default function ImageDataTable({screen}) {
         if (response) {
             showMessageAlert(response.message, 'success');
             getData()
+            setSelected([]);
         }
     }
 
@@ -210,15 +148,13 @@ export default function ImageDataTable({screen}) {
         editAction(item.id)
     }
 
-    const [rows, setRows] = useState([])
-
     const getData = async () => {
         const response = await api.__get(`${URL_GET_DATA}?screen_id=${screen}`, (msg) => {
             showMessageSnackbar(msg, 'error');
         }, () => { getData() })
 
         if (response.data) {
-            setRows(Object.values(response.data))
+            setDataTable(Object.values(response.data))
         }
     };
 
@@ -228,28 +164,100 @@ export default function ImageDataTable({screen}) {
 
     return (
         <>
-            <TableContainer component={Paper}>
-                <Table aria-label="collapsible table">
-                    <TableHead>
-                        <TableRow>
-                            {/* <TableCell/> */}
-                            <TableCell align="left">
-                                <Iconify icon='material-symbols:photo' width={24} height={24}/>
-                            </TableCell>
-                            <TableCell align="center">Name</TableCell>
-                            <TableCell align="center">Duration</TableCell>
-                            <TableCell align="center">Create At</TableCell>
-                            <TableCell align="center">Update At</TableCell>
-                            <TableCell align="right">Actions</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {rows && rows.map((row) => (
-                            <Row key={row.id} row={row} handleClickMenu={handleOpenMenu}/>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+            <Card>
+                <UserListToolbar numSelected={selected.length} filterName={filterName}
+                                 onFilterName={handleFilterByName} onDeleteSelect={handleDeleteSelected}/>
+
+                <Scrollbar>
+                    <TableContainer sx={{minWidth: 800}}>
+                        <Table>
+                            <UserListHead
+                                order={order}
+                                orderBy={orderBy}
+                                headLabel={TABLE_HEAD}
+                                rowCount={filteredDataTable.length}
+                                numSelected={selected.length}
+                                onRequestSort={handleRequestSort}
+                                onSelectAllClick={handleSelectAllClick}
+                            />
+                            <TableBody>
+                                {filteredDataTable.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                                    const {id, name, duration} = row;
+                                    const selectedRow = selected.indexOf(id) !== -1;
+
+                                    return (
+                                        <TableRow hover key={id} tabIndex={-1} role="checkbox"
+                                                  selected={selectedRow}>
+                                            <TableCell padding="checkbox">
+                                                <Checkbox checked={selectedRow}
+                                                          onChange={(event) => handleClick(event, id)}/>
+                                            </TableCell>
+                                            <TableCell component="th" scope="row" padding="none">
+                                                <Stack direction="row" alignItems="center" spacing={2}>
+                                                    <img src={row.image} alt={row.description} width="70px"/>
+                                                    <Typography variant="subtitle2" noWrap>
+                                                        {name}
+                                                    </Typography>
+                                                </Stack>
+                                            </TableCell>
+                                            <TableCell align="center">{duration}s</TableCell>
+                                            <TableCell align="center">{formatDate(row.created_at)}</TableCell>
+                                            <TableCell align="center">{formatDate(row.updated_at)}</TableCell>
+
+                                            <TableCell align="center">
+                                                <IconButton id={id} size="large" color="inherit"
+                                                            onClick={handleOpenMenu}>
+                                                    <Iconify icon={'eva:more-vertical-fill'}/>
+                                                </IconButton>
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                })}
+                                {emptyRows > 0 && (
+                                    <TableRow style={{height: 53 * emptyRows}}>
+                                        <TableCell colSpan={6}/>
+                                    </TableRow>
+                                )}
+                            </TableBody>
+
+                            {isNotFound && (
+                                <TableBody>
+                                    <TableRow>
+                                        <TableCell align="center" colSpan={6} sx={{py: 3}}>
+                                            <Paper
+                                                sx={{
+                                                    textAlign: 'center',
+                                                }}
+                                            >
+                                                <Typography variant="h6" paragraph>
+                                                    Not found
+                                                </Typography>
+
+                                                <Typography variant="body2">
+                                                    No results found for &nbsp;
+                                                    <strong>&quot;{filterName}&quot;</strong>.
+                                                    <br/> Try checking for typos or using complete words.
+                                                </Typography>
+                                            </Paper>
+                                        </TableCell>
+                                    </TableRow>
+                                </TableBody>
+                            )}
+                        </Table>
+                    </TableContainer>
+                </Scrollbar>
+
+                <TablePagination
+                    rowsPerPageOptions={[5, 10, 25]}
+                    component="div"
+                    count={filteredDataTable.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+            </Card>
+
             <Popover
                 open={Boolean(open)}
                 anchorEl={open}

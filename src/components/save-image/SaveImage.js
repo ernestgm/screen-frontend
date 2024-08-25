@@ -20,23 +20,20 @@ const VisuallyHiddenInput = styled('input')({
 
 
 
-export default function SaveImage({ onChange, previewImage }) {
+export default function SaveImage({ onChange, updatePreview, previewImage }) {
     const showSnackbarMessage = useMessagesSnackbar();
 
     const [image, setImage] = useState(null);
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            if (file.size > 1024 * 1024) { // 1MB = 1024 * 1024 bytes
-                showSnackbarMessage('File size should be less than 1MB', 'error');
-            } else {
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    setImage(file);
-                    onChange(reader.result);
-                };
-                reader.readAsDataURL(file);
-            }
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImage(file);
+                onChange(file);
+                updatePreview(reader.result);
+            };
+            reader.readAsDataURL(file);
         }
     };
 
@@ -54,7 +51,7 @@ export default function SaveImage({ onChange, previewImage }) {
             </Button>
             {previewImage !== '' && (
                 <div>
-                    <h4>Previsualización:</h4>
+                    <h4>Preview:</h4>
                     <img src={previewImage} alt="Imagen subida" style={{ maxWidth: '100%', maxHeight: '200px' }} />
                 </div>
             )}

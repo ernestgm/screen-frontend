@@ -1,18 +1,33 @@
 import React, {useEffect, useState} from "react";
 import {
-    Button, Card, Dialog,
-    Checkbox, DialogActions, DialogContent, DialogTitle, IconButton, MenuItem, Paper, Popover,
+    Button,
+    Card,
+    Checkbox,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    FormControl,
+    FormControlLabel,
+    IconButton,
+    InputLabel,
+    MenuItem,
+    Paper,
+    Popover,
+    Select,
     Stack,
     Table,
     TableBody,
     TableCell,
-    TableContainer, TablePagination,
-    TableRow, TextField,
-    Typography, InputLabel, Select, FormControl
+    TableContainer,
+    TablePagination,
+    TableRow,
+    TextField,
+    Typography
 } from "@mui/material";
 import {LoadingButton} from "@mui/lab";
 import SaveIcon from '@mui/icons-material/Save';
-import {filter, flatMap} from "lodash";
+import {filter} from "lodash";
 import PROYECT_CONFIG from "../../config/config";
 import {UserListHead, UserListToolbar} from "../../sections/@dashboard/user";
 import Scrollbar from "../../components/scrollbar/Scrollbar";
@@ -25,30 +40,31 @@ import {applySortFilter, getComparator} from "../../utils/table/tableFunctions";
 import palette from "../../theme/palette";
 import useNavigateTo from "../../hooks/navigateTo";
 import useAuthStore from "../../zustand/useAuthStore";
-import BackButton from "../../sections/@dashboard/app/AppBackButton";
+import marqueeColors from "../../_mock/colors";
+import SingleColorPreview from "../../components/color-utils/SingleColorPreview";
 
 
-const AREA_URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.AREA.ALL;
+const MARQUEE_URL_GET_ALL_DATA = PROYECT_CONFIG.API_CONFIG.MARQUEE.ALL;
+const MARQUEE_URL_GET_DATA_UPDATE = PROYECT_CONFIG.API_CONFIG.MARQUEE.GET;
+const MARQUEE_URL_DELETE_ROW = PROYECT_CONFIG.API_CONFIG.MARQUEE.DELETE;
+const MARQUEE_URL_CREATE_ROW = PROYECT_CONFIG.API_CONFIG.MARQUEE.CREATE;
+const MARQUEE_URL_UPDATE_ROW = PROYECT_CONFIG.API_CONFIG.MARQUEE.UPDATE;
 const BUSINESS_URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.BUSINESS.ALL;
-const SCREEN_URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.SCREEN.ALL;
-const SCREEN_URL_GET_DATA_UPDATE = PROYECT_CONFIG.API_CONFIG.SCREEN.GET;
-const SCREEN_URL_DELETE_ROW = PROYECT_CONFIG.API_CONFIG.SCREEN.DELETE;
-const SCREEN_URL_CREATE_ROW = PROYECT_CONFIG.API_CONFIG.SCREEN.CREATE;
-const SCREEN_URL_UPDATE_ROW = PROYECT_CONFIG.API_CONFIG.SCREEN.UPDATE;
-const ROUTE_DETAILS_ROW = '/dashboard/screen/details/';
+const ROUTE_DETAILS_ROW = '/dashboard/marquee/details/';
 
 const TABLE_HEAD = [
     {id: 'name', label: 'Name', alignRight: false},
-    {id: 'user', label: 'User', alignRight: false},
     {id: 'business', label: 'Business', alignRight: false},
-    {id: 'actives', label: 'Active On', alignRight: false},
+    {id: 'bg_color', label: 'Background Color', alignRight: false},
+    {id: 'text_color', label: 'Text Color', alignRight: false},
+    {id: 'active_on', label: 'Active On', alignRight: false},
     {id: 'created_at', label: 'Create At', alignRight: false},
     {id: 'updated_at', label: 'Update At', alignRight: false},
     {id: 'actions', label: 'Actions'},
 ];
 
 
-export default function ScreenDataTable({ business }) {
+export default function MarqueeDataTable() {
     const { navigateTo } = useNavigateTo();
     const [dataTable, setDataTable] = useState([]);
     const [open, setOpen] = useState(false);
@@ -59,78 +75,55 @@ export default function ScreenDataTable({ business }) {
     const [orderBy, setOrderBy] = useState('name');
     const [filterName, setFilterName] = useState('');
     const [rowsPerPage, setRowsPerPage] = useState(5);
-    const [areas, setAreas] = useState([]);
     const [businesses, setBusinesses] = useState([]);
-    const [businessesIds, setBusinessesIds] = useState([]);
     const [disabledAreaField, setDisabledAreaField] = useState(false);
+    const [update, setUpdate] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const {currentUser} = useAuthStore((state) => state);
     const {api} = useApiHandlerStore((state) => state);
     const showMessageAlert = useMessagesAlert();
     const showMessageSnackbar = useMessagesSnackbar();
-    const [loading, setLoading] = useState(false);
 
-    const getAreas = async (pBusiness) => {
-        const path = pBusiness ? `${AREA_URL_GET_DATA}?business_id=${pBusiness}` : `${AREA_URL_GET_DATA}`
-        const response = await api.__get(path, (msg) => {
-            showMessageSnackbar(msg, 'error');
-        }, () => { getAreas(pBusiness) })
 
-        if (response.data) {
-            getBusiness(Object.values(response.data))
-        }
-    };
-
-    const getBusiness = async (_areas) => {
+    const getBusiness = async () => {
         const response = await api.__get(`${BUSINESS_URL_GET_DATA}`, (msg) => {
             showMessageSnackbar(msg, 'error');
         }, () => { getBusiness() })
 
         if (response.data) {
-            if (business) {
-                setAreas(_areas)
-                setBusinesses(Object.values(response.data));
-            } else if (currentUser && currentUser.user.role.tag === PROYECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
-                setAreas(_areas)
+            if (currentUser && currentUser.user.role.tag === PROYECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
                 setBusinesses(Object.values(response.data));
             } else {
                 const filteredBusiness = filter(response.data, (_business) => _business.user_id === currentUser.user.id)
                 setBusinesses(filteredBusiness);
-                const businessIds = filteredBusiness.map(mBusiness => mBusiness.id);
-                const filteredAreas = filter(_areas, (_area) => businessIds.includes( _area.business_id))
-                setAreas(filteredAreas);
             }
         }
     };
-
-
-    const getScreens = async () => {
-        const urlApi = business ? `${SCREEN_URL_GET_DATA}?business_id=${business}` : SCREEN_URL_GET_DATA;
-        const response = await api.__get(urlApi, (msg) => {
+    const getMarquees = async () => {
+        const response = await api.__get(MARQUEE_URL_GET_ALL_DATA, (msg) => {
             showMessageSnackbar(msg, 'error');
-        }, () => { getScreens() })
+        }, () => { getMarquees() })
 
         if (response.data) {
-            if (business) {
-                setDataTable(Object.values(response.data));
-            } else if (currentUser && currentUser.user.role.tag === PROYECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
+            if (currentUser && currentUser.user.role.tag === PROYECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
                 setDataTable(Object.values(response.data));
             } else {
-                const filteredScreen = filter(response.data, (_screen) => _screen.business.user_id === currentUser.user.id)
-                setDataTable(filteredScreen);
+                const filteredMarquee = filter(response.data, (_marquee) => _marquee.business.user_id === currentUser.user.id)
+                setDataTable(filteredMarquee);
             }
         }
     };
 
     const deleteRows = async (ids) => {
         const data = {'ids': ids};
-        const response = await api.__delete(SCREEN_URL_DELETE_ROW, data, (msg) => {
+        const response = await api.__delete(MARQUEE_URL_DELETE_ROW, data, (msg) => {
             showMessageSnackbar(msg, 'error');
         }, () => { deleteRows(ids) })
 
         if (response) {
             showMessageAlert(response.message, 'success');
-            getScreens();
+            getMarquees();
             setSelected([]);
         }
     }
@@ -209,12 +202,7 @@ export default function ScreenDataTable({ business }) {
 
     const handleDetailsItemClick = (item) => {
         handleCloseMenu()
-        if (business) {
-            navigateTo(`${ROUTE_DETAILS_ROW}${item.id}`)
-        } else {
-            navigateTo(`${ROUTE_DETAILS_ROW}${item.id}/menu`)
-        }
-
+        navigateTo(`${ROUTE_DETAILS_ROW}${item.id}`)
     }
 
     const handleDeleteItemClick = (item) => {
@@ -225,14 +213,11 @@ export default function ScreenDataTable({ business }) {
     const [validator, setValidator] = useState({});
     const initialFormData = {
         name: '',
-        description: '',
-        area_id: '',
         business_id: '',
-        enabled: 1
+        bg_color: '#000000',
+        text_color: '#FFFFFF',
     }
     const [formData, setFormData] = useState(initialFormData);
-
-    const [update, setUpdate] = useState(null);
 
     const handleChange = (event) => {
         const {name, value} = event.target;
@@ -240,31 +225,9 @@ export default function ScreenDataTable({ business }) {
             ...prevFormData,
             [name]: value,
         }));
-
-        if (name === "enabled") {
-            setFormData((prevFormData) => ({
-                ...prevFormData,
-                "enabled": formData.enabled === 0 ? 1 : 0,
-            }));
-        }
-
-        if (name === "business_id") {
-            getAreas(value)
-        }
     };
-    const handleClickNewScreen = () => {
-        if (business) {
-            setDisabledAreaField(true);
-        } else {
-            setDisabledAreaField(false);
-        }
-        setFormData({
-            name: '',
-            description: '',
-            area_id: '',
-            business_id: business,
-            enabled: 1
-        })
+    const handleClickNewMarquee = () => {
+        setFormData(initialFormData)
         setOpenNewDialog(true);
     };
 
@@ -281,31 +244,27 @@ export default function ScreenDataTable({ business }) {
 
         if (update) {
             editFormData.name = formData.name
-            editFormData.description = formData.description
-            editFormData.area_id = formData.area_id
             editFormData.business_id = formData.business_id
-            editFormData.enabled = formData.enabled
+            editFormData.bg_color = formData.bg_color
+            editFormData.text_color = formData.text_color
 
-            response = await api.__update(`${SCREEN_URL_UPDATE_ROW}${update}`, editFormData, (msg) => {
+            response = await api.__update(`${MARQUEE_URL_UPDATE_ROW}${update}`, editFormData, (msg) => {
                 showMessageSnackbar(msg, 'error');
-            }, () => { createNewAction() },
-                ( isLoading ) => { setLoading(isLoading) });
+            }, () => { createNewAction() }, ( isLoading ) => { setLoading(isLoading) });
         } else {
-            response = await api.__post(SCREEN_URL_CREATE_ROW, formData, (msg) => {
+            response = await api.__post(MARQUEE_URL_CREATE_ROW, formData, (msg) => {
                 showMessageSnackbar(msg, 'error');
-            }, () => { createNewAction() },
-                ( isLoading ) => { setLoading(isLoading) });
+            }, () => { createNewAction() }, ( isLoading ) => { setLoading(isLoading) });
         }
 
 
         if (response) {
             if (response.success) {
-                const msg = update ? `Screen updated successfully!` : `Screen added successfully!`;
+                const msg = update ? `Marquee updated successfully!` : `Marquee added successfully!`;
                 showMessageSnackbar(msg, 'success');
                 setOpenNewDialog(false);
-                getScreens();
+                getMarquees();
                 setUpdate(null);
-                setDisabledAreaField(false);
                 setFormData(initialFormData);
                 setValidator([]);
             } else {
@@ -316,37 +275,32 @@ export default function ScreenDataTable({ business }) {
 
     const editAction = async (id) => {
         setUpdate(id);
-        const response = await api.__get(`${SCREEN_URL_GET_DATA_UPDATE}${id}`,  (msg) => {
+        const response = await api.__get(`${MARQUEE_URL_GET_DATA_UPDATE}${id}`,  (msg) => {
             showMessageSnackbar(msg, 'error');
         }, () => { editAction(id) });
 
         if (response.data) {
             setFormData({
                 name: response.data.name,
-                description: response.data.description,
-                area_id: response.data.area_id,
                 business_id: response.data.business_id,
-                enabled: response.data.enabled
+                bg_color: response.data.bg_color,
+                text_color: response.data.text_color,
             })
-            getAreas(response.data.business_id)
             setOpenNewDialog(true);
         }
     }
 
     useEffect(() => {
-        getAreas(business)
-        getScreens();
+        getBusiness()
+        getMarquees()
     }, []);
 
     return (
         <>
-            <Stack direction="row" alignItems="start" justifyContent="space-between" mb={5}>
-                <Typography variant="h4" gutterBottom>
-                    { business ?  'Screens' : '' }
-                </Typography>
-                <Button variant="outlined" onClick={handleClickNewScreen}
+            <Stack direction="row" alignItems="end" justifyContent="space-between" mb={5}>
+                <Button variant="outlined" onClick={handleClickNewMarquee}
                         startIcon={<Iconify icon="eva:plus-fill"/>}>
-                    New Screen
+                    New Marquee
                 </Button>
             </Stack>
             <Card>
@@ -369,10 +323,13 @@ export default function ScreenDataTable({ business }) {
                                 {filteredDataTable.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                                     const {id, name, business, devices} = row;
                                     const selectedRow = selected.indexOf(id) !== -1;
-                                    const nameUser = business ? business.user.name : ''
                                     const nameBusiness = business ? business.name : ''
-                                    let bgColorCell = row.enabled === 1 ? palette.success.lighter : palette.error.lighter
+                                    let bgColorCell = palette.success.lighter
                                     const ActiveOn = devices ? devices.length : 0
+                                    const marqueeBgColor = marqueeColors.find((color) => color.id === row.bg_color)
+                                    const marqueeBgColorName = marqueeBgColor ? marqueeBgColor.name : '';
+                                    const marqueeTextColor = marqueeColors.find((color) => color.id === row.text_color)
+                                    const marqueeTextColorName = marqueeTextColor ? marqueeTextColor.name : '';
 
                                     if (ActiveOn === 0) {
                                         bgColorCell = palette.warning.lighter
@@ -386,27 +343,27 @@ export default function ScreenDataTable({ business }) {
                                                           onChange={(event) => handleClick(event, id)}/>
                                             </TableCell>
 
-                                            <TableCell component="th" scope="row" padding="none">
-                                                <Stack direction="row" alignItems="center" spacing={2}>
-                                                    <Iconify icon="material-symbols:live-tv-outline-rounded"/>
-                                                    <Typography variant="subtitle2" noWrap>
-                                                        {name}
-                                                    </Typography>
-                                                </Stack>
+                                            <TableCell align="center" component="th" scope="row" padding="none">
+                                                <Typography variant="subtitle2" noWrap>
+                                                    {name}
+                                                </Typography>
                                             </TableCell>
-
-                                            <TableCell align="left">{nameUser}</TableCell>
-
                                             <TableCell align="left">{nameBusiness}</TableCell>
-
+                                            <TableCell align="left">
+                                                {
+                                                    marqueeBgColorName
+                                                }
+                                            </TableCell>
+                                            <TableCell align="left">
+                                                {
+                                                    marqueeTextColorName
+                                                }
+                                            </TableCell>
                                             <TableCell align="left">
                                                 { row.devices ? row.devices.length : 0 } Device(s)
                                             </TableCell>
-
                                             <TableCell align="left">{formatDate(row.created_at)}</TableCell>
-
                                             <TableCell align="left">{formatDate(row.updated_at)}</TableCell>
-
                                             <TableCell align="center">
                                                 <IconButton id={id} size="large" color="inherit"
                                                             onClick={handleOpenMenu}>
@@ -461,7 +418,7 @@ export default function ScreenDataTable({ business }) {
                 />
             </Card>
             <Dialog open={openNewDialog} onClose={handleCloseNew}>
-                <DialogTitle>{update ? 'Edit' : 'Create a new'} Screen</DialogTitle>
+                <DialogTitle>{update ? 'Edit' : 'Create a new'} Marquee</DialogTitle>
                 <DialogContent>
                     <TextField
                         margin="dense"
@@ -474,17 +431,7 @@ export default function ScreenDataTable({ business }) {
                         onChange={handleChange}
                         error={validator.name && true}
                         helperText={validator.name}
-                    />
-                    <TextField
-                        margin="dense"
-                        name="description"
-                        label="Description"
-                        value={formData.description ?? ''}
-                        type="text"
-                        fullWidth
-                        variant="standard"
-                        onChange={handleChange}
-                        sx={{pb: 2}}
+                        sx={{mb:3}}
                     />
                     <FormControl
                         variant="standard"
@@ -516,25 +463,58 @@ export default function ScreenDataTable({ business }) {
                     <FormControl
                         variant="standard"
                         fullWidth
-                        sx={{mb: 3}}
                         defaultValue={''}
+                        sx={{mb: 3}}
                     >
-                        <InputLabel id="role-select-label">Select Area (optional)</InputLabel>
+                        <InputLabel id="role-select-label">Select Background Color</InputLabel>
                         <Select
-                            name="area_id"
-                            labelId="area-select-label"
-                            id="area-select"
-                            value={formData.area_id ?? ''}
-                            label="Select Area"
+                            name="bg_color"
+                            labelId="bg-color-select-label"
+                            id="bg-color-select"
+                            value={formData.bg_color ?? ''}
+                            label="Select Background Color"
                             onChange={handleChange}
                         >
                             {
-                                areas.map((item) => {
-                                    return (
-                                        <MenuItem key={item.id}
-                                                  value={item.id}>{item.name}</MenuItem>
-                                    )
-                                })
+                                marqueeColors.map( (item) => {
+                                        return (
+                                            <MenuItem key={item.id} value={item.id}>
+                                                <Stack sx={{pl:2}} component="span" direction="row" alignItems="center" justifyContent="flex-start">
+                                                    <SingleColorPreview color={item.id}  sx={{ mr: 2 }} /> {item.name}
+                                                </Stack>
+                                            </MenuItem>
+                                        )
+                                    }
+                                )
+                            }
+                        </Select>
+                    </FormControl>
+                    <FormControl
+                        variant="standard"
+                        fullWidth
+                        sx={{mb: 3}}
+                        defaultValue={''}
+                    >
+                        <InputLabel id="text-color-select-label">Select Text Color</InputLabel>
+                        <Select
+                            name="text_color"
+                            labelId="text-color-select-label"
+                            id="text-color-select"
+                            value={formData.text_color ?? ''}
+                            label="Select Text Color"
+                            onChange={handleChange}
+                        >
+                            {
+                                marqueeColors.map( (item) => {
+                                        return (
+                                            <MenuItem key={item.id} value={item.id}>
+                                                <Stack sx={{pl:2}} component="span" direction="row" alignItems="center" justifyContent="flex-start">
+                                                    <SingleColorPreview color={item.id}  sx={{ mr: 2 }} /> {item.name}
+                                                </Stack>
+                                            </MenuItem>
+                                        )
+                                    }
+                                )
                             }
                         </Select>
                     </FormControl>

@@ -1,5 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField} from "@mui/material";
+import {LoadingButton} from "@mui/lab";
+import SaveIcon from '@mui/icons-material/Save';
 import useApiHandlerStore from "../../../zustand/useApiHandlerStore";
 import useMessagesAlert from "../../../hooks/messages/useMessagesAlert";
 import useMessagesSnackbar from "../../../hooks/messages/useMessagesSnackbar";
@@ -17,6 +19,7 @@ export default function AreaModalDialog({updateAreaId, areaFormData, openDialog,
     const {api} = useApiHandlerStore((state) => state);
     const showMessageSnackbar = useMessagesSnackbar();
     const [validator, setValidator] = useState({});
+    const [loading, setLoading] = useState(false);
 
     const createNewAreaAction = async () => {
         let response;
@@ -24,11 +27,11 @@ export default function AreaModalDialog({updateAreaId, areaFormData, openDialog,
         if (updateAreaId) {
             response = await api.__update(`${AREA_URL_UPDATE_ROW}${updateAreaId}`, areaFormData, (msg) => {
                 showMessageSnackbar(msg, 'error');
-            }, () => { createNewAreaAction() });
+            }, () => { createNewAreaAction() }, ( isLoading ) => { setLoading(isLoading) });
         } else {
             response = await api.__post(AREA_URL_CREATE_ROW, areaFormData, (msg) => {
                 showMessageSnackbar(msg, 'error');
-            }, () => { createNewAreaAction() });
+            }, () => { createNewAreaAction() }, ( isLoading ) => { setLoading(isLoading) });
         }
 
 
@@ -77,7 +80,16 @@ export default function AreaModalDialog({updateAreaId, areaFormData, openDialog,
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseNewArea}>Cancel</Button>
-                    <Button onClick={createNewAreaAction}>{updateAreaId ? 'Save' : 'Create'}</Button>
+                    <LoadingButton
+                        color="secondary"
+                        onClick={createNewAreaAction}
+                        loading={loading}
+                        loadingPosition="start"
+                        startIcon={<SaveIcon />}
+                        variant="contained"
+                    >
+                        <span>{updateAreaId ? 'Save' : 'Create'}</span>
+                    </LoadingButton>
                 </DialogActions>
             </Dialog>
     </>

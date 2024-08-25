@@ -10,6 +10,8 @@ import {
     Typography,
     TextField, FormControlLabel,
 } from '@mui/material';
+import SaveIcon from '@mui/icons-material/Save';
+import imageCompression from "browser-image-compression";
 import {LoadingButton} from "@mui/lab";
 import BackButton from "../../sections/@dashboard/app/AppBackButton";
 import useApiHandlerStore from "../../zustand/useApiHandlerStore";
@@ -33,6 +35,7 @@ export default function CreateImagePage() {
     const {navigateTo} = useNavigateTo();
     const {api} = useApiHandlerStore((state) => state);
     const [validator, setValidator] = useState({});
+    const [preview, setPreview] = useState("");
     const [formData, setFormData] = useState({
         name: '',
         description: '',
@@ -40,8 +43,9 @@ export default function CreateImagePage() {
         duration: 5,
         screen_id: pscreen,
         image: '',
-        products: []
+        // products: []
     });
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (event) => {
         const {name, value} = event.target;
@@ -59,27 +63,57 @@ export default function CreateImagePage() {
         }
     };
 
-    const handleUploadImage = (images) => {
-
-        setFormData((prevFormData) => ({
-            ...prevFormData,
-            image: images
-        }));
-
+    const showPreview = (base64) => {
+        setPreview(base64)
     }
+    const handleUploadImage = async (images) => {
+        let imageBase64 = ""
+        if (images) {
+            const options = {
+                maxSizeMB: 1, // Tamaño máximo en MB
+                maxWidthOrHeight: 1920, // Máxima altura o ancho
+                useWebWorker: true,
+            };
+
+            try {
+                setLoading(true)
+                const compressedFile = await imageCompression(images, options);
+                setLoading(false)
+                imageBase64 = await convertToBase64(compressedFile)
+                setLoading(false)
+
+                setFormData((prevFormData) => ({
+                    ...prevFormData,
+                    image: imageBase64
+                }));
+            } catch (error) {
+                console.error('Error al comprimir la imagen:', error);
+            }
+        }
+    }
+
+    const convertToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onprogress = () => setLoading(true)
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = (error) => reject(error);
+        });
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         let response;
         if (pimage) {
-            response = await api.__update(`${URL_UPDATE}${pimage}`, formData, (msg) => {
+            response = await api.__post(`${URL_UPDATE}${pimage}`, formData, (msg) => {
                 showSnackbarMessage(msg, 'error');
-            }, () => { handleSubmit(e) });
+            }, () => { handleSubmit(e) }, ( isLoading ) => { setLoading(isLoading) });
         } else {
             response = await api.__post(URL_CREATE, formData, (msg) => {
                 showSnackbarMessage(msg, 'error');
-            }, () => { handleSubmit(e) });
+            }, () => { handleSubmit(e) }, ( isLoading ) => { setLoading(isLoading) });
         }
 
         if (response) {
@@ -107,6 +141,7 @@ export default function CreateImagePage() {
                 duration: response.data.duration,
                 image: response.data.image,
             });
+            setPreview(response.data.image)
         }
     }
 
@@ -172,7 +207,7 @@ export default function CreateImagePage() {
                         {/*    sx={{ flexGrow: 1, m: 0 }} */}
                         {/* /> */}
 
-                        <SaveImage onChange={handleUploadImage} previewImage={formData.image}/>
+                        <SaveImage onChange={handleUploadImage} updatePreview={showPreview} previewImage={preview}/>
                     </Stack>
 
                     <Stack sx={{m: 2}}>
@@ -180,8 +215,15 @@ export default function CreateImagePage() {
                     </Stack>
                 </Card>
                 <Stack sx={{m: 2}}>
-                    <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleSubmit}>
-                        {`Save ${NAME_PAGE}`}
+                    <LoadingButton
+                        color="secondary"
+                        onClick={handleSubmit}
+                        loading={loading}
+                        loadingPosition="start"
+                        startIcon={<SaveIcon />}
+                        variant="contained"
+                    >
+                        <span>Save</span>
                     </LoadingButton>
                 </Stack>
             </Container>

@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d4767243-8cf2-4570-929d-1212d7106fb6" name="Changes" comment="Implement Videos">
+    <list default="true" id="d4767243-8cf2-4570-929d-1212d7106fb6" name="Changes" comment="UX User">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/config.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/main/Dashboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/main/Dashboard.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sections/@dashboard/app/AppWidgetSummary.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sections/@dashboard/app/AppWidgetSummary.js" afterDir="false" />
     </list>
     <list id="d4ad349c-1410-4760-87b2-6c449dfa42b6" name="ignore" comment="CRUD Business" />
     <option name="SHOW_DIALOG" value="false" />
@@ -359,22 +357,6 @@
       <option name="project" value="LOCAL" />
       <updated>1721878383814</updated>
     </task>
-    <task id="LOCAL-00037" summary="add Screen option menu for users Owners">
-      <option name="closed" value="true" />
-      <created>1722388647319</created>
-      <option name="number" value="00037" />
-      <option name="presentableId" value="LOCAL-00037" />
-      <option name="project" value="LOCAL" />
-      <updated>1722388647319</updated>
-    </task>
-    <task id="LOCAL-00038" summary="Added refresh tokens!!!">
-      <option name="closed" value="true" />
-      <created>1722662330437</created>
-      <option name="number" value="00038" />
-      <option name="presentableId" value="LOCAL-00038" />
-      <option name="project" value="LOCAL" />
-      <updated>1722662330437</updated>
-    </task>
     <task id="LOCAL-00039" summary="Added refresh tokens!!!">
       <option name="closed" value="true" />
       <created>1722663249217</created>
@@ -495,7 +477,23 @@
       <option name="project" value="LOCAL" />
       <updated>1724898641535</updated>
     </task>
-    <option name="localTasksCounter" value="54" />
+    <task id="LOCAL-00054" summary="UX User">
+      <option name="closed" value="true" />
+      <created>1724987415234</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1724987415234</updated>
+    </task>
+    <task id="LOCAL-00055" summary="UX User">
+      <option name="closed" value="true" />
+      <created>1724993415832</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1724993415832</updated>
+    </task>
+    <option name="localTasksCounter" value="56" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -526,7 +524,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="CRUD business" />
     <MESSAGE value="CRUD images" />
     <MESSAGE value="CRUD images and save products list localy" />
     <MESSAGE value="Generate JSON for business." />
@@ -551,6 +548,7 @@
     <MESSAGE value="Upload images from phones and other devices" />
     <MESSAGE value="Add Loading Buttom to forms" />
     <MESSAGE value="Implement Videos" />
-    <option name="LAST_COMMIT_MESSAGE" value="Implement Videos" />
+    <MESSAGE value="UX User" />
+    <option name="LAST_COMMIT_MESSAGE" value="UX User" />
   </component>
 </project>

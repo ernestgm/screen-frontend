@@ -70,7 +70,7 @@ export default function Dashboard() {
                 <AppWidgetSummary title="Marquees" total={0} icon={'material-symbols:rtt'} onClicked={goToMarquee}/>
             </Grid>
 
-            <Grid item xs={12} sm={3} md={3} sx={{display: isAdmin() ? 'block' : 'none' }}>
+            <Grid item xs={12} sm={3} md={3}>
                 <AppWidgetSummary title="Devices" total={0} color="info" icon={'mdi:cast-variant'} onClicked={goToDevice}/>
             </Grid>
         </Grid>

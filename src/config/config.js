@@ -1,5 +1,5 @@
 const PROYECT_CONFIG = {
-    NAME: 'EScreen',
+    NAME: 'PlayAds',
     API_CONFIG: {
         baseURL: process.env.REACT_APP_API_CONFIG_BASE_URL,
         USERS: {

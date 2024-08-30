@@ -1,7 +1,7 @@
 // @mui
 import PropTypes from 'prop-types';
 import { alpha, styled } from '@mui/material/styles';
-import { Card, Typography } from '@mui/material';
+import {Card, CardActionArea, Typography} from '@mui/material';
 // utils
 import { fShortenNumber } from '../../../utils/formatNumber';
 // table
@@ -30,11 +30,10 @@ AppWidgetSummary.propTypes = {
   sx: PropTypes.object,
 };
 
-export default function AppWidgetSummary({ title, total, icon, color = 'primary', sx, ...other }) {
+export default function AppWidgetSummary({ title, total, icon, color = 'primary', onClicked = () => {}, sx, ...other }) {
   return (
     <Card
       sx={{
-        py: 5,
         boxShadow: 0,
         textAlign: 'center',
         color: (theme) => theme.palette[color].darker,
@@ -43,8 +42,10 @@ export default function AppWidgetSummary({ title, total, icon, color = 'primary'
       }}
       {...other}
     >
+        <CardActionArea onClick={onClicked}>
       <StyledIcon
         sx={{
+            my: 5,
           color: (theme) => theme.palette[color].dark,
           backgroundImage: (theme) =>
             `linear-gradient(135deg, ${alpha(theme.palette[color].dark, 0)} 0%, ${alpha(
@@ -56,11 +57,12 @@ export default function AppWidgetSummary({ title, total, icon, color = 'primary'
         <Iconify icon={icon} width={24} height={24} />
       </StyledIcon>
 
-      <Typography variant="h3">{fShortenNumber(total)}</Typography>
+      <Typography variant="h3">{ total > 0 ? fShortenNumber(total) : "" }</Typography>
 
-      <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
+      <Typography variant="subtitle2" sx={{my: 2, opacity: 0.72 }}>
         {title}
       </Typography>
+        </CardActionArea>
     </Card>
   );
 }

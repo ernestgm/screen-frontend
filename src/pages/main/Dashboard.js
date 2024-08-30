@@ -1,18 +1,16 @@
 import { Helmet } from 'react-helmet-async';
 import {useEffect, useState} from "react";
 // @mui
-import { useTheme } from '@mui/material/styles';
 import { Grid, Container, Typography } from '@mui/material';
+import useNavigateTo from "../../hooks/navigateTo";
 // table
 
 // sections
 import {AppWidgetSummary} from "../../sections/@dashboard/app";
-import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
-
-import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import useAccontHandlerStore from "../../zustand/useAccontHandlerStore";
 
 import PROYECT_CONFIG from "../../config/config";
+
 
 
 
@@ -20,32 +18,29 @@ import PROYECT_CONFIG from "../../config/config";
 const URL_GET_BUSINESS_RESUME = PROYECT_CONFIG.API_CONFIG.BUSINESS.RESUME;
 
 export default function Dashboard() {
-    const showSnackbarMessage = useMessagesSnackbar();
-    const {api} = useApiHandlerStore((state) => state);
+    const {navigateTo} = useNavigateTo();
     const { account } = useAccontHandlerStore((state) => state);
-    const [bussinesCount, setBussinesCount] = useState(0);
-    const [screenCount, setScreenCount] = useState(0);
-    const [imagesCount, setImagesCount] = useState(0);
-    const getBusinessDetails = async () => {
-        let params = ''
+
+    const isAdmin = () => {
         const rol = account.role && account.role.tag;
-        const user = account.uid && account.uid;
-        if (rol !== 'admin') {
-            params = `?userId=${user}`
-        }
-        const response = await api.__get(`${URL_GET_BUSINESS_RESUME}${params}`, (msg) => {
-            showSnackbarMessage(msg, 'error');
-        }, () => { getBusinessDetails() });
-        if (response) {
-            setBussinesCount(response.bussines)
-            setScreenCount(response.screens)
-            setImagesCount(response.images)
-        }
+        return rol === 'admin'
     }
 
-    useEffect(() => {
-        getBusinessDetails();
-    }, [])
+    const goToBusiness = () => {
+       navigateTo('/dashboard/business')
+    }
+    const goToScreen = () => {
+        navigateTo('/dashboard/screens')
+    }
+    const goToUser = () => {
+        navigateTo('/dashboard/user')
+    }
+    const goToMarquee = () => {
+        navigateTo('/dashboard/marquees')
+    }
+    const goToDevice = () => {
+        navigateTo('/dashboard/devices')
+    }
 
   return (
     <>
@@ -59,21 +54,25 @@ export default function Dashboard() {
         </Typography>
 
         <Grid container spacing={3}>
-            <Grid item xs={12} sm={6} md={4}>
-                <AppWidgetSummary title="Bussines" total={bussinesCount} icon={'ant-design:build-filled'} />
+            <Grid item xs={12} sm={3} md={3} sx={{display: isAdmin() ? 'block' : 'none' }}>
+                <AppWidgetSummary title="Business" total={0} icon={'ion:business-sharp'} onClicked={goToBusiness}/>
             </Grid>
 
-            <Grid item xs={12} sm={6} md={4}>
-                <AppWidgetSummary title="Screens" total={screenCount} color="info" icon={'mdi:monitor-dashboard'} />
+            <Grid item xs={12} sm={3} md={3}>
+                <AppWidgetSummary title="Screens" total={0} color="info" icon={'mdi:monitor-dashboard'} onClicked={goToScreen}/>
             </Grid>
 
-            <Grid item xs={12} sm={6} md={4}>
-                <AppWidgetSummary title="Images" total={imagesCount} color="warning" icon={'ant-design:picture-filled'} />
+            <Grid item xs={12} sm={3} md={3} sx={{display: isAdmin() ? 'block' : 'none' }}>
+                <AppWidgetSummary title="User" total={0} color="warning" icon={'material-symbols:supervised-user-circle'} onClicked={goToUser}/>
             </Grid>
-          <Grid item xs={12} md={12} lg={12}>
-            {/* <BusinessResume /> */}
 
-          </Grid>
+            <Grid item xs={12} sm={3} md={3}>
+                <AppWidgetSummary title="Marquees" total={0} icon={'material-symbols:rtt'} onClicked={goToMarquee}/>
+            </Grid>
+
+            <Grid item xs={12} sm={3} md={3} sx={{display: isAdmin() ? 'block' : 'none' }}>
+                <AppWidgetSummary title="Devices" total={0} color="info" icon={'mdi:cast-variant'} onClicked={goToDevice}/>
+            </Grid>
         </Grid>
       </Container>
     </>

@@ -132,6 +132,18 @@ export default function MarqueeDataTable() {
         deleteRows(selected)
     }
 
+    const handleEditSelected = () => {
+        if (selected.length === 1) {
+            editAction(selected[0])
+        }
+    }
+
+    const handleDetailsSelected = () => {
+        if (selected.length === 1) {
+            navigateTo(`${ROUTE_DETAILS_ROW}${selected[0]}`)
+        }
+    }
+
 
     const handleOpenMenu = (event) => {
         setOpen(event.currentTarget);
@@ -304,8 +316,14 @@ export default function MarqueeDataTable() {
                 </Button>
             </Stack>
             <Card>
-                <UserListToolbar numSelected={selected.length} filterName={filterName}
-                                 onFilterName={handleFilterByName} onDeleteSelect={handleDeleteSelected}/>
+                <UserListToolbar
+                    numSelected={selected.length}
+                    filterName={filterName}
+                    onFilterName={handleFilterByName}
+                    onDeleteSelect={handleDeleteSelected}
+                    onDetailsSelect={handleDetailsSelected}
+                    onEditSelect={handleEditSelected}
+                />
 
                 <Scrollbar>
                     <TableContainer sx={{minWidth: 800}}>

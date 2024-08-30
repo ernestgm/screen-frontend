@@ -83,6 +83,12 @@ export default function AdDataTable({ marquee }) {
         deleteRows(selected)
     }
 
+    const handleEditSelected = () => {
+        if (selected.length === 1) {
+            editAdAction(selected[0])
+        }
+    }
+
 
     const handleOpenMenu = (event) => {
         setOpen(event.currentTarget);
@@ -257,8 +263,14 @@ export default function AdDataTable({ marquee }) {
             </Stack>
 
             <Card>
-                <UserListToolbar numSelected={selected.length} filterName={filterName}
-                                 onFilterName={handleFilterByName} onDeleteSelect={handleDeleteSelected}/>
+                <UserListToolbar
+                    numSelected={selected.length}
+                    filterName={filterName}
+                    onFilterName={handleFilterByName}
+                    onDeleteSelect={handleDeleteSelected}
+                    onEditSelect={handleEditSelected}
+                    onlyEdit
+                />
 
                 <Scrollbar>
                     <TableContainer sx={{minWidth: 800}}>

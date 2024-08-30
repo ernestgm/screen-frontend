@@ -134,6 +134,12 @@ export default function UserPage() {
         deleteUsers(selected)
     }
 
+    const handleEditSelected = () => {
+        if (selected.length === 1) {
+            navigateTo(`/dashboard/user/edit/${selected[0]}`)
+        }
+    }
+
 
     const handleOpenMenu = (event) => {
         setOpen(event.currentTarget);
@@ -230,8 +236,14 @@ export default function UserPage() {
                 </Stack>
 
                 <Card>
-                    <UserListToolbar numSelected={selected.length} filterName={filterName}
-                                     onFilterName={handleFilterByName} onDeleteSelect={handleDeleteSelected}/>
+                    <UserListToolbar
+                        numSelected={selected.length}
+                        filterName={filterName}
+                        onFilterName={handleFilterByName}
+                        onDeleteSelect={handleDeleteSelected}
+                        onEditSelect={handleEditSelected}
+                        onlyEdit
+                    />
 
                     <Scrollbar>
                         <TableContainer sx={{minWidth: 800}}>

@@ -117,6 +117,18 @@ export default function UserPage() {
         deleteRows(selected)
     }
 
+    const handleEditSelected = () => {
+        if (selected.length === 1) {
+            navigateTo(`${PATH_EDIT_ROW}${selected[0]}`)
+        }
+    }
+
+    const handleDetailsSelected = () => {
+        if (selected.length === 1) {
+            navigateTo(`${PATH_DETAILS_ROW}${selected[0]}`)
+        }
+    }
+
 
     const handleOpenMenu = (event) => {
         setOpen(event.currentTarget);
@@ -243,8 +255,14 @@ export default function UserPage() {
                 </Stack>
 
                 <Card>
-                    <UserListToolbar numSelected={selected.length} filterName={filterName}
-                                     onFilterName={handleFilterByName} onDeleteSelect={handleDeleteSelected}/>
+                    <UserListToolbar
+                        numSelected={selected.length}
+                        filterName={filterName}
+                        onFilterName={handleFilterByName}
+                        onDeleteSelect={handleDeleteSelected}
+                        onDetailsSelect={handleDetailsSelected}
+                        onEditSelect={handleEditSelected}
+                    />
 
                     <Scrollbar>
                         <TableContainer sx={{minWidth: 800}}>

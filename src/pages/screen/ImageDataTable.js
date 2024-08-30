@@ -120,6 +120,12 @@ export default function ImageDataTable({screen}) {
         deleteRows(selected)
     }
 
+    const handleEditSelected = () => {
+        if (selected.length === 1) {
+            editAction(selected[0])
+        }
+    }
+
     const deleteRows = async (ids) => {
         const data = {'ids': ids, 'screen_id': screen};
         const response = await api.__delete(URL_DELETE_DATA, data, (msg) => {
@@ -165,8 +171,14 @@ export default function ImageDataTable({screen}) {
     return (
         <>
             <Card>
-                <UserListToolbar numSelected={selected.length} filterName={filterName}
-                                 onFilterName={handleFilterByName} onDeleteSelect={handleDeleteSelected}/>
+                <UserListToolbar
+                    numSelected={selected.length}
+                    filterName={filterName}
+                    onFilterName={handleFilterByName}
+                    onDeleteSelect={handleDeleteSelected}
+                    onEditSelect={handleEditSelected}
+                    onlyEdit
+                />
 
                 <Scrollbar>
                     <TableContainer sx={{minWidth: 800}}>

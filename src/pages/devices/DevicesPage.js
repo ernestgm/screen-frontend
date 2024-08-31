@@ -224,16 +224,18 @@ export default function DevicePage() {
         }
     }
 
-
-
-    const handleEditItemClick = (item) => {
-        handleCloseMenu()
+    const editRow = (id) => {
         if (currentUser && currentUser.user.role.tag === PROYECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
             setDisabledUserField(false)
         } else {
             setDisabledUserField(true)
         }
-        editAction(item.id)
+        editAction(id)
+    }
+
+    const handleEditItemClick = (item) => {
+        handleCloseMenu()
+        editRow(item.id)
     }
 
     const editAction = async (id) => {
@@ -301,6 +303,12 @@ export default function DevicePage() {
 
     const handleDeleteSelected = () => {
         deleteDevices(selected)
+    }
+
+    const handleEditSelected = () => {
+        if (selected.length === 1) {
+            editRow(selected[0])
+        }
     }
 
 
@@ -390,8 +398,14 @@ export default function DevicePage() {
                 </Stack>
 
                 <Card>
-                    <UserListToolbar numSelected={selected.length} filterName={filterName}
-                                     onFilterName={handleFilterByName} onDeleteSelect={handleDeleteSelected}/>
+                    <UserListToolbar
+                        numSelected={selected.length}
+                        filterName={filterName}
+                        onFilterName={handleFilterByName}
+                        onDeleteSelect={handleDeleteSelected}
+                        onEditSelect={handleEditSelected}
+                        onlyEdit
+                    />
 
                     <Scrollbar>
                         <TableContainer sx={{minWidth: 800}}>

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 // @mui
 import { styled, alpha } from '@mui/material/styles';
-import { Toolbar, Tooltip, IconButton, Typography, OutlinedInput, InputAdornment } from '@mui/material';
+import {Toolbar, Tooltip, IconButton, Typography, OutlinedInput, InputAdornment, Hidden} from '@mui/material';
 // table
 import Iconify from '../../../components/iconify';
 
@@ -10,7 +10,7 @@ import Iconify from '../../../components/iconify';
 const StyledRoot = styled(Toolbar)(({ theme }) => ({
   height: 96,
   display: 'flex',
-  justifyContent: 'space-between',
+  justifyContent: 'flex-end',
   padding: theme.spacing(0, 1, 0, 3),
 }));
 
@@ -37,9 +37,12 @@ UserListToolbar.propTypes = {
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
   onDeleteSelect: PropTypes.func,
+  onDetailsSelect: PropTypes.func,
+  onEditSelect: PropTypes.func,
+  onlyEdit: PropTypes.bool,
 };
 
-export default function UserListToolbar({ numSelected, filterName, onFilterName, onDeleteSelect }) {
+export default function UserListToolbar({onlyEdit = false, numSelected, filterName, onFilterName, onDeleteSelect, onDetailsSelect = () => {}, onEditSelect = () => {} }) {
   return (
     <StyledRoot
       sx={{
@@ -50,7 +53,7 @@ export default function UserListToolbar({ numSelected, filterName, onFilterName,
       }}
     >
       {numSelected > 0 ? (
-        <Typography component="div" variant="subtitle1">
+        <Typography component="div" variant="subtitle1" sx={{marginRight: 'auto'}}>
           {numSelected} selected
         </Typography>
       ) : (
@@ -72,6 +75,35 @@ export default function UserListToolbar({ numSelected, filterName, onFilterName,
             <Iconify icon="eva:trash-2-fill" />
           </IconButton>
         </Tooltip>
+      ) : (
+          <Typography component="div">
+            {""}
+          </Typography>
+      )}
+
+      {numSelected === 1 ? (
+          <Hidden only={['xl','lg','md','sm']}>
+
+            { onlyEdit === false ? (
+                    <Tooltip title="Details">
+                      <IconButton onClick={onDetailsSelect}>
+                        <Iconify icon="tabler:list-details" />
+                      </IconButton>
+                    </Tooltip>
+                ) : (
+                      <Typography component="div">
+                        {""}
+                      </Typography>
+                    )
+            }
+
+
+            <Tooltip title="Edit">
+              <IconButton onClick={onEditSelect}>
+                <Iconify icon="eva:edit-fill" />
+              </IconButton>
+            </Tooltip>
+          </Hidden>
       ) : (
           <Typography component="div">
             {""}

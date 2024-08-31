@@ -139,6 +139,22 @@ export default function ScreenDataTable({ business }) {
         deleteRows(selected)
     }
 
+    const handleEditSelected = () => {
+        if (selected.length === 1) {
+            editAction(selected[0])
+        }
+    }
+
+    const handleDetailsSelected = () => {
+        if (selected.length === 1) {
+            if (business) {
+                navigateTo(`${ROUTE_DETAILS_ROW}${selected[0]}`)
+            } else {
+                navigateTo(`${ROUTE_DETAILS_ROW}${selected[0]}/menu`)
+            }
+        }
+    }
+
 
     const handleOpenMenu = (event) => {
         setOpen(event.currentTarget);
@@ -214,7 +230,6 @@ export default function ScreenDataTable({ business }) {
         } else {
             navigateTo(`${ROUTE_DETAILS_ROW}${item.id}/menu`)
         }
-
     }
 
     const handleDeleteItemClick = (item) => {
@@ -350,8 +365,14 @@ export default function ScreenDataTable({ business }) {
                 </Button>
             </Stack>
             <Card>
-                <UserListToolbar numSelected={selected.length} filterName={filterName}
-                                 onFilterName={handleFilterByName} onDeleteSelect={handleDeleteSelected}/>
+                <UserListToolbar
+                    numSelected={selected.length}
+                    filterName={filterName}
+                    onFilterName={handleFilterByName}
+                    onDeleteSelect={handleDeleteSelected}
+                    onDetailsSelect={handleDetailsSelected}
+                    onEditSelect={handleEditSelected}
+                />
 
                 <Scrollbar>
                     <TableContainer sx={{minWidth: 800}}>

@@ -73,6 +73,10 @@ const PROYECT_CONFIG = {
             ADMIN: 'admin'
         }
     },
+    WS_CONFIG: {
+        BASE_URL: process.env.REACT_APP_CENTRIFUGUE_BASE_URL,
+        WS_SECRET: process.env.WS_SECRET,
+    }
 }
 
 export default PROYECT_CONFIG;

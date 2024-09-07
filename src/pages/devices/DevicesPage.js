@@ -1,6 +1,7 @@
 import {Helmet} from 'react-helmet-async';
 import {filter} from 'lodash';
 import React, {useEffect, useState} from 'react';
+import {Centrifuge} from "centrifuge";
 // @mui
 import {
     Card,
@@ -33,6 +34,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import Iconify from '../../components/iconify';
 import Scrollbar from '../../components/scrollbar';
 // sections
+
 import {UserListHead, UserListToolbar} from '../../sections/@dashboard/user';
 import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import {formatDate} from "../../utils/formatTime";
@@ -40,6 +42,7 @@ import useMessagesAlert from "../../hooks/messages/useMessagesAlert";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import PROYECT_CONFIG from "../../config/config";
 import useAuthStore from "../../zustand/useAuthStore";
+import palette from "../../theme/palette";
 
 
 // ----------------------------------------------------------------------
@@ -116,6 +119,8 @@ export default function DevicePage() {
     const [validator, setValidator] = useState({});
     const [disabledUserField, setDisabledUserField] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [clientsOnline, setClientsOnline] = useState([]);
+    let centrifuge = null
 
 
     const {currentUser} = useAuthStore((state) => state);
@@ -206,7 +211,6 @@ export default function DevicePage() {
     };
 
     const filterMarqueByUser = (id) => {
-        console.log(marquees)
         if (id) {
             const filtered = filter(marquees, (_marquee) => _marquee.business.user_id === id)
             setFilteredMarquees(filtered)
@@ -376,11 +380,65 @@ export default function DevicePage() {
 
     const isNotFound = !filteredDevices.length && !!filterName;
 
+    function initWS() {
+        console.log(centrifuge)
+        if (centrifuge === null) {
+            const wsJwtToken = currentUser.ws_token
+            centrifuge = new Centrifuge(
+                PROYECT_CONFIG.WS_CONFIG.BASE_URL,
+                {
+                    token: wsJwtToken
+                }
+            );
+
+            centrifuge.on('connected', (ctx)=> {
+                console.log(`Client connected: ${ctx.client}`)
+            });
+
+            const sub = centrifuge.newSubscription("status:appOnline");
+            sub.subscribe()
+
+            sub.presence().then((ctx) => {
+                const devices = Object.entries(ctx.clients).map(([key, value]) => {
+                    return value.user
+                })
+                setClientsOnline(devices)
+                console.log(devices);
+            }, (err) => {
+                console.log(err);
+            });
+
+            sub.on('join', (ctx) => {
+                console.log(ctx)
+                setClientsOnline(
+                    prevEntries => [
+                        ...prevEntries,
+                        ctx.info.user
+                    ]
+                )
+                console.log(clientsOnline)
+            });
+
+            sub.on('leave', (ctx)=> {
+                console.log(ctx)
+                setClientsOnline(prevEntries => prevEntries.filter((value) => value !== ctx.info.user))
+                console.log(clientsOnline)
+            });
+            centrifuge.connect();
+        }
+    }
+
     useEffect(() => {
+        initWS()
         getUsers()
         getScreens()
         getDevices()
         getMarquees()
+
+        return () => {
+            centrifuge.disconnect();
+            centrifuge = null
+        };
     }, []);
 
     return (
@@ -424,6 +482,8 @@ export default function DevicePage() {
                                         const {id, code, name} = row;
                                         const selectedDevices = selected.indexOf(id) !== -1;
                                         const user = (users.find((n) => n.id === row.user_id))
+                                        const onlineColor = clientsOnline.some((value) => value === row.device_id) ? palette.success.dark : palette.error.dark
+
                                         return (
                                             <TableRow hover key={id} tabIndex={-1} role="checkbox"
                                                       selected={selectedDevices}>
@@ -434,7 +494,7 @@ export default function DevicePage() {
 
                                                 <TableCell component="th" scope="row" padding="none">
                                                     <Stack direction="row" alignItems="center" spacing={2}>
-                                                        <Iconify icon="mdi:cast-variant"/>
+                                                        <Iconify icon="mdi:cast-variant" sx={{color: onlineColor}}/>
                                                         <Typography variant="subtitle2" noWrap>
                                                             {code}
                                                         </Typography>

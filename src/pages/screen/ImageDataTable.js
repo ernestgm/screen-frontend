@@ -1,33 +1,41 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
-import Box from '@mui/material/Box';
-import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import {useEffect, useState} from "react";
-import {Card, Checkbox, MenuItem, Popover, Stack, TablePagination} from "@mui/material";
+import {
+    Button,
+    Card,
+    Checkbox, Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    MenuItem,
+    Popover,
+    Stack,
+    TablePagination
+} from "@mui/material";
+import {Delete} from "@mui/icons-material";
+import {LoadingButton} from "@mui/lab";
 import Iconify from "../../components/iconify";
-import PROYECT_CONFIG from "../../config/config";
+import PROJECT_CONFIG from "../../config/config";
 import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import useMessagesAlert from "../../hooks/messages/useMessagesAlert";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
-import {fCurrency} from "../../utils/formatNumber";
 import {formatDate} from "../../utils/formatTime";
 import useNavigateTo from "../../hooks/navigateTo";
 import {UserListHead, UserListToolbar} from "../../sections/@dashboard/user";
 import Scrollbar from "../../components/scrollbar/Scrollbar";
-import palette from "../../theme/palette";
 import {applySortFilter, getComparator} from "../../utils/table/tableFunctions";
 
-const URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.IMAGE.ALL;
-const URL_DELETE_DATA = PROYECT_CONFIG.API_CONFIG.IMAGE.DELETE;
+
+const URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.IMAGE.ALL;
+const URL_DELETE_DATA = PROJECT_CONFIG.API_CONFIG.IMAGE.DELETE;
 const URL_EDIT_IMAGE = '/dashboard/image/edit/';
 
 const TABLE_HEAD = [
@@ -44,15 +52,16 @@ export default function ImageDataTable({screen}) {
     const {api} = useApiHandlerStore((state) => state);
     const showMessageAlert = useMessagesAlert();
     const showMessageSnackbar = useMessagesSnackbar();
-
     const [dataTable, setDataTable] = useState([]);
-    const [openNewDialog, setOpenNewDialog] = useState(false);
     const [page, setPage] = useState(0);
     const [order, setOrder] = useState('asc');
     const [selected, setSelected] = useState([]);
     const [orderBy, setOrderBy] = useState('name');
     const [filterName, setFilterName] = useState('');
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [rowsPerPage, setRowsPerPage] = useState(PROJECT_CONFIG.TABLE_CONFIG.ROW_PER_PAGE);
+    const [loading, setLoading] = useState(false);
+    const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
+    const [rowsForDelete, setRowsForDelete] = useState([]);
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -117,7 +126,8 @@ export default function ImageDataTable({screen}) {
     };
 
     const handleDeleteSelected = () => {
-        deleteRows(selected)
+        setRowsForDelete(selected)
+        setOpenConfirmDelete(true)
     }
 
     const handleEditSelected = () => {
@@ -126,17 +136,20 @@ export default function ImageDataTable({screen}) {
         }
     }
 
-    const deleteRows = async (ids) => {
-        const data = {'ids': ids, 'screen_id': screen};
+    const deleteRows = async () => {
+        setLoading(true)
+        const data = {'ids': rowsForDelete, 'screen_id': screen};
         const response = await api.__delete(URL_DELETE_DATA, data, (msg) => {
             showMessageSnackbar(msg, 'error');
-        }, () => { deleteRows(ids) })
+        }, () => { deleteRows() })
 
         if (response) {
             showMessageAlert(response.message, 'success');
             getData()
             setSelected([]);
         }
+        setLoading(false)
+        setOpenConfirmDelete(false)
     }
 
     const editAction = async (id) => {
@@ -146,7 +159,13 @@ export default function ImageDataTable({screen}) {
 
     const handleDeleteItemClick = (item) => {
         handleCloseMenu()
-        deleteRows([item.id])
+        setRowsForDelete([item.id])
+        setOpenConfirmDelete(true)
+    }
+
+    const handleCloseConfirmDelete = ()=> {
+        setOpenConfirmDelete(false)
+        setRowsForDelete([])
     }
 
     const handleEditItemClick = (item) => {
@@ -159,7 +178,7 @@ export default function ImageDataTable({screen}) {
             showMessageSnackbar(msg, 'error');
         }, () => { getData() })
 
-        if (response.data) {
+        if (response !== undefined && response.data) {
             setDataTable(Object.values(response.data))
         }
     };
@@ -260,7 +279,7 @@ export default function ImageDataTable({screen}) {
                 </Scrollbar>
 
                 <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
+                    rowsPerPageOptions={PROJECT_CONFIG.TABLE_CONFIG.ROWS_PER_PAGE_OPTIONS}
                     component="div"
                     count={filteredDataTable.length}
                     rowsPerPage={rowsPerPage}
@@ -269,6 +288,30 @@ export default function ImageDataTable({screen}) {
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
             </Card>
+
+            <Dialog open={openConfirmDelete} onClose={handleCloseConfirmDelete}>
+                <DialogTitle>
+                    Delete
+                </DialogTitle>
+                <DialogContent>
+                    <Typography variant="subtitle1" gutterBottom>
+                        Are you sure you want to delete the selected data?
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseConfirmDelete}>Cancel</Button>
+                    <LoadingButton
+                        color="error"
+                        onClick={deleteRows}
+                        loading={loading}
+                        loadingPosition="start"
+                        startIcon={<Delete />}
+                        variant="contained"
+                    >
+                        <span>OK</span>
+                    </LoadingButton>
+                </DialogActions>
+            </Dialog>
 
             <Popover
                 open={Boolean(open)}

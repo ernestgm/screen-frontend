@@ -4,9 +4,29 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d4767243-8cf2-4570-929d-1212d7106fb6" name="Changes" comment="UX User">
+    <list default="true" id="d4767243-8cf2-4570-929d-1212d7106fb6" name="Changes" comment="Fixed Bugs">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/main/Dashboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/main/Dashboard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/_mock/colors.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/_mock/colors.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/areas/DetailsAreasPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/areas/DetailsAreasPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/business/BusinessPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/business/BusinessPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/business/CreateBusinessPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/business/CreateBusinessPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/business/table/AreasDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/business/table/AreasDataTable.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/devices/DevicesPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/devices/DevicesPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/marquee/AdDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/marquee/AdDataTable.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/marquee/DetailsMarqueePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/marquee/DetailsMarqueePage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/marquee/MarqueeDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/marquee/MarqueeDataTable.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/marquee/MarqueesPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/marquee/MarqueesPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/screen/DetailsScreenPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/screen/DetailsScreenPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/screen/ImageDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/screen/ImageDataTable.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/screen/ScreenDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/screen/ScreenDataTable.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/screen/ScreensPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/screen/ScreensPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/user/CreateUserPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/user/CreateUserPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/user/UserPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/user/UserPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sections/@dashboard/app/AppBackButton.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sections/@dashboard/app/AppBackButton.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sections/@dashboard/app/TitlePageDetails.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sections/@dashboard/app/TitlePageDetails.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/zustand/useAccontHandlerStore.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/zustand/useAccontHandlerStore.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/zustand/useAuthStore.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/zustand/useAuthStore.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/zustand/useGlobalMessageStore.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/zustand/useGlobalMessageStore.js" afterDir="false" />
     </list>
     <list id="d4ad349c-1410-4760-87b2-6c449dfa42b6" name="ignore" comment="CRUD Business" />
     <option name="SHOW_DIALOG" value="false" />
@@ -27,7 +47,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$" value="develop" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -44,26 +64,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/ernes/Documents/proyect/react/screen-frontend/src/pages",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.standard": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.standard": "",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "yarn",
-    "prettierjs.PrettierConfiguration.Package": "C:\\Users\\ernes\\Documents\\proyect\\react\\screen-frontend\\node_modules\\prettier",
-    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\PhpStorm 2022.3.3\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/ernes/Documents/proyect/react/screen-frontend/src/pages&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;C:\\Users\\ernes\\Documents\\proyect\\react\\screen-frontend\\node_modules\\prettier&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\PhpStorm 2022.3.3\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\pages" />
@@ -132,6 +152,7 @@
       <workItem from="1723676072490" duration="2140000" />
       <workItem from="1723678456889" duration="21418000" />
       <workItem from="1724067775700" duration="3683000" />
+      <workItem from="1725659944464" duration="3005000" />
     </task>
     <task id="LOCAL-00001" summary="User login Complete">
       <created>1680980627562</created>
@@ -357,14 +378,6 @@
       <option name="project" value="LOCAL" />
       <updated>1721878383814</updated>
     </task>
-    <task id="LOCAL-00039" summary="Added refresh tokens!!!">
-      <option name="closed" value="true" />
-      <created>1722663249217</created>
-      <option name="number" value="00039" />
-      <option name="presentableId" value="LOCAL-00039" />
-      <option name="project" value="LOCAL" />
-      <updated>1722663249217</updated>
-    </task>
     <task id="LOCAL-00040" summary="Bugs create images">
       <option name="closed" value="true" />
       <created>1722735571846</created>
@@ -493,7 +506,15 @@
       <option name="project" value="LOCAL" />
       <updated>1724993415832</updated>
     </task>
-    <option name="localTasksCounter" value="56" />
+    <task id="LOCAL-00056" summary="Fixed Bugs">
+      <option name="closed" value="true" />
+      <created>1725756772674</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1725756772674</updated>
+    </task>
+    <option name="localTasksCounter" value="57" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -524,8 +545,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="CRUD images" />
-    <MESSAGE value="CRUD images and save products list localy" />
     <MESSAGE value="Generate JSON for business." />
     <MESSAGE value="Change the design and add the copy to clipboard in page Edit Images" />
     <MESSAGE value="Create the Screen Page in Nav" />
@@ -549,6 +568,8 @@
     <MESSAGE value="Add Loading Buttom to forms" />
     <MESSAGE value="Implement Videos" />
     <MESSAGE value="UX User" />
-    <option name="LAST_COMMIT_MESSAGE" value="UX User" />
+    <MESSAGE value="Online Status" />
+    <MESSAGE value="Fixed Bugs" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed Bugs" />
   </component>
 </project>

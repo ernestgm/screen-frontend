@@ -16,7 +16,7 @@ import {LoadingButton} from "@mui/lab";
 import BackButton from "../../sections/@dashboard/app/AppBackButton";
 import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
-import PROYECT_CONFIG from "../../config/config";
+import PROJECT_CONFIG from "../../config/config";
 import ProductsDataTable from "./table/ProductsDataTable";
 import {SaveImage} from "../../components/save-image";
 import useNavigateTo from "../../hooks/navigateTo";
@@ -24,10 +24,10 @@ import useNavigateTo from "../../hooks/navigateTo";
 // ----------------------------------------------------------------------
 
 const NAME_PAGE = 'Image';
-const URL_UPDATE = PROYECT_CONFIG.API_CONFIG.IMAGE.UPDATE;
-const URL_CREATE = PROYECT_CONFIG.API_CONFIG.IMAGE.CREATE;
+const URL_UPDATE = PROJECT_CONFIG.API_CONFIG.IMAGE.UPDATE;
+const URL_CREATE = PROJECT_CONFIG.API_CONFIG.IMAGE.CREATE;
 const URL_BACK = '/dashboard/screen/details/';
-const URL_GET_ITEM_FOR_UPDATE = PROYECT_CONFIG.API_CONFIG.IMAGE.GET;
+const URL_GET_ITEM_FOR_UPDATE = PROJECT_CONFIG.API_CONFIG.IMAGE.GET;
 
 export default function CreateImagePage() {
     const showSnackbarMessage = useMessagesSnackbar();
@@ -132,7 +132,7 @@ export default function CreateImagePage() {
             showSnackbarMessage(msg, 'error');
         }, () => { getItemForUpdate() });
 
-        if (response.data) {
+        if (response !== undefined && response.data) {
             setFormData({
                 name: response.data.name,
                 description: response.data.description,
@@ -161,7 +161,7 @@ export default function CreateImagePage() {
     return (
         <>
             <Helmet>
-                <title> {pimage ? `${NAME_PAGE} edit` : `Create ${NAME_PAGE}`} | {PROYECT_CONFIG.NAME} </title>
+                <title> {pimage ? `${NAME_PAGE} edit` : `Create ${NAME_PAGE}`} | {PROJECT_CONFIG.NAME} </title>
             </Helmet>
 
             <Container>

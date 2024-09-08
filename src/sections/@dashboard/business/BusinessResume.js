@@ -10,12 +10,12 @@ import Scrollbar from '../../../components/scrollbar';
 import useApiHandlerStore from "../../../zustand/useApiHandlerStore";
 import useMessagesAlert from "../../../hooks/messages/useMessagesAlert";
 import useMessagesSnackbar from "../../../hooks/messages/useMessagesSnackbar";
-import PROYECT_CONFIG from "../../../config/config";
+import PROJECT_CONFIG from "../../../config/config";
 
 // ----------------------------------------------------------------------
 
-const URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.BUSINESS.ALL;
-const URL_GENERATE_JSON = PROYECT_CONFIG.API_CONFIG.BUSINESS.GENERATE_JSON;
+const URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.BUSINESS.ALL;
+const URL_GENERATE_JSON = PROJECT_CONFIG.API_CONFIG.BUSINESS.GENERATE_JSON;
 
 export default function BusinessResume({...other}) {
     const {api} = useApiHandlerStore((state) => state);

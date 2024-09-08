@@ -3,7 +3,7 @@ import useAuthStore from "./useAuthStore";
 
 
 const useAccountHandlerStore = create(
-    (set, get) => ({
+    (set) => ({
         account: {
             uid: `${useAuthStore.getState().currentUser ? useAuthStore.getState().currentUser.user.id : ''}`,
             displayName: `${

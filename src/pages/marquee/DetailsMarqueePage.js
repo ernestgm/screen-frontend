@@ -6,14 +6,13 @@ import {
     Stack,
     Container,
     Typography,
-    Grid, Button, Card, ListItem,
+    Grid, Card, ListItem,
 } from '@mui/material';
 import BackButton from "../../sections/@dashboard/app/AppBackButton";
 import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
-import PROYECT_CONFIG from "../../config/config";
+import PROJECT_CONFIG from "../../config/config";
 import TitlePageDetails from "../../sections/@dashboard/app/TitlePageDetails";
-import Iconify from "../../components/iconify";
 import useNavigateTo from "../../hooks/navigateTo";
 import AdDataTable from "./AdDataTable";
 
@@ -22,7 +21,7 @@ import AdDataTable from "./AdDataTable";
 // ----------------------------------------------------------------------
 
 const NAME_PAGE = 'Marquee Details';
-const URL_GET_PAGE = PROYECT_CONFIG.API_CONFIG.MARQUEE.GET;
+const URL_GET_PAGE = PROJECT_CONFIG.API_CONFIG.MARQUEE.GET;
 const URL_TABLES_PAGE = '/dashboard/business/details/';
 const URL_MENU_MARQUEE_PAGE = '/dashboard/marquees';
 const URL_CREATE_IMAGE = '/dashboard/image/create/';
@@ -49,7 +48,7 @@ export default function DetailsMarqueePage() {
         const response = await api.__get(`${URL_GET_PAGE}${id}`, (msg) => {
             showSnackbarMessage(msg, 'error');
         }, () => { getPageDetails() });
-        if (response.data) {
+        if (response !== undefined && response.data) {
             setMarquee(response.data);
         }
     }
@@ -61,7 +60,7 @@ export default function DetailsMarqueePage() {
     return (
         <>
             <Helmet>
-                <title> {NAME_PAGE} | {PROYECT_CONFIG.NAME} </title>
+                <title> {NAME_PAGE} | {PROJECT_CONFIG.NAME} </title>
             </Helmet>
 
             <Container>
@@ -80,7 +79,6 @@ export default function DetailsMarqueePage() {
                         <TitlePageDetails
                             title={marquee.name}
                             description=''
-                            createdAt={marquee.created_at}
                             icon={'material-symbols:rtt'}
                         />
                         <Card

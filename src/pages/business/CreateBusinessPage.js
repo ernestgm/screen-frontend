@@ -5,31 +5,18 @@ import SaveIcon from '@mui/icons-material/Save';
 import {Helmet} from 'react-helmet-async';
 import {
     Card,
-    Table,
     Stack,
-    Paper,
-    Avatar,
-    Button,
-    Popover,
-    Checkbox,
-    TableRow,
     MenuItem,
-    TableBody,
-    TableCell,
     Container,
     Typography,
-    IconButton,
-    TableContainer,
-    TablePagination,
     TextField, InputAdornment, FormControl, InputLabel, Select,
 } from '@mui/material';
 import {LoadingButton} from "@mui/lab";
-import { GoogleMap, LoadScript, Autocomplete } from '@react-google-maps/api';
 import Iconify from "../../components/iconify";
 import BackButton from "../../sections/@dashboard/app/AppBackButton";
 import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
-import PROYECT_CONFIG from "../../config/config";
+import PROJECT_CONFIG from "../../config/config";
 import { MapContainer } from "../../components/map";
 import useNavigateTo from "../../hooks/navigateTo";
 import useAuthStore from "../../zustand/useAuthStore";
@@ -37,11 +24,11 @@ import useAuthStore from "../../zustand/useAuthStore";
 // ----------------------------------------------------------------------
 
 const NAME_PAGE = 'Business';
-const URL_UPDATE = PROYECT_CONFIG.API_CONFIG.BUSINESS.UPDATE;
-const URL_CREATE = PROYECT_CONFIG.API_CONFIG.BUSINESS.CREATE;
+const URL_UPDATE = PROJECT_CONFIG.API_CONFIG.BUSINESS.UPDATE;
+const URL_CREATE = PROJECT_CONFIG.API_CONFIG.BUSINESS.CREATE;
 const URL_TABLES_PAGE = '/dashboard/business';
-const URL_GET_ITEM_FOR_UPDATE = PROYECT_CONFIG.API_CONFIG.BUSINESS.GET;
-const ADMIN_TAG = PROYECT_CONFIG.API_CONFIG.ROLES.ADMIN
+const URL_GET_ITEM_FOR_UPDATE = PROJECT_CONFIG.API_CONFIG.BUSINESS.GET;
+const ADMIN_TAG = PROJECT_CONFIG.API_CONFIG.ROLES.ADMIN
 
 export default function CreateBusinessPage() {
     const showSnackbarMessage = useMessagesSnackbar();
@@ -136,7 +123,7 @@ export default function CreateBusinessPage() {
     }
 
     const getOwners = async () => {
-        const response = await api.__get(PROYECT_CONFIG.API_CONFIG.USERS.ALL, (msg) => {
+        const response = await api.__get(PROJECT_CONFIG.API_CONFIG.USERS.ALL, (msg) => {
             showSnackbarMessage(msg, 'error');
         }, () => { getOwners() });
 
@@ -155,7 +142,7 @@ export default function CreateBusinessPage() {
     return (
         <>
             <Helmet>
-                <title> {id ? `${NAME_PAGE} edit` : `Create ${NAME_PAGE}`} | {PROYECT_CONFIG.NAME} </title>
+                <title> {id ? `${NAME_PAGE} edit` : `Create ${NAME_PAGE}`} | {PROJECT_CONFIG.NAME} </title>
             </Helmet>
 
             <Container>

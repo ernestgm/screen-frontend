@@ -8,7 +8,6 @@ import {
     DialogContent,
     DialogTitle,
     FormControl,
-    FormControlLabel,
     IconButton,
     InputLabel,
     MenuItem,
@@ -25,10 +24,11 @@ import {
     TextField,
     Typography
 } from "@mui/material";
+import {Delete} from "@mui/icons-material";
 import {LoadingButton} from "@mui/lab";
 import SaveIcon from '@mui/icons-material/Save';
 import {filter} from "lodash";
-import PROYECT_CONFIG from "../../config/config";
+import PROJECT_CONFIG from "../../config/config";
 import {UserListHead, UserListToolbar} from "../../sections/@dashboard/user";
 import Scrollbar from "../../components/scrollbar/Scrollbar";
 import {formatDate} from "../../utils/formatTime";
@@ -44,12 +44,12 @@ import marqueeColors from "../../_mock/colors";
 import SingleColorPreview from "../../components/color-utils/SingleColorPreview";
 
 
-const MARQUEE_URL_GET_ALL_DATA = PROYECT_CONFIG.API_CONFIG.MARQUEE.ALL;
-const MARQUEE_URL_GET_DATA_UPDATE = PROYECT_CONFIG.API_CONFIG.MARQUEE.GET;
-const MARQUEE_URL_DELETE_ROW = PROYECT_CONFIG.API_CONFIG.MARQUEE.DELETE;
-const MARQUEE_URL_CREATE_ROW = PROYECT_CONFIG.API_CONFIG.MARQUEE.CREATE;
-const MARQUEE_URL_UPDATE_ROW = PROYECT_CONFIG.API_CONFIG.MARQUEE.UPDATE;
-const BUSINESS_URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.BUSINESS.ALL;
+const MARQUEE_URL_GET_ALL_DATA = PROJECT_CONFIG.API_CONFIG.MARQUEE.ALL;
+const MARQUEE_URL_GET_DATA_UPDATE = PROJECT_CONFIG.API_CONFIG.MARQUEE.GET;
+const MARQUEE_URL_DELETE_ROW = PROJECT_CONFIG.API_CONFIG.MARQUEE.DELETE;
+const MARQUEE_URL_CREATE_ROW = PROJECT_CONFIG.API_CONFIG.MARQUEE.CREATE;
+const MARQUEE_URL_UPDATE_ROW = PROJECT_CONFIG.API_CONFIG.MARQUEE.UPDATE;
+const BUSINESS_URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.BUSINESS.ALL;
 const ROUTE_DETAILS_ROW = '/dashboard/marquee/details/';
 
 const TABLE_HEAD = [
@@ -74,11 +74,13 @@ export default function MarqueeDataTable() {
     const [selected, setSelected] = useState([]);
     const [orderBy, setOrderBy] = useState('name');
     const [filterName, setFilterName] = useState('');
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [rowsPerPage, setRowsPerPage] = useState(PROJECT_CONFIG.TABLE_CONFIG.ROW_PER_PAGE);
     const [businesses, setBusinesses] = useState([]);
     const [disabledAreaField, setDisabledAreaField] = useState(false);
     const [update, setUpdate] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
+    const [rowsForDelete, setRowsForDelete] = useState([]);
 
     const {currentUser} = useAuthStore((state) => state);
     const {api} = useApiHandlerStore((state) => state);
@@ -91,8 +93,8 @@ export default function MarqueeDataTable() {
             showMessageSnackbar(msg, 'error');
         }, () => { getBusiness() })
 
-        if (response.data) {
-            if (currentUser && currentUser.user.role.tag === PROYECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
+        if (response !== undefined && response.data) {
+            if (currentUser && currentUser.user.role.tag === PROJECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
                 setBusinesses(Object.values(response.data));
             } else {
                 const filteredBusiness = filter(response.data, (_business) => _business.user_id === currentUser.user.id)
@@ -105,8 +107,8 @@ export default function MarqueeDataTable() {
             showMessageSnackbar(msg, 'error');
         }, () => { getMarquees() })
 
-        if (response.data) {
-            if (currentUser && currentUser.user.role.tag === PROYECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
+        if (response !== undefined && response.data) {
+            if (currentUser && currentUser.user.role.tag === PROJECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
                 setDataTable(Object.values(response.data));
             } else {
                 const filteredMarquee = filter(response.data, (_marquee) => _marquee.business.user_id === currentUser.user.id)
@@ -115,21 +117,25 @@ export default function MarqueeDataTable() {
         }
     };
 
-    const deleteRows = async (ids) => {
-        const data = {'ids': ids};
+    const deleteRows = async () => {
+        setLoading(true)
+        const data = {'ids': rowsForDelete};
         const response = await api.__delete(MARQUEE_URL_DELETE_ROW, data, (msg) => {
             showMessageSnackbar(msg, 'error');
-        }, () => { deleteRows(ids) })
+        }, () => { deleteRows() })
 
         if (response) {
             showMessageAlert(response.message, 'success');
             getMarquees();
             setSelected([]);
         }
+        setLoading(false)
+        setOpenConfirmDelete(false)
     }
 
     const handleDeleteSelected = () => {
-        deleteRows(selected)
+        setRowsForDelete(selected)
+        setOpenConfirmDelete(true)
     }
 
     const handleEditSelected = () => {
@@ -219,7 +225,13 @@ export default function MarqueeDataTable() {
 
     const handleDeleteItemClick = (item) => {
         handleCloseMenu()
-        deleteRows([item.id])
+        setRowsForDelete([item.id])
+        setOpenConfirmDelete(true)
+    }
+
+    const handleCloseConfirmDelete = ()=> {
+        setOpenConfirmDelete(false)
+        setRowsForDelete([])
     }
 
     const [validator, setValidator] = useState({});
@@ -426,7 +438,7 @@ export default function MarqueeDataTable() {
                 </Scrollbar>
 
                 <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
+                    rowsPerPageOptions={PROJECT_CONFIG.TABLE_CONFIG.ROWS_PER_PAGE_OPTIONS}
                     component="div"
                     count={filteredDataTable.length}
                     rowsPerPage={rowsPerPage}
@@ -551,6 +563,31 @@ export default function MarqueeDataTable() {
                     </LoadingButton>
                 </DialogActions>
             </Dialog>
+
+            <Dialog open={openConfirmDelete} onClose={handleCloseConfirmDelete}>
+                <DialogTitle>
+                    Delete
+                </DialogTitle>
+                <DialogContent>
+                    <Typography variant="subtitle1" gutterBottom>
+                        Are you sure you want to delete the selected data?
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseConfirmDelete}>Cancel</Button>
+                    <LoadingButton
+                        color="error"
+                        onClick={deleteRows}
+                        loading={loading}
+                        loadingPosition="start"
+                        startIcon={<Delete />}
+                        variant="contained"
+                    >
+                        <span>OK</span>
+                    </LoadingButton>
+                </DialogActions>
+            </Dialog>
+
             <Popover
                 open={Boolean(open)}
                 anchorEl={open}

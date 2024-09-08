@@ -11,7 +11,7 @@ import {
 import BackButton from "../../sections/@dashboard/app/AppBackButton";
 import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
-import PROYECT_CONFIG from "../../config/config";
+import PROJECT_CONFIG from "../../config/config";
 import TitlePageDetails from "../../sections/@dashboard/app/TitlePageDetails";
 import ImageDataTable from "./ImageDataTable";
 import Iconify from "../../components/iconify";
@@ -22,7 +22,7 @@ import useNavigateTo from "../../hooks/navigateTo";
 // ----------------------------------------------------------------------
 
 const NAME_PAGE = 'Screen Details';
-const URL_GET_PAGE = PROYECT_CONFIG.API_CONFIG.SCREEN.GET;
+const URL_GET_PAGE = PROJECT_CONFIG.API_CONFIG.SCREEN.GET;
 const URL_TABLES_PAGE = '/dashboard/business/details/';
 const URL_MENU_SCREEN_PAGE = '/dashboard/screens';
 const URL_CREATE_IMAGE = '/dashboard/image/create/';
@@ -64,7 +64,7 @@ export default function DetailsScreenPage() {
         const response = await api.__get(`${URL_GET_PAGE}${id}`, (msg) => {
             showSnackbarMessage(msg, 'error');
         }, () => { getPageDetails() });
-        if (response.data) {
+        if (response !== undefined && response.data) {
             setScreen(response.data);
         }
     }
@@ -80,7 +80,7 @@ export default function DetailsScreenPage() {
     return (
         <>
             <Helmet>
-                <title> {NAME_PAGE} | {PROYECT_CONFIG.NAME} </title>
+                <title> {NAME_PAGE} | {PROJECT_CONFIG.NAME} </title>
             </Helmet>
 
             <Container>
@@ -99,7 +99,6 @@ export default function DetailsScreenPage() {
                         <TitlePageDetails
                             title={screen.name}
                             description={screen.description}
-                            createdAt={screen.created_at}
                             icon={'material-symbols:live-tv-outline-rounded'}
                         />
                         <Card

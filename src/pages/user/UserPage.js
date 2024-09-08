@@ -1,6 +1,6 @@
 import {Helmet} from 'react-helmet-async';
 import {filter} from 'lodash';
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 // @mui
 import {
     Card,
@@ -19,8 +19,10 @@ import {
     Typography,
     IconButton,
     TableContainer,
-    TablePagination,
+    TablePagination, DialogTitle, DialogContent, DialogActions, Dialog,
 } from '@mui/material';
+import {Delete} from "@mui/icons-material";
+import {LoadingButton} from "@mui/lab";
 // table
 import Iconify from '../../components/iconify';
 import Scrollbar from '../../components/scrollbar';
@@ -30,9 +32,10 @@ import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import {formatDate} from "../../utils/formatTime";
 import useMessagesAlert from "../../hooks/messages/useMessagesAlert";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
-import PROYECT_CONFIG from "../../config/config";
+import PROJECT_CONFIG from "../../config/config";
 import palette from "../../theme/palette";
 import useNavigateTo from "../../hooks/navigateTo";
+
 
 
 // ----------------------------------------------------------------------
@@ -79,22 +82,17 @@ function applySortFilter(array, comparator, query) {
 
 export default function UserPage() {
     const {navigateTo} = useNavigateTo();
-
     const [users, setUsers] = useState([]);
-
     const [open, setOpen] = useState(null);
-
+    const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
     const [page, setPage] = useState(0);
-
     const [order, setOrder] = useState('asc');
-
     const [selected, setSelected] = useState([]);
-
+    const [rowsForDelete, setRowsForDelete] = useState([]);
+    const [loading, setLoading] = useState(false);
     const [orderBy, setOrderBy] = useState('name');
-
     const [filterName, setFilterName] = useState('');
-
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [rowsPerPage, setRowsPerPage] = useState(PROJECT_CONFIG.TABLE_CONFIG.ROW_PER_PAGE);
 
 
     const {api} = useApiHandlerStore((state) => state);
@@ -112,26 +110,31 @@ export default function UserPage() {
             }
         )
 
-        if (response.data) {
+        if (response !== undefined && response.data) {
             setUsers(Object.values(response.data));
         }
     };
 
-    const deleteUsers = async (ids) => {
-        const data = { 'ids': ids };
+    const deleteUsers = async () => {
+        setLoading(true)
+        const data = { 'ids': rowsForDelete };
         const response = await api.__delete('/users', data, (msg) => {
             showMessageSnackbar(msg, 'error');
-        }, () => { deleteUsers(ids) })
+        }, () => { deleteUsers() })
 
         if (response) {
             showMessageAlert(response.message, 'success');
             getUsers();
             setSelected([]);
+
         }
+        setLoading(false)
+        setOpenConfirmDelete(false)
     }
 
     const handleDeleteSelected = () => {
-        deleteUsers(selected)
+        setRowsForDelete(selected)
+        setOpenConfirmDelete(true)
     }
 
     const handleEditSelected = () => {
@@ -210,7 +213,13 @@ export default function UserPage() {
 
     const handleDeleteItemClick = (item) => {
         handleCloseMenu()
-        deleteUsers([item.id])
+        setRowsForDelete([item.id])
+        setOpenConfirmDelete(true)
+    }
+
+    const handleCloseConfirmDelete = ()=> {
+        setOpenConfirmDelete(false)
+        setRowsForDelete([])
     }
 
     useEffect(() => {
@@ -220,7 +229,7 @@ export default function UserPage() {
     return (
         <>
             <Helmet>
-                <title> User | { PROYECT_CONFIG.NAME } </title>
+                <title> User | { PROJECT_CONFIG.NAME } </title>
             </Helmet>
 
             <Container>
@@ -330,7 +339,7 @@ export default function UserPage() {
                     </Scrollbar>
 
                     <TablePagination
-                        rowsPerPageOptions={[5, 10, 25]}
+                        rowsPerPageOptions={PROJECT_CONFIG.TABLE_CONFIG.ROWS_PER_PAGE_OPTIONS}
                         component="div"
                         count={filteredUsers.length}
                         rowsPerPage={rowsPerPage}
@@ -340,6 +349,30 @@ export default function UserPage() {
                     />
                 </Card>
             </Container>
+
+            <Dialog open={openConfirmDelete} onClose={handleCloseConfirmDelete}>
+                <DialogTitle>
+                    Delete
+                </DialogTitle>
+                <DialogContent>
+                    <Typography variant="subtitle1" gutterBottom>
+                        Are you sure you want to delete the selected data?
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseConfirmDelete}>Cancel</Button>
+                    <LoadingButton
+                        color="error"
+                        onClick={deleteUsers}
+                        loading={loading}
+                        loadingPosition="start"
+                        startIcon={<Delete />}
+                        variant="contained"
+                    >
+                        <span>OK</span>
+                    </LoadingButton>
+                </DialogActions>
+            </Dialog>
 
             <Popover
                 open={Boolean(open)}

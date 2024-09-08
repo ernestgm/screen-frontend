@@ -8,7 +8,7 @@ const initialState = {
 };
 
 const useGlobalMessageStore = create(
-    (set, get) => ({
+    (set) => ({
         options: initialState,
         showMessage: (optionValue) => set(state => ({options: {...state.options, ...optionValue}})),
         closeAlert: () => set({ options: initialState })

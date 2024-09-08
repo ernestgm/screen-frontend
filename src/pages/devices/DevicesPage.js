@@ -1,6 +1,7 @@
 import {Helmet} from 'react-helmet-async';
 import {filter} from 'lodash';
 import React, {useEffect, useState} from 'react';
+import {Centrifuge} from "centrifuge";
 // @mui
 import {
     Card,
@@ -24,33 +25,36 @@ import {
     FormControl,
     InputLabel,
     Select,
-    FormControlLabel,
     DialogActions, Button, Dialog,
 } from '@mui/material';
 import {LoadingButton} from "@mui/lab";
 import SaveIcon from '@mui/icons-material/Save';
+import {Delete} from "@mui/icons-material";
 // table
 import Iconify from '../../components/iconify';
 import Scrollbar from '../../components/scrollbar';
 // sections
+
 import {UserListHead, UserListToolbar} from '../../sections/@dashboard/user';
 import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import {formatDate} from "../../utils/formatTime";
 import useMessagesAlert from "../../hooks/messages/useMessagesAlert";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
-import PROYECT_CONFIG from "../../config/config";
+import PROJECT_CONFIG from "../../config/config";
 import useAuthStore from "../../zustand/useAuthStore";
+import palette from "../../theme/palette";
+
 
 
 // ----------------------------------------------------------------------
-const DEVICE_URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.DEVICE.ALL;
-const DEVICE_URL_GET_DATA_UPDATE = PROYECT_CONFIG.API_CONFIG.DEVICE.GET;
-const DEVICE_URL_DELETE_ROW = PROYECT_CONFIG.API_CONFIG.DEVICE.DELETE;
-const DEVICE_URL_UPDATE_ROW = PROYECT_CONFIG.API_CONFIG.DEVICE.UPDATE;
+const DEVICE_URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.DEVICE.ALL;
+const DEVICE_URL_GET_DATA_UPDATE = PROJECT_CONFIG.API_CONFIG.DEVICE.GET;
+const DEVICE_URL_DELETE_ROW = PROJECT_CONFIG.API_CONFIG.DEVICE.DELETE;
+const DEVICE_URL_UPDATE_ROW = PROJECT_CONFIG.API_CONFIG.DEVICE.UPDATE;
 
-const USERS_URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.USERS.ALL;
-const SCREENS_URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.SCREEN.ALL;
-const MARQUEES_URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.MARQUEE.ALL;
+const USERS_URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.USERS.ALL;
+const SCREENS_URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.SCREEN.ALL;
+const MARQUEES_URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.MARQUEE.ALL;
 
 const TABLE_HEAD = [
     {id: 'code', label: 'Device Code', alignRight: false},
@@ -110,12 +114,16 @@ export default function DevicePage() {
     const [selected, setSelected] = useState([]);
     const [orderBy, setOrderBy] = useState('code');
     const [filterName, setFilterName] = useState('');
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [rowsPerPage, setRowsPerPage] = useState(PROJECT_CONFIG.TABLE_CONFIG.ROW_PER_PAGE);
     const [openNewDialog, setOpenNewDialog] = useState(false);
     const [update, setUpdate] = useState(null);
     const [validator, setValidator] = useState({});
     const [disabledUserField, setDisabledUserField] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
+    const [rowsForDelete, setRowsForDelete] = useState([]);
+    const [clientsOnline, setClientsOnline] = useState([]);
+    let centrifuge = null
 
 
     const {currentUser} = useAuthStore((state) => state);
@@ -155,9 +163,9 @@ export default function DevicePage() {
             showMessageSnackbar(msg, 'error');
         }, () => { getScreens() })
 
-        if (response.data) {
+        if (response !== undefined && response.data) {
             setScreens(Object.values(response.data));
-            if (currentUser && currentUser.user.role.tag === PROYECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
+            if (currentUser && currentUser.user.role.tag === PROJECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
                 filterScreenByUser(null)
             } else {
                 filterScreenByUser(currentUser.user.id)
@@ -170,9 +178,9 @@ export default function DevicePage() {
             showMessageSnackbar(msg, 'error');
         }, () => { getScreens() })
 
-        if (response.data) {
+        if (response !== undefined && response.data) {
             setMarquees(Object.values(response.data));
-            if (currentUser && currentUser.user.role.tag === PROYECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
+            if (currentUser && currentUser.user.role.tag === PROJECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
                 filterMarqueByUser(null)
             } else {
                 filterMarqueByUser(currentUser.user.id)
@@ -185,8 +193,8 @@ export default function DevicePage() {
             showMessageSnackbar(msg, 'error');
         }, () => { getDevices() })
 
-        if (response.data) {
-            if (currentUser && currentUser.user.role.tag === PROYECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
+        if (response !== undefined && response.data) {
+            if (currentUser && currentUser.user.role.tag === PROJECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
                 setDevices(Object.values(response.data));
             } else {
                 const filteredDevices = filter(response.data, (_device) => _device.user_id === currentUser.user.id)
@@ -200,13 +208,12 @@ export default function DevicePage() {
             showMessageSnackbar(msg, 'error');
         }, () => { getUsers() })
 
-        if (response.data) {
+        if (response !== undefined && response.data) {
             setUsers(Object.values(response.data));
         }
     };
 
     const filterMarqueByUser = (id) => {
-        console.log(marquees)
         if (id) {
             const filtered = filter(marquees, (_marquee) => _marquee.business.user_id === id)
             setFilteredMarquees(filtered)
@@ -225,7 +232,7 @@ export default function DevicePage() {
     }
 
     const editRow = (id) => {
-        if (currentUser && currentUser.user.role.tag === PROYECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
+        if (currentUser && currentUser.user.role.tag === PROJECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
             setDisabledUserField(false)
         } else {
             setDisabledUserField(true)
@@ -244,7 +251,7 @@ export default function DevicePage() {
             showMessageSnackbar(msg, 'error');
         }, () => { editAction(id) });
 
-        if (response.data) {
+        if (response !== undefined && response.data) {
             setFormData({
                 name: response.data.name,
                 user_id: response.data.user_id,
@@ -288,21 +295,25 @@ export default function DevicePage() {
         setFormData(initialFormData);
     };
 
-    const deleteDevices = async (ids) => {
-        const data = { 'ids': ids };
+    const deleteDevices = async () => {
+        setLoading(true)
+        const data = { 'ids': rowsForDelete };
         const response = await api.__delete(`${DEVICE_URL_DELETE_ROW}`, data, (msg) => {
             showMessageSnackbar(msg, 'error');
-        }, () => { deleteDevices(ids) })
+        }, () => { deleteDevices() })
 
         if (response) {
             showMessageAlert(response.message, 'success');
             getDevices();
             setSelected([]);
         }
+        setLoading(false)
+        setOpenConfirmDelete(false)
     }
 
     const handleDeleteSelected = () => {
-        deleteDevices(selected)
+        setRowsForDelete(selected)
+        setOpenConfirmDelete(true)
     }
 
     const handleEditSelected = () => {
@@ -367,7 +378,13 @@ export default function DevicePage() {
 
     const handleDeleteItemClick = (item) => {
         handleCloseMenu()
-        deleteDevices([item.id])
+        setRowsForDelete([item.id])
+        setOpenConfirmDelete(true)
+    }
+
+    const handleCloseConfirmDelete = ()=> {
+        setOpenConfirmDelete(false)
+        setRowsForDelete([])
     }
 
     const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - devices.length) : 0;
@@ -376,17 +393,71 @@ export default function DevicePage() {
 
     const isNotFound = !filteredDevices.length && !!filterName;
 
+    function initWS() {
+        console.log(centrifuge)
+        if (centrifuge === null) {
+            const wsJwtToken = currentUser.ws_token
+            centrifuge = new Centrifuge(
+                PROJECT_CONFIG.WS_CONFIG.BASE_URL,
+                {
+                    token: wsJwtToken
+                }
+            );
+
+            centrifuge.on('connected', (ctx)=> {
+                console.log(`Client connected: ${ctx.client}`)
+            });
+
+            const sub = centrifuge.newSubscription("status:appOnline");
+            sub.subscribe()
+
+            sub.presence().then((ctx) => {
+                const devices = Object.entries(ctx.clients).map(([key, value]) => {
+                    return value.user
+                })
+                setClientsOnline(devices)
+                console.log(devices);
+            }, (err) => {
+                console.log(err);
+            });
+
+            sub.on('join', (ctx) => {
+                console.log(ctx)
+                setClientsOnline(
+                    prevEntries => [
+                        ...prevEntries,
+                        ctx.info.user
+                    ]
+                )
+                console.log(clientsOnline)
+            });
+
+            sub.on('leave', (ctx)=> {
+                console.log(ctx)
+                setClientsOnline(prevEntries => prevEntries.filter((value) => value !== ctx.info.user))
+                console.log(clientsOnline)
+            });
+            centrifuge.connect();
+        }
+    }
+
     useEffect(() => {
+        initWS()
         getUsers()
         getScreens()
         getDevices()
         getMarquees()
+
+        return () => {
+            centrifuge.disconnect();
+            centrifuge = null
+        };
     }, []);
 
     return (
         <>
             <Helmet>
-                <title> {NAME_PAGE} | { PROYECT_CONFIG.NAME } </title>
+                <title> {NAME_PAGE} | { PROJECT_CONFIG.NAME } </title>
             </Helmet>
 
             <Container>
@@ -424,6 +495,8 @@ export default function DevicePage() {
                                         const {id, code, name} = row;
                                         const selectedDevices = selected.indexOf(id) !== -1;
                                         const user = (users.find((n) => n.id === row.user_id))
+                                        const onlineColor = clientsOnline.some((value) => value === row.device_id) ? palette.success.dark : palette.error.dark
+
                                         return (
                                             <TableRow hover key={id} tabIndex={-1} role="checkbox"
                                                       selected={selectedDevices}>
@@ -434,7 +507,7 @@ export default function DevicePage() {
 
                                                 <TableCell component="th" scope="row" padding="none">
                                                     <Stack direction="row" alignItems="center" spacing={2}>
-                                                        <Iconify icon="mdi:cast-variant"/>
+                                                        <Iconify icon="mdi:cast-variant" sx={{color: onlineColor}}/>
                                                         <Typography variant="subtitle2" noWrap>
                                                             {code}
                                                         </Typography>
@@ -508,7 +581,7 @@ export default function DevicePage() {
                     </Scrollbar>
 
                     <TablePagination
-                        rowsPerPageOptions={[5, 10, 25]}
+                        rowsPerPageOptions={PROJECT_CONFIG.TABLE_CONFIG.ROWS_PER_PAGE_OPTIONS}
                         component="div"
                         count={filteredDevices.length}
                         rowsPerPage={rowsPerPage}
@@ -625,6 +698,31 @@ export default function DevicePage() {
                     </LoadingButton>
                 </DialogActions>
             </Dialog>
+
+            <Dialog open={openConfirmDelete} onClose={handleCloseConfirmDelete}>
+                <DialogTitle>
+                    Delete
+                </DialogTitle>
+                <DialogContent>
+                    <Typography variant="subtitle1" gutterBottom>
+                        Are you sure you want to delete the selected data?
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseConfirmDelete}>Cancel</Button>
+                    <LoadingButton
+                        color="error"
+                        onClick={deleteDevices}
+                        loading={loading}
+                        loadingPosition="start"
+                        startIcon={<Delete />}
+                        variant="contained"
+                    >
+                        <span>OK</span>
+                    </LoadingButton>
+                </DialogActions>
+            </Dialog>
+
             <Popover
                 open={Boolean(open)}
                 anchorEl={open}

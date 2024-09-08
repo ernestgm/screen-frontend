@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import {faker} from "@faker-js/faker";
 import * as React from "react";
-import PROYECT_CONFIG from "../../../config/config";
+import PROJECT_CONFIG from "../../../config/config";
 import {UserListHead, UserListToolbar} from "../../../sections/@dashboard/user";
 import Scrollbar from "../../../components/scrollbar/Scrollbar";
 import {formatDate} from "../../../utils/formatTime";
@@ -27,12 +27,12 @@ import {SaveImage} from "../../../components/save-image";
 
 // Area Table
 
-const PRODUCT_URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.PRODUCT.ALL;
-const PRODUCT_URL_GET_DATA_UPDATE = PROYECT_CONFIG.API_CONFIG.PRODUCT.GET;
-const PRODUCT_URL_DELETE_ROW = PROYECT_CONFIG.API_CONFIG.PRODUCT.DELETE;
-const PRODUCT_URL_CREATE_ROW = PROYECT_CONFIG.API_CONFIG.PRODUCT.CREATE;
-const PRODUCT_URL_UPDATE_ROW = PROYECT_CONFIG.API_CONFIG.PRODUCT.UPDATE;
-const URL_GET_ROUTE_JSON = PROYECT_CONFIG.API_CONFIG.BUSINESS.ROUTE_JSON;
+const PRODUCT_URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.PRODUCT.ALL;
+const PRODUCT_URL_GET_DATA_UPDATE = PROJECT_CONFIG.API_CONFIG.PRODUCT.GET;
+const PRODUCT_URL_DELETE_ROW = PROJECT_CONFIG.API_CONFIG.PRODUCT.DELETE;
+const PRODUCT_URL_CREATE_ROW = PROJECT_CONFIG.API_CONFIG.PRODUCT.CREATE;
+const PRODUCT_URL_UPDATE_ROW = PROJECT_CONFIG.API_CONFIG.PRODUCT.UPDATE;
+const URL_GET_ROUTE_JSON = PROJECT_CONFIG.API_CONFIG.BUSINESS.ROUTE_JSON;
 
 const TABLE_HEAD = [
     {id: 'name', label: 'Name', alignRight: false},
@@ -62,7 +62,7 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
 
     const [filterName, setFilterName] = useState('');
 
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [rowsPerPage, setRowsPerPage] = useState(PROJECT_CONFIG.TABLE_CONFIG.ROW_PER_PAGE);
 
     const {api} = useApiHandlerStore((state) => state);
     const showMessageAlert = useMessagesAlert();
@@ -73,7 +73,7 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
             showMessageSnackbar(msg, 'error');
         }, () => { getProducts() })
 
-        if (response.data) {
+        if (response !== undefined && response.data) {
             setDataTable(Object.values(response.data));
         }
     };
@@ -281,7 +281,7 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
                 showMessageSnackbar(msg, 'error');
             }, () => { editAction(id) });
 
-            if (response.data) {
+            if (response !== undefined && response.data) {
                 setFormData({
                     name: response.data.name,
                     description: response.data.description,
@@ -461,7 +461,7 @@ export default function ProductsDataTable({image, saveLocalProducts}) {
                 </Scrollbar>
 
                 <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
+                    rowsPerPageOptions={PROJECT_CONFIG.TABLE_CONFIG.ROWS_PER_PAGE_OPTIONS}
                     component="div"
                     count={filteredDataTable.length}
                     rowsPerPage={rowsPerPage}

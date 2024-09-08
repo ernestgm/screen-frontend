@@ -7,9 +7,9 @@ const initialState = {
 
 const useAuthStore = create(
     persist(
-        (set, get) => ({
+        (set) => ({
             ...initialState,
-            setCurrentUser: (user) => set((_) => ({currentUser: user})),
+            setCurrentUser: (user) => set(() => ({currentUser: user})),
             resetCurrentUser: () => set(initialState),
             userAccount: () => { console.log(initialState) }
         }),

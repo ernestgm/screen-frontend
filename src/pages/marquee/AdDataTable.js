@@ -11,8 +11,9 @@ import {
     Typography, FormControlLabel
 } from "@mui/material";
 import {LoadingButton} from "@mui/lab";
+import {Delete} from "@mui/icons-material";
 import SaveIcon from '@mui/icons-material/Save';
-import PROYECT_CONFIG from "../../config/config";
+import PROJECT_CONFIG from "../../config/config";
 import useNavigateTo from "../../hooks/navigateTo";
 import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import useMessagesAlert from "../../hooks/messages/useMessagesAlert";
@@ -27,11 +28,11 @@ import palette from "../../theme/palette";
 
 // Area Table
 
-const AD_URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.AD.ALL;
-const AD_URL_GET_DATA_UPDATE = PROYECT_CONFIG.API_CONFIG.AD.GET;
-const AD_URL_DELETE_ROW = PROYECT_CONFIG.API_CONFIG.AD.DELETE;
-const AD_URL_CREATE_ROW = PROYECT_CONFIG.API_CONFIG.AD.CREATE;
-const AD_URL_UPDATE_ROW = PROYECT_CONFIG.API_CONFIG.AD.UPDATE;
+const AD_URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.AD.ALL;
+const AD_URL_GET_DATA_UPDATE = PROJECT_CONFIG.API_CONFIG.AD.GET;
+const AD_URL_DELETE_ROW = PROJECT_CONFIG.API_CONFIG.AD.DELETE;
+const AD_URL_CREATE_ROW = PROJECT_CONFIG.API_CONFIG.AD.CREATE;
+const AD_URL_UPDATE_ROW = PROJECT_CONFIG.API_CONFIG.AD.UPDATE;
 
 const AREA_TABLE_HEAD = [
     {id: 'message', label: 'Message', alignRight: false},
@@ -41,7 +42,6 @@ const AREA_TABLE_HEAD = [
 ];
 
 export default function AdDataTable({ marquee }) {
-    const {navigateTo} = useNavigateTo();
     const [dataTable, setDataTable] = useState([]);
     const [open, setOpen] = useState(false);
     const [openNewAdDialog, setOpenNewAdDialog] = useState(false);
@@ -50,37 +50,43 @@ export default function AdDataTable({ marquee }) {
     const [selected, setSelected] = useState([]);
     const [orderBy, setOrderBy] = useState('name');
     const [filterName, setFilterName] = useState('');
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [rowsPerPage, setRowsPerPage] = useState(PROJECT_CONFIG.TABLE_CONFIG.ROW_PER_PAGE);
     const {api} = useApiHandlerStore((state) => state);
     const showMessageAlert = useMessagesAlert();
     const showMessageSnackbar = useMessagesSnackbar();
     const [loading, setLoading] = useState(false);
+    const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
+    const [rowsForDelete, setRowsForDelete] = useState([]);
 
     const getAds = async () => {
         const response = await api.__get(`${AD_URL_GET_DATA}?marquee_id=${marquee}`, (msg) => {
             showMessageSnackbar(msg, 'error');
         }, () => { getAds() })
 
-        if (response.data) {
+        if (response !== undefined && response.data) {
             setDataTable(Object.values(response.data));
         }
     };
 
-    const deleteRows = async (ids) => {
-        const data = {'ids': ids};
+    const deleteRows = async () => {
+        setLoading(true)
+        const data = {'ids': rowsForDelete};
         const response = await api.__delete(AD_URL_DELETE_ROW, data, (msg) => {
             showMessageSnackbar(msg, 'error');
-        }, () => { deleteRows(ids) })
+        }, () => { deleteRows() })
 
         if (response) {
             showMessageAlert(response.message, 'success');
             getAds();
             setSelected([]);
         }
+        setLoading(false)
+        setOpenConfirmDelete(false)
     }
 
     const handleDeleteSelected = () => {
-        deleteRows(selected)
+        setRowsForDelete(selected)
+        setOpenConfirmDelete(true)
     }
 
     const handleEditSelected = () => {
@@ -159,7 +165,13 @@ export default function AdDataTable({ marquee }) {
 
     const handleDeleteItemClick = (item) => {
         handleCloseMenu()
-        deleteRows([item.id])
+        setRowsForDelete([item.id])
+        setOpenConfirmDelete(true)
+    }
+
+    const handleCloseConfirmDelete = ()=> {
+        setOpenConfirmDelete(false)
+        setRowsForDelete([])
     }
 
     const [validator, setValidator] = useState({});
@@ -203,7 +215,7 @@ export default function AdDataTable({ marquee }) {
             showMessageSnackbar(msg, 'error');
         }, () => { editAdAction(id) });
 
-        if (response.data) {
+        if (response !== undefined && response.data) {
             setFormData({
                 message: response.data.message,
                 marquee_id: marquee,
@@ -354,7 +366,7 @@ export default function AdDataTable({ marquee }) {
                 </Scrollbar>
 
                 <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
+                    rowsPerPageOptions={PROJECT_CONFIG.TABLE_CONFIG.ROWS_PER_PAGE_OPTIONS}
                     component="div"
                     count={filteredDataTable.length}
                     rowsPerPage={rowsPerPage}
@@ -398,6 +410,31 @@ export default function AdDataTable({ marquee }) {
                     </LoadingButton>
                 </DialogActions>
             </Dialog>
+
+            <Dialog open={openConfirmDelete} onClose={handleCloseConfirmDelete}>
+                <DialogTitle>
+                    Delete
+                </DialogTitle>
+                <DialogContent>
+                    <Typography variant="subtitle1" gutterBottom>
+                        Are you sure you want to delete the selected data?
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseConfirmDelete}>Cancel</Button>
+                    <LoadingButton
+                        color="error"
+                        onClick={deleteRows}
+                        loading={loading}
+                        loadingPosition="start"
+                        startIcon={<Delete />}
+                        variant="contained"
+                    >
+                        <span>OK</span>
+                    </LoadingButton>
+                </DialogActions>
+            </Dialog>
+
             <Popover
                 open={Boolean(open)}
                 anchorEl={open}

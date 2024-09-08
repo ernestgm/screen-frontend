@@ -9,13 +9,13 @@ import useNavigateTo from "../../hooks/navigateTo";
 import {AppWidgetSummary} from "../../sections/@dashboard/app";
 import useAccontHandlerStore from "../../zustand/useAccontHandlerStore";
 
-import PROYECT_CONFIG from "../../config/config";
+import PROJECT_CONFIG from "../../config/config";
 
 
 
 
 // ----------------------------------------------------------------------
-const URL_GET_BUSINESS_RESUME = PROYECT_CONFIG.API_CONFIG.BUSINESS.RESUME;
+const URL_GET_BUSINESS_RESUME = PROJECT_CONFIG.API_CONFIG.BUSINESS.RESUME;
 
 export default function Dashboard() {
     const {navigateTo} = useNavigateTo();
@@ -45,7 +45,7 @@ export default function Dashboard() {
   return (
     <>
       <Helmet>
-        <title> Dashboard | { PROYECT_CONFIG.NAME } </title>
+        <title> Dashboard | { PROJECT_CONFIG.NAME } </title>
       </Helmet>
 
       <Container maxWidth="xl">

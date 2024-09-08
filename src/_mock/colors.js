@@ -1,6 +1,3 @@
-import { faker } from '@faker-js/faker';
-import { sample } from 'lodash';
-
 // ----------------------------------------------------------------------
 
 const COLOR_NAME = [

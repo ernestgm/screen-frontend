@@ -25,11 +25,11 @@ import {
     FormControl,
     InputLabel,
     Select,
-    FormControlLabel,
     DialogActions, Button, Dialog,
 } from '@mui/material';
 import {LoadingButton} from "@mui/lab";
 import SaveIcon from '@mui/icons-material/Save';
+import {Delete} from "@mui/icons-material";
 // table
 import Iconify from '../../components/iconify';
 import Scrollbar from '../../components/scrollbar';
@@ -43,6 +43,7 @@ import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import PROJECT_CONFIG from "../../config/config";
 import useAuthStore from "../../zustand/useAuthStore";
 import palette from "../../theme/palette";
+
 
 
 // ----------------------------------------------------------------------
@@ -119,6 +120,8 @@ export default function DevicePage() {
     const [validator, setValidator] = useState({});
     const [disabledUserField, setDisabledUserField] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
+    const [rowsForDelete, setRowsForDelete] = useState([]);
     const [clientsOnline, setClientsOnline] = useState([]);
     let centrifuge = null
 
@@ -292,21 +295,25 @@ export default function DevicePage() {
         setFormData(initialFormData);
     };
 
-    const deleteDevices = async (ids) => {
-        const data = { 'ids': ids };
+    const deleteDevices = async () => {
+        setLoading(true)
+        const data = { 'ids': rowsForDelete };
         const response = await api.__delete(`${DEVICE_URL_DELETE_ROW}`, data, (msg) => {
             showMessageSnackbar(msg, 'error');
-        }, () => { deleteDevices(ids) })
+        }, () => { deleteDevices() })
 
         if (response) {
             showMessageAlert(response.message, 'success');
             getDevices();
             setSelected([]);
         }
+        setLoading(false)
+        setOpenConfirmDelete(false)
     }
 
     const handleDeleteSelected = () => {
-        deleteDevices(selected)
+        setRowsForDelete(selected)
+        setOpenConfirmDelete(true)
     }
 
     const handleEditSelected = () => {
@@ -371,7 +378,13 @@ export default function DevicePage() {
 
     const handleDeleteItemClick = (item) => {
         handleCloseMenu()
-        deleteDevices([item.id])
+        setRowsForDelete([item.id])
+        setOpenConfirmDelete(true)
+    }
+
+    const handleCloseConfirmDelete = ()=> {
+        setOpenConfirmDelete(false)
+        setRowsForDelete([])
     }
 
     const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - devices.length) : 0;
@@ -685,6 +698,31 @@ export default function DevicePage() {
                     </LoadingButton>
                 </DialogActions>
             </Dialog>
+
+            <Dialog open={openConfirmDelete} onClose={handleCloseConfirmDelete}>
+                <DialogTitle>
+                    Delete
+                </DialogTitle>
+                <DialogContent>
+                    <Typography variant="subtitle1" gutterBottom>
+                        Are you sure you want to delete the selected data?
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseConfirmDelete}>Cancel</Button>
+                    <LoadingButton
+                        color="error"
+                        onClick={deleteDevices}
+                        loading={loading}
+                        loadingPosition="start"
+                        startIcon={<Delete />}
+                        variant="contained"
+                    >
+                        <span>OK</span>
+                    </LoadingButton>
+                </DialogActions>
+            </Dialog>
+
             <Popover
                 open={Boolean(open)}
                 anchorEl={open}

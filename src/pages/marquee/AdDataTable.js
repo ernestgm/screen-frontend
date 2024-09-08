@@ -11,6 +11,7 @@ import {
     Typography, FormControlLabel
 } from "@mui/material";
 import {LoadingButton} from "@mui/lab";
+import {Delete} from "@mui/icons-material";
 import SaveIcon from '@mui/icons-material/Save';
 import PROJECT_CONFIG from "../../config/config";
 import useNavigateTo from "../../hooks/navigateTo";
@@ -41,7 +42,6 @@ const AREA_TABLE_HEAD = [
 ];
 
 export default function AdDataTable({ marquee }) {
-    const {navigateTo} = useNavigateTo();
     const [dataTable, setDataTable] = useState([]);
     const [open, setOpen] = useState(false);
     const [openNewAdDialog, setOpenNewAdDialog] = useState(false);
@@ -55,6 +55,8 @@ export default function AdDataTable({ marquee }) {
     const showMessageAlert = useMessagesAlert();
     const showMessageSnackbar = useMessagesSnackbar();
     const [loading, setLoading] = useState(false);
+    const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
+    const [rowsForDelete, setRowsForDelete] = useState([]);
 
     const getAds = async () => {
         const response = await api.__get(`${AD_URL_GET_DATA}?marquee_id=${marquee}`, (msg) => {
@@ -66,21 +68,25 @@ export default function AdDataTable({ marquee }) {
         }
     };
 
-    const deleteRows = async (ids) => {
-        const data = {'ids': ids};
+    const deleteRows = async () => {
+        setLoading(true)
+        const data = {'ids': rowsForDelete};
         const response = await api.__delete(AD_URL_DELETE_ROW, data, (msg) => {
             showMessageSnackbar(msg, 'error');
-        }, () => { deleteRows(ids) })
+        }, () => { deleteRows() })
 
         if (response) {
             showMessageAlert(response.message, 'success');
             getAds();
             setSelected([]);
         }
+        setLoading(false)
+        setOpenConfirmDelete(false)
     }
 
     const handleDeleteSelected = () => {
-        deleteRows(selected)
+        setRowsForDelete(selected)
+        setOpenConfirmDelete(true)
     }
 
     const handleEditSelected = () => {
@@ -159,7 +165,13 @@ export default function AdDataTable({ marquee }) {
 
     const handleDeleteItemClick = (item) => {
         handleCloseMenu()
-        deleteRows([item.id])
+        setRowsForDelete([item.id])
+        setOpenConfirmDelete(true)
+    }
+
+    const handleCloseConfirmDelete = ()=> {
+        setOpenConfirmDelete(false)
+        setRowsForDelete([])
     }
 
     const [validator, setValidator] = useState({});
@@ -398,6 +410,31 @@ export default function AdDataTable({ marquee }) {
                     </LoadingButton>
                 </DialogActions>
             </Dialog>
+
+            <Dialog open={openConfirmDelete} onClose={handleCloseConfirmDelete}>
+                <DialogTitle>
+                    Delete
+                </DialogTitle>
+                <DialogContent>
+                    <Typography variant="subtitle1" gutterBottom>
+                        Are you sure you want to delete the selected data?
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseConfirmDelete}>Cancel</Button>
+                    <LoadingButton
+                        color="error"
+                        onClick={deleteRows}
+                        loading={loading}
+                        loadingPosition="start"
+                        startIcon={<Delete />}
+                        variant="contained"
+                    >
+                        <span>OK</span>
+                    </LoadingButton>
+                </DialogActions>
+            </Dialog>
+
             <Popover
                 open={Boolean(open)}
                 anchorEl={open}

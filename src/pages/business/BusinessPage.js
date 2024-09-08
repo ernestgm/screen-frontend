@@ -1,5 +1,5 @@
 import {Helmet} from 'react-helmet-async';
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 // @mui
 import {
     Card,
@@ -18,8 +18,10 @@ import {
     Typography,
     IconButton,
     TableContainer,
-    TablePagination, Collapse, Alert, Box,
+    TablePagination, Collapse, Alert, Box, DialogTitle, DialogContent, DialogActions, Dialog,
 } from '@mui/material';
+import {LoadingButton} from "@mui/lab";
+import {Delete} from "@mui/icons-material";
 // table
 import Iconify from '../../components/iconify';
 import Scrollbar from '../../components/scrollbar';
@@ -34,6 +36,7 @@ import {applySortFilter, getComparator} from "../../utils/table/tableFunctions";
 import useNavigateTo from "../../hooks/navigateTo";
 import useAuthStore from "../../zustand/useAuthStore";
 import AreaModalDialog from "./table/AreaModalDialog";
+
 
 
 // ----------------------------------------------------------------------
@@ -59,23 +62,14 @@ const ADMIN_TAG = PROJECT_CONFIG.API_CONFIG.ROLES.ADMIN
 
 export default function UserPage() {
     const { navigateTo } = useNavigateTo();
-
     const [dataTable, setDataTable] = useState([]);
-
     const [open, setOpen] = useState(null);
-
     const [page, setPage] = useState(0);
-
     const [order, setOrder] = useState('asc');
-
     const [selected, setSelected] = useState([]);
-
     const [orderBy, setOrderBy] = useState('name');
-
     const [filterName, setFilterName] = useState('');
-
     const [rowsPerPage, setRowsPerPage] = useState(PROJECT_CONFIG.TABLE_CONFIG.ROW_PER_PAGE);
-
     const [openNewAreaDialog, setOpenNewAreaDialog] = useState(false);
     const [newAreaBussinesId, setNewAreaBussinesId] = useState(null);
     const initialFormData = {
@@ -88,6 +82,9 @@ export default function UserPage() {
     const {api} = useApiHandlerStore((state) => state);
     const showMessageAlert = useMessagesAlert();
     const showMessageSnackbar = useMessagesSnackbar()
+    const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
+    const [rowsForDelete, setRowsForDelete] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     const getDataTable = async () => {
         const params = (currentUser && currentUser.user.role.tag !== ADMIN_TAG) ? `?userId=${currentUser.user.id}` : ''
@@ -100,21 +97,25 @@ export default function UserPage() {
         }
     };
 
-    const deleteRows = async (ids) => {
-        const data = { 'ids': ids };
+    const deleteRows = async () => {
+        setLoading(true)
+        const data = { 'ids': rowsForDelete };
         const response = await api.__delete(URL_DELETE_ROW, data, (msg) => {
             showMessageSnackbar(msg, 'error');
-        }, () => { deleteRows(ids) })
+        }, () => { deleteRows() })
 
         if (response) {
             showMessageAlert(response.message, 'success');
             getDataTable();
             setSelected([]);
         }
+        setLoading(false)
+        setOpenConfirmDelete(false)
     }
 
     const handleDeleteSelected = () => {
-        deleteRows(selected)
+        setRowsForDelete(selected)
+        setOpenConfirmDelete(true)
     }
 
     const handleEditSelected = () => {
@@ -204,7 +205,13 @@ export default function UserPage() {
 
     const handleDeleteItemClick = (item) => {
         handleCloseMenu()
-        deleteRows([item.id])
+        setRowsForDelete([item.id])
+        setOpenConfirmDelete(true)
+    }
+
+    const handleCloseConfirmDelete = ()=> {
+        setOpenConfirmDelete(false)
+        setRowsForDelete([])
     }
 
     const handleCreateAreaClick = (item) => {
@@ -363,6 +370,31 @@ export default function UserPage() {
                 handleClose={handleCloseCreateAreaDialog}
                 handleFormChange={handleChange}
             />
+
+            <Dialog open={openConfirmDelete} onClose={handleCloseConfirmDelete}>
+                <DialogTitle>
+                    Delete
+                </DialogTitle>
+                <DialogContent>
+                    <Typography variant="subtitle1" gutterBottom>
+                        Are you sure you want to delete the selected data?
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseConfirmDelete}>Cancel</Button>
+                    <LoadingButton
+                        color="error"
+                        onClick={deleteRows}
+                        loading={loading}
+                        loadingPosition="start"
+                        startIcon={<Delete />}
+                        variant="contained"
+                    >
+                        <span>OK</span>
+                    </LoadingButton>
+                </DialogActions>
+            </Dialog>
+
             <Popover
                 open={Boolean(open)}
                 anchorEl={open}
@@ -400,8 +432,6 @@ export default function UserPage() {
                     <Iconify icon={'eva:edit-fill'} sx={{mr: 2}}/>
                     Edit
                 </MenuItem>
-
-
 
                 <MenuItem onClick={() => handleDeleteItemClick(open)} sx={{color: 'error.main'}}>
                     <Iconify icon={'eva:trash-2-outline'} sx={{mr: 2}}/>

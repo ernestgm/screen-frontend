@@ -1,6 +1,5 @@
 // table
 import * as React from "react";
-import SvgColor from '../../../components/svg-color';
 import Iconify from "../../../components/iconify";
 
 // ----------------------------------------------------------------------

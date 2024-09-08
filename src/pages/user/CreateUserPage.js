@@ -70,7 +70,6 @@ export default function CreateUserPage() {
     };
 
     const handleChangePassword = (event) => {
-        const {value} = event.target;
         setChangePassword(!changePassword)
     }
 

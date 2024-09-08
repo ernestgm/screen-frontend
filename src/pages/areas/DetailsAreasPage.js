@@ -66,7 +66,7 @@ export default function DetailsAreasPage() {
                 </Stack>
                 <Grid container spacing={2} mb={5}>
                     <Grid item xs={12} sm={12} md={12}>
-                        <TitlePageDetails title={area.name} createdAt={area.created_at} icon={'fluent-mdl2:build-queue'}/>
+                        <TitlePageDetails title={area.name} icon={'fluent-mdl2:build-queue'}/>
                     </Grid>
                 </Grid>
             </Container>

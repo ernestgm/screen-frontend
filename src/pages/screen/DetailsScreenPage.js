@@ -99,7 +99,6 @@ export default function DetailsScreenPage() {
                         <TitlePageDetails
                             title={screen.name}
                             description={screen.description}
-                            createdAt={screen.created_at}
                             icon={'material-symbols:live-tv-outline-rounded'}
                         />
                         <Card

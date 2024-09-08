@@ -24,11 +24,10 @@ TitlePageDetails.propTypes = {
     icon: PropTypes.string,
     title: PropTypes.string.isRequired,
     description: PropTypes.string,
-    createdAt: PropTypes.string,
     sx: PropTypes.object,
 };
 
-export default function TitlePageDetails({title, description, createdAt, icon, color = 'primary', sx, ...other}) {
+export default function TitlePageDetails({title, description, icon, color = 'primary', sx, ...other}) {
     return (
         <Card
             sx={{
@@ -70,10 +69,7 @@ export default function TitlePageDetails({title, description, createdAt, icon, c
                         )
                     }
                 </Stack>
-
-
             </Stack>
-
         </Card>
     );
 }

@@ -6,14 +6,13 @@ import {
     Stack,
     Container,
     Typography,
-    Grid, Button, Card, ListItem,
+    Grid, Card, ListItem,
 } from '@mui/material';
 import BackButton from "../../sections/@dashboard/app/AppBackButton";
 import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import PROJECT_CONFIG from "../../config/config";
 import TitlePageDetails from "../../sections/@dashboard/app/TitlePageDetails";
-import Iconify from "../../components/iconify";
 import useNavigateTo from "../../hooks/navigateTo";
 import AdDataTable from "./AdDataTable";
 
@@ -80,7 +79,6 @@ export default function DetailsMarqueePage() {
                         <TitlePageDetails
                             title={marquee.name}
                             description=''
-                            createdAt={marquee.created_at}
                             icon={'material-symbols:rtt'}
                         />
                         <Card

@@ -12,7 +12,7 @@ import Iconify from '../components/iconify';
 import { LoginForm } from '../sections/auth/login';
 import useAuthStore from '../zustand/useAuthStore';
 import GlobalNotification from "../components/snackbar";
-import PROYECT_CONFIG from "../config/config";
+import PROJECT_CONFIG from "../config/config";
 import useNavigateTo from "../hooks/navigateTo";
 
 // ----------------------------------------------------------------------
@@ -59,7 +59,7 @@ export default function LoginPage(props) {
   return (
     <>
       <Helmet>
-        <title> Login | { PROYECT_CONFIG.NAME } </title>
+        <title> Login | { PROJECT_CONFIG.NAME } </title>
       </Helmet>
       <GlobalNotification/>
       <StyledRoot>
@@ -83,7 +83,7 @@ export default function LoginPage(props) {
                   }}
               />
               <Typography variant="h4" alignSelf="center">
-              Sign in to { PROYECT_CONFIG.NAME }
+              Sign in to { PROJECT_CONFIG.NAME }
             </Typography>
             </Stack>
 

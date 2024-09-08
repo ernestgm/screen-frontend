@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import {LoadingButton} from "@mui/lab";
 import SaveIcon from '@mui/icons-material/Save';
-import PROYECT_CONFIG from "../../config/config";
+import PROJECT_CONFIG from "../../config/config";
 import useNavigateTo from "../../hooks/navigateTo";
 import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import useMessagesAlert from "../../hooks/messages/useMessagesAlert";
@@ -27,11 +27,11 @@ import palette from "../../theme/palette";
 
 // Area Table
 
-const AD_URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.AD.ALL;
-const AD_URL_GET_DATA_UPDATE = PROYECT_CONFIG.API_CONFIG.AD.GET;
-const AD_URL_DELETE_ROW = PROYECT_CONFIG.API_CONFIG.AD.DELETE;
-const AD_URL_CREATE_ROW = PROYECT_CONFIG.API_CONFIG.AD.CREATE;
-const AD_URL_UPDATE_ROW = PROYECT_CONFIG.API_CONFIG.AD.UPDATE;
+const AD_URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.AD.ALL;
+const AD_URL_GET_DATA_UPDATE = PROJECT_CONFIG.API_CONFIG.AD.GET;
+const AD_URL_DELETE_ROW = PROJECT_CONFIG.API_CONFIG.AD.DELETE;
+const AD_URL_CREATE_ROW = PROJECT_CONFIG.API_CONFIG.AD.CREATE;
+const AD_URL_UPDATE_ROW = PROJECT_CONFIG.API_CONFIG.AD.UPDATE;
 
 const AREA_TABLE_HEAD = [
     {id: 'message', label: 'Message', alignRight: false},
@@ -50,7 +50,7 @@ export default function AdDataTable({ marquee }) {
     const [selected, setSelected] = useState([]);
     const [orderBy, setOrderBy] = useState('name');
     const [filterName, setFilterName] = useState('');
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [rowsPerPage, setRowsPerPage] = useState(PROJECT_CONFIG.TABLE_CONFIG.ROW_PER_PAGE);
     const {api} = useApiHandlerStore((state) => state);
     const showMessageAlert = useMessagesAlert();
     const showMessageSnackbar = useMessagesSnackbar();
@@ -61,7 +61,7 @@ export default function AdDataTable({ marquee }) {
             showMessageSnackbar(msg, 'error');
         }, () => { getAds() })
 
-        if (response.data) {
+        if (response !== undefined && response.data) {
             setDataTable(Object.values(response.data));
         }
     };
@@ -203,7 +203,7 @@ export default function AdDataTable({ marquee }) {
             showMessageSnackbar(msg, 'error');
         }, () => { editAdAction(id) });
 
-        if (response.data) {
+        if (response !== undefined && response.data) {
             setFormData({
                 message: response.data.message,
                 marquee_id: marquee,
@@ -354,7 +354,7 @@ export default function AdDataTable({ marquee }) {
                 </Scrollbar>
 
                 <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
+                    rowsPerPageOptions={PROJECT_CONFIG.TABLE_CONFIG.ROWS_PER_PAGE_OPTIONS}
                     component="div"
                     count={filteredDataTable.length}
                     rowsPerPage={rowsPerPage}

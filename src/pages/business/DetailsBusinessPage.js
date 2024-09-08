@@ -12,7 +12,7 @@ import {
 import BackButton from "../../sections/@dashboard/app/AppBackButton";
 import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
-import PROYECT_CONFIG from "../../config/config";
+import PROJECT_CONFIG from "../../config/config";
 import BusinessDetailsCard from "../../sections/@dashboard/business/BusinessDetailsCard";
 import {MapContainer} from "../../components/map";
 import AreasDataTable from "./table/AreasDataTable";
@@ -22,7 +22,7 @@ import ScreenDataTable from "../screen/ScreenDataTable";
 // ----------------------------------------------------------------------
 
 const NAME_PAGE = 'Business Details';
-const URL_GET_BUSINESS = PROYECT_CONFIG.API_CONFIG.BUSINESS.GET;
+const URL_GET_BUSINESS = PROJECT_CONFIG.API_CONFIG.BUSINESS.GET;
 const URL_CREATE = '/business';
 const URL_TABLES_PAGE = '/dashboard/business';
 const URL_GET_ITEM_FOR_UPDATE = '/business/';
@@ -57,7 +57,7 @@ export default function DetailsBusinessPage() {
         const response = await api.__get(`${URL_GET_BUSINESS}${id}`, (msg) => {
             showSnackbarMessage(msg, 'error');
         }, () => { getBusinessDetails() });
-        if (response.data) {
+        if (response !== undefined && response.data) {
             const data = response.data;
             setBusiness((oldData) => (
                 {
@@ -87,7 +87,7 @@ export default function DetailsBusinessPage() {
     return (
         <>
             <Helmet>
-                <title> {NAME_PAGE} | {PROYECT_CONFIG.NAME} </title>
+                <title> {NAME_PAGE} | {PROJECT_CONFIG.NAME} </title>
             </Helmet>
 
             <Container>

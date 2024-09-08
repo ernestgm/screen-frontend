@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import {Autocomplete, GoogleMap, LoadScript , Marker} from '@react-google-maps/api';
-import PROYECT_CONFIG from "../../config/config";
+import PROJECT_CONFIG from "../../config/config";
 
 const containerStyle = {
     width: '100%',

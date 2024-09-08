@@ -17,7 +17,7 @@ import {
   AppCurrentSubject,
   AppConversionRates,
 } from '../sections/@dashboard/app';
-import PROYECT_CONFIG from "../config/config";
+import PROJECT_CONFIG from "../config/config";
 
 // ----------------------------------------------------------------------
 
@@ -27,7 +27,7 @@ export default function DashboardAppPage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard | { PROYECT_CONFIG.NAME } </title>
+        <title> Dashboard | { PROJECT_CONFIG.NAME } </title>
       </Helmet>
 
       <Container maxWidth="xl">

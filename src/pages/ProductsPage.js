@@ -6,7 +6,7 @@ import { Container, Stack, Typography } from '@mui/material';
 import { ProductSort, ProductList, ProductCartWidget, ProductFilterSidebar } from '../sections/@dashboard/products';
 // mock
 import PRODUCTS from '../_mock/products';
-import PROYECT_CONFIG from "../config/config";
+import PROJECT_CONFIG from "../config/config";
 
 // ----------------------------------------------------------------------
 
@@ -24,7 +24,7 @@ export default function ProductsPage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard: Products | { PROYECT_CONFIG.NAME } </title>
+        <title> Dashboard: Products | { PROJECT_CONFIG.NAME } </title>
       </Helmet>
 
       <Container>

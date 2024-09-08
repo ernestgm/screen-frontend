@@ -5,14 +5,14 @@ import SaveIcon from '@mui/icons-material/Save';
 import useApiHandlerStore from "../../../zustand/useApiHandlerStore";
 import useMessagesAlert from "../../../hooks/messages/useMessagesAlert";
 import useMessagesSnackbar from "../../../hooks/messages/useMessagesSnackbar";
-import PROYECT_CONFIG from "../../../config/config";
+import PROJECT_CONFIG from "../../../config/config";
 
 
-const AREA_URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.AREA.ALL;
-const AREA_URL_GET_DATA_UPDATE = PROYECT_CONFIG.API_CONFIG.AREA.GET;
-const AREA_URL_DELETE_ROW = PROYECT_CONFIG.API_CONFIG.AREA.DELETE;
-const AREA_URL_CREATE_ROW = PROYECT_CONFIG.API_CONFIG.AREA.CREATE;
-const AREA_URL_UPDATE_ROW = PROYECT_CONFIG.API_CONFIG.AREA.UPDATE;
+const AREA_URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.AREA.ALL;
+const AREA_URL_GET_DATA_UPDATE = PROJECT_CONFIG.API_CONFIG.AREA.GET;
+const AREA_URL_DELETE_ROW = PROJECT_CONFIG.API_CONFIG.AREA.DELETE;
+const AREA_URL_CREATE_ROW = PROJECT_CONFIG.API_CONFIG.AREA.CREATE;
+const AREA_URL_UPDATE_ROW = PROJECT_CONFIG.API_CONFIG.AREA.UPDATE;
 const ROUTE_DETAILS_ROW = '/dashboard/area/details/';
 
 export default function AreaModalDialog({updateAreaId, areaFormData, openDialog, handleClose, handleFormChange}) {

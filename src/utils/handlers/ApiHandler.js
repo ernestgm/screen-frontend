@@ -1,4 +1,4 @@
-import PROYECT_CONFIG from '../../config/config';
+import PROJECT_CONFIG from '../../config/config';
 
 class ApiHanler {
     setUserToken(value) {
@@ -51,7 +51,7 @@ class ApiHanler {
         }
 
         onLoadingCallBack(true)
-        return fetch(PROYECT_CONFIG.API_CONFIG.baseURL+path, {
+        return fetch(PROJECT_CONFIG.API_CONFIG.baseURL+path, {
               method: _method,
               headers: _header,
               body: postData

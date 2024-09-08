@@ -40,20 +40,20 @@ import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import {formatDate} from "../../utils/formatTime";
 import useMessagesAlert from "../../hooks/messages/useMessagesAlert";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
-import PROYECT_CONFIG from "../../config/config";
+import PROJECT_CONFIG from "../../config/config";
 import useAuthStore from "../../zustand/useAuthStore";
 import palette from "../../theme/palette";
 
 
 // ----------------------------------------------------------------------
-const DEVICE_URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.DEVICE.ALL;
-const DEVICE_URL_GET_DATA_UPDATE = PROYECT_CONFIG.API_CONFIG.DEVICE.GET;
-const DEVICE_URL_DELETE_ROW = PROYECT_CONFIG.API_CONFIG.DEVICE.DELETE;
-const DEVICE_URL_UPDATE_ROW = PROYECT_CONFIG.API_CONFIG.DEVICE.UPDATE;
+const DEVICE_URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.DEVICE.ALL;
+const DEVICE_URL_GET_DATA_UPDATE = PROJECT_CONFIG.API_CONFIG.DEVICE.GET;
+const DEVICE_URL_DELETE_ROW = PROJECT_CONFIG.API_CONFIG.DEVICE.DELETE;
+const DEVICE_URL_UPDATE_ROW = PROJECT_CONFIG.API_CONFIG.DEVICE.UPDATE;
 
-const USERS_URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.USERS.ALL;
-const SCREENS_URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.SCREEN.ALL;
-const MARQUEES_URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.MARQUEE.ALL;
+const USERS_URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.USERS.ALL;
+const SCREENS_URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.SCREEN.ALL;
+const MARQUEES_URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.MARQUEE.ALL;
 
 const TABLE_HEAD = [
     {id: 'code', label: 'Device Code', alignRight: false},
@@ -113,7 +113,7 @@ export default function DevicePage() {
     const [selected, setSelected] = useState([]);
     const [orderBy, setOrderBy] = useState('code');
     const [filterName, setFilterName] = useState('');
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [rowsPerPage, setRowsPerPage] = useState(PROJECT_CONFIG.TABLE_CONFIG.ROW_PER_PAGE);
     const [openNewDialog, setOpenNewDialog] = useState(false);
     const [update, setUpdate] = useState(null);
     const [validator, setValidator] = useState({});
@@ -160,9 +160,9 @@ export default function DevicePage() {
             showMessageSnackbar(msg, 'error');
         }, () => { getScreens() })
 
-        if (response.data) {
+        if (response !== undefined && response.data) {
             setScreens(Object.values(response.data));
-            if (currentUser && currentUser.user.role.tag === PROYECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
+            if (currentUser && currentUser.user.role.tag === PROJECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
                 filterScreenByUser(null)
             } else {
                 filterScreenByUser(currentUser.user.id)
@@ -175,9 +175,9 @@ export default function DevicePage() {
             showMessageSnackbar(msg, 'error');
         }, () => { getScreens() })
 
-        if (response.data) {
+        if (response !== undefined && response.data) {
             setMarquees(Object.values(response.data));
-            if (currentUser && currentUser.user.role.tag === PROYECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
+            if (currentUser && currentUser.user.role.tag === PROJECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
                 filterMarqueByUser(null)
             } else {
                 filterMarqueByUser(currentUser.user.id)
@@ -190,8 +190,8 @@ export default function DevicePage() {
             showMessageSnackbar(msg, 'error');
         }, () => { getDevices() })
 
-        if (response.data) {
-            if (currentUser && currentUser.user.role.tag === PROYECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
+        if (response !== undefined && response.data) {
+            if (currentUser && currentUser.user.role.tag === PROJECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
                 setDevices(Object.values(response.data));
             } else {
                 const filteredDevices = filter(response.data, (_device) => _device.user_id === currentUser.user.id)
@@ -205,7 +205,7 @@ export default function DevicePage() {
             showMessageSnackbar(msg, 'error');
         }, () => { getUsers() })
 
-        if (response.data) {
+        if (response !== undefined && response.data) {
             setUsers(Object.values(response.data));
         }
     };
@@ -229,7 +229,7 @@ export default function DevicePage() {
     }
 
     const editRow = (id) => {
-        if (currentUser && currentUser.user.role.tag === PROYECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
+        if (currentUser && currentUser.user.role.tag === PROJECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
             setDisabledUserField(false)
         } else {
             setDisabledUserField(true)
@@ -248,7 +248,7 @@ export default function DevicePage() {
             showMessageSnackbar(msg, 'error');
         }, () => { editAction(id) });
 
-        if (response.data) {
+        if (response !== undefined && response.data) {
             setFormData({
                 name: response.data.name,
                 user_id: response.data.user_id,
@@ -385,7 +385,7 @@ export default function DevicePage() {
         if (centrifuge === null) {
             const wsJwtToken = currentUser.ws_token
             centrifuge = new Centrifuge(
-                PROYECT_CONFIG.WS_CONFIG.BASE_URL,
+                PROJECT_CONFIG.WS_CONFIG.BASE_URL,
                 {
                     token: wsJwtToken
                 }
@@ -444,7 +444,7 @@ export default function DevicePage() {
     return (
         <>
             <Helmet>
-                <title> {NAME_PAGE} | { PROYECT_CONFIG.NAME } </title>
+                <title> {NAME_PAGE} | { PROJECT_CONFIG.NAME } </title>
             </Helmet>
 
             <Container>
@@ -568,7 +568,7 @@ export default function DevicePage() {
                     </Scrollbar>
 
                     <TablePagination
-                        rowsPerPageOptions={[5, 10, 25]}
+                        rowsPerPageOptions={PROJECT_CONFIG.TABLE_CONFIG.ROWS_PER_PAGE_OPTIONS}
                         component="div"
                         count={filteredDevices.length}
                         rowsPerPage={rowsPerPage}

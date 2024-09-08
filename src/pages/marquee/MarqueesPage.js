@@ -7,7 +7,7 @@ import {
 } from '@mui/material';
 import {useParams} from "react-router-dom";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
-import PROYECT_CONFIG from "../../config/config";
+import PROJECT_CONFIG from "../../config/config";
 import AreasDataTable from "../business/table/AreasDataTable";
 import MarqueeDataTable from "./MarqueeDataTable";
 
@@ -23,7 +23,7 @@ export default function MarqueesPage() {
     return (
         <>
             <Helmet>
-                <title> {NAME_PAGE} | {PROYECT_CONFIG.NAME} </title>
+                <title> {NAME_PAGE} | {PROJECT_CONFIG.NAME} </title>
             </Helmet>
 
             <Container>

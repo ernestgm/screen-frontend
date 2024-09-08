@@ -11,7 +11,7 @@ import {
 import BackButton from "../../sections/@dashboard/app/AppBackButton";
 import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
-import PROYECT_CONFIG from "../../config/config";
+import PROJECT_CONFIG from "../../config/config";
 import {AppWidgetSummary} from "../../sections/@dashboard/app";
 import TitlePageDetails from "../../sections/@dashboard/app/TitlePageDetails";
 import ScreenDataTable from "../screen/ScreenDataTable";
@@ -21,7 +21,7 @@ import Iconify from "../../components/iconify";
 // ----------------------------------------------------------------------
 
 const NAME_PAGE = 'Area Details';
-const URL_GET_AREA = PROYECT_CONFIG.API_CONFIG.AREA.GET;
+const URL_GET_AREA = PROJECT_CONFIG.API_CONFIG.AREA.GET;
 const URL_TABLES_PAGE = '/dashboard/business/details/';
 
 export default function DetailsAreasPage() {
@@ -40,7 +40,7 @@ export default function DetailsAreasPage() {
         const response = await api.__get(`${URL_GET_AREA}${id}`, (msg) => {
             showSnackbarMessage(msg, 'error');
         }, () => {getAreaDetails()});
-        if (response.data) {
+        if (response !== undefined && response.data) {
             setArea(response.data);
         }
     }
@@ -52,7 +52,7 @@ export default function DetailsAreasPage() {
     return (
         <>
             <Helmet>
-                <title> {NAME_PAGE} | {PROYECT_CONFIG.NAME} </title>
+                <title> {NAME_PAGE} | {PROJECT_CONFIG.NAME} </title>
             </Helmet>
 
             <Container>

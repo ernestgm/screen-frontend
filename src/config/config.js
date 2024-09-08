@@ -1,4 +1,4 @@
-const PROYECT_CONFIG = {
+const PROJECT_CONFIG = {
     NAME: 'PlayAds',
     API_CONFIG: {
         baseURL: process.env.REACT_APP_API_CONFIG_BASE_URL,
@@ -76,7 +76,11 @@ const PROYECT_CONFIG = {
     WS_CONFIG: {
         BASE_URL: process.env.REACT_APP_CENTRIFUGUE_BASE_URL,
         WS_SECRET: process.env.WS_SECRET,
+    },
+    TABLE_CONFIG: {
+        ROW_PER_PAGE: 25,
+        ROWS_PER_PAGE_OPTIONS: [25, 50, 100]
     }
 }
 
-export default PROYECT_CONFIG;
+export default PROJECT_CONFIG;

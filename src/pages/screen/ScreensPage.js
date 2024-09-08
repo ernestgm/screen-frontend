@@ -7,7 +7,7 @@ import {
 } from '@mui/material';
 import {useParams} from "react-router-dom";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
-import PROYECT_CONFIG from "../../config/config";
+import PROJECT_CONFIG from "../../config/config";
 import ScreenDataTable from "./ScreenDataTable";
 import Iconify from "../../components/iconify";
 
@@ -22,7 +22,7 @@ export default function ScreensPage() {
     return (
         <>
             <Helmet>
-                <title> {NAME_PAGE} | {PROYECT_CONFIG.NAME} </title>
+                <title> {NAME_PAGE} | {PROJECT_CONFIG.NAME} </title>
             </Helmet>
 
             <Container>

@@ -10,7 +10,7 @@ import {
     TableRow, TextField,
     Typography, Box
 } from "@mui/material";
-import PROYECT_CONFIG from "../../../config/config";
+import PROJECT_CONFIG from "../../../config/config";
 import {UserListHead, UserListToolbar} from "../../../sections/@dashboard/user";
 import Scrollbar from "../../../components/scrollbar/Scrollbar";
 import {formatDate} from "../../../utils/formatTime";
@@ -26,11 +26,11 @@ import BackButton from "../../../sections/@dashboard/app/AppBackButton";
 
 // Area Table
 
-const AREA_URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.AREA.ALL;
-const AREA_URL_GET_DATA_UPDATE = PROYECT_CONFIG.API_CONFIG.AREA.GET;
-const AREA_URL_DELETE_ROW = PROYECT_CONFIG.API_CONFIG.AREA.DELETE;
-const AREA_URL_CREATE_ROW = PROYECT_CONFIG.API_CONFIG.AREA.CREATE;
-const AREA_URL_UPDATE_ROW = PROYECT_CONFIG.API_CONFIG.AREA.UPDATE;
+const AREA_URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.AREA.ALL;
+const AREA_URL_GET_DATA_UPDATE = PROJECT_CONFIG.API_CONFIG.AREA.GET;
+const AREA_URL_DELETE_ROW = PROJECT_CONFIG.API_CONFIG.AREA.DELETE;
+const AREA_URL_CREATE_ROW = PROJECT_CONFIG.API_CONFIG.AREA.CREATE;
+const AREA_URL_UPDATE_ROW = PROJECT_CONFIG.API_CONFIG.AREA.UPDATE;
 const ROUTE_DETAILS_ROW = '/dashboard/area/details/';
 const URL_TABLES_PAGE = '/dashboard/business';
 
@@ -60,7 +60,7 @@ export default function AreasDataTable({business}) {
 
     const [filterName, setFilterName] = useState('');
 
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [rowsPerPage, setRowsPerPage] = useState(PROJECT_CONFIG.TABLE_CONFIG.ROW_PER_PAGE);
 
     const {api} = useApiHandlerStore((state) => state);
     const showMessageAlert = useMessagesAlert();
@@ -71,7 +71,7 @@ export default function AreasDataTable({business}) {
             showMessageSnackbar(msg, 'error');
         }, () => { getAreas() })
 
-        if (response.data) {
+        if (response !== undefined && response.data) {
             setDataTable(Object.values(response.data));
         }
     };
@@ -219,7 +219,7 @@ export default function AreasDataTable({business}) {
             showMessageSnackbar(msg, 'error');
         }, () => { editAreaAction(id) });
 
-        if (response.data) {
+        if (response !== undefined && response.data) {
             setFormData({
                 name: response.data.name,
                 business_id: business,
@@ -338,7 +338,7 @@ export default function AreasDataTable({business}) {
                 </Scrollbar>
 
                 <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
+                    rowsPerPageOptions={PROJECT_CONFIG.TABLE_CONFIG.ROWS_PER_PAGE_OPTIONS}
                     component="div"
                     count={filteredDataTable.length}
                     rowsPerPage={rowsPerPage}

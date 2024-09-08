@@ -29,7 +29,7 @@ import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import {formatDate} from "../../utils/formatTime";
 import useMessagesAlert from "../../hooks/messages/useMessagesAlert";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
-import PROYECT_CONFIG from "../../config/config";
+import PROJECT_CONFIG from "../../config/config";
 import {applySortFilter, getComparator} from "../../utils/table/tableFunctions";
 import useNavigateTo from "../../hooks/navigateTo";
 import useAuthStore from "../../zustand/useAuthStore";
@@ -47,13 +47,13 @@ const TABLE_HEAD = [
 ];
 
 const PAGE_NAME = 'Business';
-const URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.BUSINESS.ALL;
-const URL_DELETE_ROW = PROYECT_CONFIG.API_CONFIG.BUSINESS.DELETE;
+const URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.BUSINESS.ALL;
+const URL_DELETE_ROW = PROJECT_CONFIG.API_CONFIG.BUSINESS.DELETE;
 const PATH_EDIT_ROW = `/dashboard/business/edit/`;
 const PATH_GO_AREAS_ROW = `/dashboard/business/areas/`;
 const PATH_NEW_ROW = '/dashboard/business/create';
 const PATH_DETAILS_ROW = '/dashboard/business/details/';
-const ADMIN_TAG = PROYECT_CONFIG.API_CONFIG.ROLES.ADMIN
+const ADMIN_TAG = PROJECT_CONFIG.API_CONFIG.ROLES.ADMIN
 
 // ----------------------------------------------------------------------
 
@@ -74,7 +74,7 @@ export default function UserPage() {
 
     const [filterName, setFilterName] = useState('');
 
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [rowsPerPage, setRowsPerPage] = useState(PROJECT_CONFIG.TABLE_CONFIG.ROW_PER_PAGE);
 
     const [openNewAreaDialog, setOpenNewAreaDialog] = useState(false);
     const [newAreaBussinesId, setNewAreaBussinesId] = useState(null);
@@ -95,7 +95,7 @@ export default function UserPage() {
             showMessageSnackbar(msg, 'error');
         }, () => { getDataTable() })
 
-        if (response.data) {
+        if (response !== undefined && response.data) {
             setDataTable(Object.values(response.data));
         }
     };
@@ -239,7 +239,7 @@ export default function UserPage() {
     return (
         <>
             <Helmet>
-                <title> Business | { PROYECT_CONFIG.NAME } </title>
+                <title> Business | { PROJECT_CONFIG.NAME } </title>
             </Helmet>
 
             <Container>
@@ -347,7 +347,7 @@ export default function UserPage() {
                     </Scrollbar>
 
                     <TablePagination
-                        rowsPerPageOptions={[5, 10, 25]}
+                        rowsPerPageOptions={PROJECT_CONFIG.TABLE_CONFIG.ROWS_PER_PAGE_OPTIONS}
                         component="div"
                         count={filteredDataTable.length}
                         rowsPerPage={rowsPerPage}

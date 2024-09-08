@@ -30,7 +30,7 @@ import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import {formatDate} from "../../utils/formatTime";
 import useMessagesAlert from "../../hooks/messages/useMessagesAlert";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
-import PROYECT_CONFIG from "../../config/config";
+import PROJECT_CONFIG from "../../config/config";
 import palette from "../../theme/palette";
 import useNavigateTo from "../../hooks/navigateTo";
 
@@ -94,7 +94,7 @@ export default function UserPage() {
 
     const [filterName, setFilterName] = useState('');
 
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [rowsPerPage, setRowsPerPage] = useState(PROJECT_CONFIG.TABLE_CONFIG.ROW_PER_PAGE);
 
 
     const {api} = useApiHandlerStore((state) => state);
@@ -112,7 +112,7 @@ export default function UserPage() {
             }
         )
 
-        if (response.data) {
+        if (response !== undefined && response.data) {
             setUsers(Object.values(response.data));
         }
     };
@@ -220,7 +220,7 @@ export default function UserPage() {
     return (
         <>
             <Helmet>
-                <title> User | { PROYECT_CONFIG.NAME } </title>
+                <title> User | { PROJECT_CONFIG.NAME } </title>
             </Helmet>
 
             <Container>
@@ -330,7 +330,7 @@ export default function UserPage() {
                     </Scrollbar>
 
                     <TablePagination
-                        rowsPerPageOptions={[5, 10, 25]}
+                        rowsPerPageOptions={PROJECT_CONFIG.TABLE_CONFIG.ROWS_PER_PAGE_OPTIONS}
                         component="div"
                         count={filteredUsers.length}
                         rowsPerPage={rowsPerPage}

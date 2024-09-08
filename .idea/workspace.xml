@@ -6,10 +6,36 @@
   <component name="ChangeListManager">
     <list default="true" id="d4767243-8cf2-4570-929d-1212d7106fb6" name="Changes" comment="UX User">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/map/MapContainer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/map/MapContainer.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/config/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/DashboardAppPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/DashboardAppPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/LoginPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LoginPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Page401.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Page401.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Page404.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Page404.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/ProductsPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/ProductsPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/areas/AreasPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/areas/AreasPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/areas/DetailsAreasPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/areas/DetailsAreasPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/business/BusinessPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/business/BusinessPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/business/CreateBusinessPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/business/CreateBusinessPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/business/DetailsBusinessPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/business/DetailsBusinessPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/business/table/AreaModalDialog.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/business/table/AreaModalDialog.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/business/table/AreasDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/business/table/AreasDataTable.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/devices/DevicesPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/devices/DevicesPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/images/CreateImagePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/images/CreateImagePage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/images/table/ProductsDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/images/table/ProductsDataTable.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/main/Dashboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/main/Dashboard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/marquee/AdDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/marquee/AdDataTable.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/marquee/DetailsMarqueePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/marquee/DetailsMarqueePage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/marquee/MarqueeDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/marquee/MarqueeDataTable.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/marquee/MarqueesPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/marquee/MarqueesPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/screen/DetailsScreenPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/screen/DetailsScreenPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/screen/ImageDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/screen/ImageDataTable.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/screen/ScreenDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/screen/ScreenDataTable.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/screen/ScreensPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/screen/ScreensPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/user/CreateUserPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/user/CreateUserPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/user/UserPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/user/UserPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sections/@dashboard/business/BusinessResume.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sections/@dashboard/business/BusinessResume.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/handlers/ApiHandler.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/handlers/ApiHandler.js" afterDir="false" />
     </list>
     <list id="d4ad349c-1410-4760-87b2-6c449dfa42b6" name="ignore" comment="CRUD Business" />
     <option name="SHOW_DIALOG" value="false" />
@@ -30,7 +56,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$" value="online_status_app" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -528,7 +554,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="CRUD images" />
     <MESSAGE value="CRUD images and save products list localy" />
     <MESSAGE value="Generate JSON for business." />
     <MESSAGE value="Change the design and add the copy to clipboard in page Edit Images" />
@@ -553,6 +578,7 @@
     <MESSAGE value="Add Loading Buttom to forms" />
     <MESSAGE value="Implement Videos" />
     <MESSAGE value="UX User" />
-    <option name="LAST_COMMIT_MESSAGE" value="UX User" />
+    <MESSAGE value="Online Status" />
+    <option name="LAST_COMMIT_MESSAGE" value="Online Status" />
   </component>
 </project>

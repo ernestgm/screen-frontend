@@ -18,7 +18,7 @@ import Iconify from "../../components/iconify";
 import BackButton from "../../sections/@dashboard/app/AppBackButton";
 import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
-import PROYECT_CONFIG from "../../config/config";
+import PROJECT_CONFIG from "../../config/config";
 import useNavigateTo from "../../hooks/navigateTo";
 
 
@@ -123,7 +123,7 @@ export default function CreateUserPage() {
             `/user/${id}`, (msg) => {
             showSnackbarMessage(msg, 'error')
         }, () => { getUser() });
-        if (response.data) {
+        if (response !== undefined && response.data) {
             setFormData({
                 name: response.data.name,
                 lastname: response.data.lastname,
@@ -140,7 +140,7 @@ export default function CreateUserPage() {
         const response = await api.__get(`/roles`, (msg) => {
             showSnackbarMessage(msg, 'error');
         }, () => { getRoles() });
-        if (response.data) {
+        if (response !== undefined && response.data) {
             setRoles(response.data);
         }
     };
@@ -157,7 +157,7 @@ export default function CreateUserPage() {
     return (
         <>
             <Helmet>
-                <title> { id ? 'User edit' : 'Create User'} | { PROYECT_CONFIG.NAME } </title>
+                <title> { id ? 'User edit' : 'Create User'} | { PROJECT_CONFIG.NAME } </title>
             </Helmet>
 
             <Container>

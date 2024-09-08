@@ -14,7 +14,7 @@ import Paper from '@mui/material/Paper';
 import {useEffect, useState} from "react";
 import {Card, Checkbox, MenuItem, Popover, Stack, TablePagination} from "@mui/material";
 import Iconify from "../../components/iconify";
-import PROYECT_CONFIG from "../../config/config";
+import PROJECT_CONFIG from "../../config/config";
 import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import useMessagesAlert from "../../hooks/messages/useMessagesAlert";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
@@ -26,8 +26,8 @@ import Scrollbar from "../../components/scrollbar/Scrollbar";
 import palette from "../../theme/palette";
 import {applySortFilter, getComparator} from "../../utils/table/tableFunctions";
 
-const URL_GET_DATA = PROYECT_CONFIG.API_CONFIG.IMAGE.ALL;
-const URL_DELETE_DATA = PROYECT_CONFIG.API_CONFIG.IMAGE.DELETE;
+const URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.IMAGE.ALL;
+const URL_DELETE_DATA = PROJECT_CONFIG.API_CONFIG.IMAGE.DELETE;
 const URL_EDIT_IMAGE = '/dashboard/image/edit/';
 
 const TABLE_HEAD = [
@@ -52,7 +52,7 @@ export default function ImageDataTable({screen}) {
     const [selected, setSelected] = useState([]);
     const [orderBy, setOrderBy] = useState('name');
     const [filterName, setFilterName] = useState('');
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [rowsPerPage, setRowsPerPage] = useState(PROJECT_CONFIG.TABLE_CONFIG.ROW_PER_PAGE);
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -159,7 +159,7 @@ export default function ImageDataTable({screen}) {
             showMessageSnackbar(msg, 'error');
         }, () => { getData() })
 
-        if (response.data) {
+        if (response !== undefined && response.data) {
             setDataTable(Object.values(response.data))
         }
     };
@@ -260,7 +260,7 @@ export default function ImageDataTable({screen}) {
                 </Scrollbar>
 
                 <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
+                    rowsPerPageOptions={PROJECT_CONFIG.TABLE_CONFIG.ROWS_PER_PAGE_OPTIONS}
                     component="div"
                     count={filteredDataTable.length}
                     rowsPerPage={rowsPerPage}

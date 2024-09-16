@@ -61,6 +61,10 @@ const PROJECT_CONFIG = {
             DELETE: '/marquees',
             ALL: '/marquees',
         },
+        LOGS: {
+            VIEW: '/getcontentlogfiles',
+            ALL: '/getlogfiles',
+        },
         AD: {
             CREATE: '/ad',
             GET: '/ad/',

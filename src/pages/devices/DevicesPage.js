@@ -59,11 +59,12 @@ const MARQUEES_URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.MARQUEE.ALL;
 const TABLE_HEAD = [
     {id: 'code', label: 'Device Code', alignRight: false},
     {id: 'name', label: 'Name', alignRight: false},
-    // {id: 'device_id', label: 'Device ID', alignRight: false},
+
     {id: 'user', label: 'User', alignRight: false },
     {id: 'screen', label: 'Screen', alignRight: false },
     {id: 'marquee', label: 'Marquee', alignRight: false },
-    {id: 'created_at', label: 'Create At', alignRight: false},
+    {id: 'device_id', label: 'Device ID', alignRight: false},
+    // {id: 'created_at', label: 'Create At', alignRight: false},
     {id: 'updated_at', label: 'Update At', alignRight: false},
     { id: 'actions', label: 'Actions' },
 ];
@@ -534,7 +535,7 @@ export default function DevicePage() {
                                                     }
                                                 </TableCell>
 
-                                                <TableCell align="left">{formatDate(row.created_at)}</TableCell>
+                                                <TableCell align="left">{row.device_id}</TableCell>
 
                                                 <TableCell align="left">{formatDate(row.updated_at)}</TableCell>
 

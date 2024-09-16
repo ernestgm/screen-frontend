@@ -21,6 +21,7 @@ import DevicePage from "./pages/devices/DevicesPage";
 import AreasPage from "./pages/areas/AreasPage";
 import MarqueesPage from "./pages/marquee/MarqueesPage";
 import DetailsMarqueePage from "./pages/marquee/DetailsMarqueePage";
+import LogsPage from "./pages/logs/LogsPage";
 
 // ----------------------------------------------------------------------
 
@@ -65,6 +66,7 @@ export default function Router() {
 
             // Others
             { path: 'products', element: <ProductsPage /> },
+            { path: 'logs', element: <LogsPage /> },
           ],
         },
       ],

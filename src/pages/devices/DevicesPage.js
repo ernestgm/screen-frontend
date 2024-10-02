@@ -108,7 +108,8 @@ export default function DevicePage() {
     const [rowsForDelete, setRowsForDelete] = useState([]);
     const [clientsOnline, setClientsOnline] = useState([]);
     const [wdClientsOnline, setWdClientsOnline] = useState([]);
-    let centrifuge = null
+    const [centrifuge, setCentrifuge] = useState(null);
+    let centrifugal = null
 
 
     const {currentUser} = useAuthStore((state) => state);
@@ -379,22 +380,21 @@ export default function DevicePage() {
     const isNotFound = !filteredDevices.length && !!filterName;
 
     function initWS() {
-        console.log(centrifuge)
-        if (centrifuge === null) {
+        if (centrifugal === null) {
             const wsJwtToken = currentUser.ws_token
-            centrifuge = new Centrifuge(
+            centrifugal = new Centrifuge(
                 PROJECT_CONFIG.WS_CONFIG.BASE_URL,
                 {
                     token: wsJwtToken
                 }
             );
 
-            centrifuge.on('connected', (ctx)=> {
+            centrifugal.on('connected', (ctx)=> {
                 console.log(`Client connected: ${ctx.client}`)
             });
 
             // Devices Online
-            const sub = centrifuge.newSubscription("status:appOnline");
+            const sub = centrifugal.newSubscription("status:appOnline");
             sub.subscribe()
 
             sub.presence().then((ctx) => {
@@ -425,7 +425,7 @@ export default function DevicePage() {
             });
 
             // WatchDog Client Online
-            const wdSub = centrifuge.newSubscription("status:wdMonitorOnline");
+            const wdSub = centrifugal.newSubscription("status:wdMonitorOnline");
             wdSub.subscribe()
 
             wdSub.presence().then((ctx) => {
@@ -455,8 +455,21 @@ export default function DevicePage() {
                 console.log(wdClientsOnline)
             });
 
-            centrifuge.connect();
+            centrifugal.connect();
+            setCentrifuge(centrifugal)
         }
+    }
+
+    function startAppClick(deviceID) {
+        console.log(deviceID);
+        console.log(centrifuge);
+        centrifuge.publish('status:wdMonitorOnline', { message: `open_app_${deviceID}` })
+            .then(response => {
+                console.log('Message published successfully:', response);
+            })
+            .catch(err => {
+                console.error('Error publishing message:', err);
+            });
     }
 
     useEffect(() => {
@@ -467,8 +480,9 @@ export default function DevicePage() {
         getMarquees()
 
         return () => {
-            centrifuge.disconnect();
-            centrifuge = null
+            if (centrifugal != null) {
+                centrifugal.disconnect();
+            }
         };
     }, []);
 
@@ -513,11 +527,16 @@ export default function DevicePage() {
                                         const {id, code, name} = row;
                                         const selectedDevices = selected.indexOf(id) !== -1;
                                         const user = (users.find((n) => n.id === row.user_id))
-                                        const onlineColor = clientsOnline.some((value) => value === row.device_id) ? palette.success.dark : palette.error.dark
+
+                                        const isDeviceOnline = clientsOnline.some((value) => value === row.device_id)
+                                        const isWDOnline = wdClientsOnline.some((value) => value === row.device_id)
+                                        const showInitAppBtn = (!isDeviceOnline && isWDOnline)
+
+                                        const onlineColor = isDeviceOnline ? palette.success.dark : palette.error.dark
 
                                         let wdOnlineColor = palette.success.dark;
                                         let animateClassOnline = "rotationAnimate";
-                                        if (!wdClientsOnline.some((value) => value === row.device_id)) {
+                                        if (!isWDOnline) {
                                             wdOnlineColor = palette.error.dark
                                             animateClassOnline = "";
                                         }
@@ -536,6 +555,16 @@ export default function DevicePage() {
                                                         <Stack className={animateClassOnline}>
                                                             <Iconify icon="mdi:radar" sx={{color: wdOnlineColor}}/>
                                                         </Stack>
+                                                        { showInitAppBtn && (
+                                                            <Button
+                                                                color="warning"
+                                                                size="small"
+                                                                variant="contained"
+                                                                onClick={() => startAppClick(row.device_id)}
+                                                            >
+                                                                Start
+                                                            </Button>
+                                                        ) }
                                                         <Typography variant="subtitle2" noWrap>
                                                             {code}
                                                         </Typography>

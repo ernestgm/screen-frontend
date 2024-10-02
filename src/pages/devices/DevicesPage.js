@@ -43,6 +43,7 @@ import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import PROJECT_CONFIG from "../../config/config";
 import useAuthStore from "../../zustand/useAuthStore";
 import palette from "../../theme/palette";
+import {getComparator} from "../../utils/table/tableFunctions";
 
 
 
@@ -70,24 +71,6 @@ const TABLE_HEAD = [
 ];
 
 const NAME_PAGE = 'Devices';
-
-// ----------------------------------------------------------------------
-
-function descendingComparator(a, b, orderBy) {
-    if (b[orderBy] < a[orderBy]) {
-        return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-        return 1;
-    }
-    return 0;
-}
-
-function getComparator(order, orderBy) {
-    return order === 'desc'
-        ? (a, b) => descendingComparator(a, b, orderBy)
-        : (a, b) => -descendingComparator(a, b, orderBy);
-}
 
 function applySortFilter(array, comparator, query) {
     const stabilizedThis = array.map((el, index) => [el, index]);
@@ -124,6 +107,7 @@ export default function DevicePage() {
     const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
     const [rowsForDelete, setRowsForDelete] = useState([]);
     const [clientsOnline, setClientsOnline] = useState([]);
+    const [wdClientsOnline, setWdClientsOnline] = useState([]);
     let centrifuge = null
 
 
@@ -409,6 +393,7 @@ export default function DevicePage() {
                 console.log(`Client connected: ${ctx.client}`)
             });
 
+            // Devices Online
             const sub = centrifuge.newSubscription("status:appOnline");
             sub.subscribe()
 
@@ -438,6 +423,38 @@ export default function DevicePage() {
                 setClientsOnline(prevEntries => prevEntries.filter((value) => value !== ctx.info.user))
                 console.log(clientsOnline)
             });
+
+            // WatchDog Client Online
+            const wdSub = centrifuge.newSubscription("status:wdMonitorOnline");
+            wdSub.subscribe()
+
+            wdSub.presence().then((ctx) => {
+                const wdDevices = Object.entries(ctx.clients).map(([key, value]) => {
+                    return value.user
+                })
+                setWdClientsOnline(wdDevices)
+                console.log(wdDevices);
+            }, (err) => {
+                console.log(err);
+            });
+
+            wdSub.on('join', (ctx) => {
+                console.log(ctx)
+                setWdClientsOnline(
+                    prevEntries => [
+                        ...prevEntries,
+                        ctx.info.user
+                    ]
+                )
+                console.log(wdClientsOnline)
+            });
+
+            wdSub.on('leave', (ctx)=> {
+                console.log(ctx)
+                setWdClientsOnline(prevEntries => prevEntries.filter((value) => value !== ctx.info.user))
+                console.log(wdClientsOnline)
+            });
+
             centrifuge.connect();
         }
     }
@@ -498,6 +515,13 @@ export default function DevicePage() {
                                         const user = (users.find((n) => n.id === row.user_id))
                                         const onlineColor = clientsOnline.some((value) => value === row.device_id) ? palette.success.dark : palette.error.dark
 
+                                        let wdOnlineColor = palette.success.dark;
+                                        let animateClassOnline = "rotationAnimate";
+                                        if (!wdClientsOnline.some((value) => value === row.device_id)) {
+                                            wdOnlineColor = palette.error.dark
+                                            animateClassOnline = "";
+                                        }
+
                                         return (
                                             <TableRow hover key={id} tabIndex={-1} role="checkbox"
                                                       selected={selectedDevices}>
@@ -509,6 +533,9 @@ export default function DevicePage() {
                                                 <TableCell component="th" scope="row" padding="none">
                                                     <Stack direction="row" alignItems="center" spacing={2}>
                                                         <Iconify icon="mdi:cast-variant" sx={{color: onlineColor}}/>
+                                                        <Stack className={animateClassOnline}>
+                                                            <Iconify icon="mdi:radar" sx={{color: wdOnlineColor}}/>
+                                                        </Stack>
                                                         <Typography variant="subtitle2" noWrap>
                                                             {code}
                                                         </Typography>

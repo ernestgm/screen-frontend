@@ -240,6 +240,7 @@ export default function MarqueeDataTable() {
         business_id: '',
         bg_color: '#000000',
         text_color: '#FFFFFF',
+        message: '',
     }
     const [formData, setFormData] = useState(initialFormData);
 
@@ -271,6 +272,7 @@ export default function MarqueeDataTable() {
             editFormData.business_id = formData.business_id
             editFormData.bg_color = formData.bg_color
             editFormData.text_color = formData.text_color
+            editFormData.message = formData.message
 
             response = await api.__update(`${MARQUEE_URL_UPDATE_ROW}${update}`, editFormData, (msg) => {
                 showMessageSnackbar(msg, 'error');
@@ -309,6 +311,7 @@ export default function MarqueeDataTable() {
                 business_id: response.data.business_id,
                 bg_color: response.data.bg_color,
                 text_color: response.data.text_color,
+                message: response.data.ads.length > 0 ? response.data.ads[0].message : '' ,
             })
             setOpenNewDialog(true);
         }
@@ -548,6 +551,24 @@ export default function MarqueeDataTable() {
                             }
                         </Select>
                     </FormControl>
+                    <FormControl
+                        variant="standard"
+                        fullWidth
+                        sx={{mb: 3}}
+                        defaultValue={''}
+                    >
+                        <Stack direction="column" alignItems="start" spacing={2}>
+                            <Typography variant="body1" gutterBottom>Message</Typography>
+                            <textarea
+                                id="message"
+                                name="message"
+                                style={{width: "100%", border: "1px solid #ccc", padding: "5px"}}
+                                onChange={handleChange}
+                                value={formData.message ?? ''}
+                            />
+                        </Stack>
+                    </FormControl>
+
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseNew}>Cancel</Button>

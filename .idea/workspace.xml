@@ -4,14 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d4767243-8cf2-4570-929d-1212d7106fb6" name="Changes" comment="Dialog COnfirm Delete">
-      <change afterPath="$PROJECT_DIR$/src/pages/logs/LogsDataTable.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/logs/LogsPage.js" afterDir="false" />
+    <list default="true" id="d4767243-8cf2-4570-929d-1212d7106fb6" name="Changes" comment="Update Marquee">
+      <change afterPath="$PROJECT_DIR$/public/assets/illustrations/linkdevice.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/user/ActivateDevicePage.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/zustand/useLocationStore.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/config/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/dashboard/nav/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/dashboard/nav/config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/devices/DevicesPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/devices/DevicesPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layouts/dashboard/header/AccountPopover.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/dashboard/header/AccountPopover.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layouts/protected/ProtectedLayout.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/protected/ProtectedLayout.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/user/CreateUserPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/user/CreateUserPage.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sections/auth/login/LoginForm.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sections/auth/login/LoginForm.js" afterDir="false" />
     </list>
     <list id="d4ad349c-1410-4760-87b2-6c449dfa42b6" name="ignore" comment="CRUD Business" />
     <option name="SHOW_DIALOG" value="false" />
@@ -56,7 +59,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/ernes/Documents/proyect/react/screen-frontend/src/pages/logs",
+    "last_opened_file_path": "C:/Users/ernes/Documents/proyect/react/screen-frontend/src/zustand",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.standard": "true",
     "node.js.detected.package.tslint": "true",
@@ -71,11 +74,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\zustand" />
+      <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\public\assets\illustrations" />
+      <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\pages\user" />
       <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\pages\logs" />
       <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\pages" />
-      <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\pages\marquee" />
-      <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\components\color-utils" />
-      <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\_mock" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\ernes\Documents\proyect\react\screen-frontend\src\pages\screen" />
@@ -141,6 +144,9 @@
       <workItem from="1725838528815" duration="15549000" />
       <workItem from="1726032558128" duration="81000" />
       <workItem from="1726067742378" duration="9746000" />
+      <workItem from="1727841169059" duration="8953000" />
+      <workItem from="1727964665753" duration="4862000" />
+      <workItem from="1728240778679" duration="9398000" />
     </task>
     <task id="LOCAL-00001" summary="User login Complete">
       <created>1680980627562</created>
@@ -366,30 +372,6 @@
       <option name="project" value="LOCAL" />
       <updated>1721878383814</updated>
     </task>
-    <task id="LOCAL-00040" summary="Bugs create images">
-      <option name="closed" value="true" />
-      <created>1722735571846</created>
-      <option name="number" value="00040" />
-      <option name="presentableId" value="LOCAL-00040" />
-      <option name="project" value="LOCAL" />
-      <updated>1722735571846</updated>
-    </task>
-    <task id="LOCAL-00041" summary="Implement add screen to business.">
-      <option name="closed" value="true" />
-      <created>1722824074938</created>
-      <option name="number" value="00041" />
-      <option name="presentableId" value="LOCAL-00041" />
-      <option name="project" value="LOCAL" />
-      <updated>1722824074938</updated>
-    </task>
-    <task id="LOCAL-00042" summary="Implement add screen to business.">
-      <option name="closed" value="true" />
-      <created>1722829329601</created>
-      <option name="number" value="00042" />
-      <option name="presentableId" value="LOCAL-00042" />
-      <option name="project" value="LOCAL" />
-      <updated>1722829329601</updated>
-    </task>
     <task id="LOCAL-00043" summary="Implement add screen to business.">
       <option name="closed" value="true" />
       <created>1722829682732</created>
@@ -502,7 +484,31 @@
       <option name="project" value="LOCAL" />
       <updated>1725756772674</updated>
     </task>
-    <option name="localTasksCounter" value="57" />
+    <task id="LOCAL-00057" summary="Show WatchDog Online">
+      <option name="closed" value="true" />
+      <created>1727845543847</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1727845543848</updated>
+    </task>
+    <task id="LOCAL-00058" summary="Show WatchDog Online">
+      <option name="closed" value="true" />
+      <created>1727886240947</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1727886240947</updated>
+    </task>
+    <task id="LOCAL-00059" summary="Update Marquee">
+      <option name="closed" value="true" />
+      <created>1727969134043</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1727969134043</updated>
+    </task>
+    <option name="localTasksCounter" value="60" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -533,9 +539,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Generate JSON for business." />
-    <MESSAGE value="Change the design and add the copy to clipboard in page Edit Images" />
-    <MESSAGE value="Create the Screen Page in Nav" />
     <MESSAGE value="Create the Devices Pages and add device id field" />
     <MESSAGE value="add time duration transition images" />
     <MESSAGE value="Add disabled and enabled user and screen" />
@@ -558,6 +561,9 @@
     <MESSAGE value="UX User" />
     <MESSAGE value="Online Status" />
     <MESSAGE value="Fixed Bugs" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed Bugs" />
+    <MESSAGE value="Logs Files" />
+    <MESSAGE value="Show WatchDog Online" />
+    <MESSAGE value="Update Marquee" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update Marquee" />
   </component>
 </project>

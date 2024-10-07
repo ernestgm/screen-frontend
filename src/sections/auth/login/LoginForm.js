@@ -8,11 +8,13 @@ import useAuthStore from '../../../zustand/useAuthStore';
 import useApiHandlerStore from "../../../zustand/useApiHandlerStore";
 import useMessagesSnackbar from "../../../hooks/messages/useMessagesSnackbar";
 import useNavigateTo from "../../../hooks/navigateTo";
+import useLocationStore from "../../../zustand/useLocationStore";
 // ----------------------------------------------------------------------
 
 export default function LoginForm() {
     const {navigateTo} = useNavigateTo();
     const {setCurrentUser} = useAuthStore((state) => state);
+    const { currentLocation } = useLocationStore((state) => state)
 
     const [showPassword, setShowPassword] = useState(false);
     const {api} = useApiHandlerStore((state) => state)
@@ -34,7 +36,11 @@ export default function LoginForm() {
 
         if (userData) {
             setCurrentUser(userData.success)
-            navigateTo('/');
+            if (currentLocation !== "/") {
+                navigateTo(currentLocation);
+            } else {
+                navigateTo('/');
+            }
         }
     };
 

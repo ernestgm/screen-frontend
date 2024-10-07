@@ -8,6 +8,7 @@ const PROJECT_CONFIG = {
             ALL: '/users',
             LOGIN: '/login',
             LOGOUT: '/logout',
+            ACTIVATE: '/activate-device'
         },
         BUSINESS: {
             CREATE: '/business',

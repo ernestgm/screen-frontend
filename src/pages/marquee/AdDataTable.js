@@ -268,6 +268,13 @@ export default function AdDataTable({ marquee }) {
                 <Typography variant="h4" gutterBottom>
                     Message List
                 </Typography>
+
+                {filteredDataTable.length < 1 && (
+                    <Button variant="outlined" onClick={handleClickNewAd}
+                            startIcon={<Iconify icon="eva:plus-fill"/>}>
+                        New Message
+                    </Button>
+                )}
             </Stack>
 
             <Card>
@@ -290,6 +297,7 @@ export default function AdDataTable({ marquee }) {
                                 rowCount={filteredDataTable.length}
                                 numSelected={selected.length}
                                 onRequestSort={handleRequestSort}
+                                onSelectAllClick={handleSelectAllClick}
                             />
                             <TableBody>
                                 {filteredDataTable.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
@@ -299,7 +307,10 @@ export default function AdDataTable({ marquee }) {
                                     return (
                                         <TableRow hover key={id} tabIndex={-1} role="checkbox"
                                                   selected={selectedRow} sx={{ background: bgColorCell }}>
-                                            <TableCell padding="checkbox">{''}</TableCell>
+                                            <TableCell padding="checkbox">
+                                                <Checkbox checked={selectedRow}
+                                                          onChange={(event) => handleClick(event, id)}/>
+                                            </TableCell>
 
                                             <TableCell component="th" scope="row" padding="none">
                                                 <Stack direction="row" alignItems="center" spacing={2}>
@@ -443,6 +454,10 @@ export default function AdDataTable({ marquee }) {
                 <MenuItem onClick={() => handleEditItemClick(open)}>
                     <Iconify icon={'eva:edit-fill'} sx={{mr: 2}}/>
                     Edit
+                </MenuItem>
+                <MenuItem onClick={() => handleDeleteItemClick(open)} sx={{color: 'error.main'}}>
+                    <Iconify icon={'eva:trash-2-outline'} sx={{mr: 2}}/>
+                    Delete
                 </MenuItem>
             </Popover>
         </>

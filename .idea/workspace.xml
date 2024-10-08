@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d4767243-8cf2-4570-929d-1212d7106fb6" name="Changes" comment="Add QR code login.">
+    <list default="true" id="d4767243-8cf2-4570-929d-1212d7106fb6" name="Changes" comment="Support to Portrait Mode">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/marquee/AdDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/marquee/AdDataTable.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/screen/ScreenDataTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/screen/ScreenDataTable.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/devices/DevicesPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/devices/DevicesPage.js" afterDir="false" />
     </list>
     <list id="d4ad349c-1410-4760-87b2-6c449dfa42b6" name="ignore" comment="CRUD Business" />
     <option name="SHOW_DIALOG" value="false" />
@@ -140,7 +139,7 @@
       <workItem from="1727841169059" duration="8953000" />
       <workItem from="1727964665753" duration="4862000" />
       <workItem from="1728240778679" duration="9398000" />
-      <workItem from="1728339336052" duration="2343000" />
+      <workItem from="1728339336052" duration="4163000" />
     </task>
     <task id="LOCAL-00001" summary="User login Complete">
       <created>1680980627562</created>
@@ -366,14 +365,6 @@
       <option name="project" value="LOCAL" />
       <updated>1721878383814</updated>
     </task>
-    <task id="LOCAL-00043" summary="Implement add screen to business.">
-      <option name="closed" value="true" />
-      <created>1722829682732</created>
-      <option name="number" value="00043" />
-      <option name="presentableId" value="LOCAL-00043" />
-      <option name="project" value="LOCAL" />
-      <updated>1722829682732</updated>
-    </task>
     <task id="LOCAL-00044" summary="Implement add screen in business">
       <option name="closed" value="true" />
       <created>1722914915945</created>
@@ -502,7 +493,15 @@
       <option name="project" value="LOCAL" />
       <updated>1727969134043</updated>
     </task>
-    <option name="localTasksCounter" value="60" />
+    <task id="LOCAL-00060" summary="Support to Portrait Mode">
+      <option name="closed" value="true" />
+      <created>1728342177993</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1728342177994</updated>
+    </task>
+    <option name="localTasksCounter" value="61" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -533,7 +532,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Create the Devices Pages and add device id field" />
     <MESSAGE value="add time duration transition images" />
     <MESSAGE value="Add disabled and enabled user and screen" />
     <MESSAGE value="fixed bug google maps" />
@@ -558,6 +556,7 @@
     <MESSAGE value="Logs Files" />
     <MESSAGE value="Show WatchDog Online" />
     <MESSAGE value="Update Marquee" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update Marquee" />
+    <MESSAGE value="Support to Portrait Mode" />
+    <option name="LAST_COMMIT_MESSAGE" value="Support to Portrait Mode" />
   </component>
 </project>

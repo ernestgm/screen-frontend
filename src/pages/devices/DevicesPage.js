@@ -429,6 +429,7 @@ export default function DevicePage() {
             wdSub.subscribe()
 
             wdSub.presence().then((ctx) => {
+                console.log(ctx)
                 const wdDevices = Object.entries(ctx.clients).map(([key, value]) => {
                     return value.user
                 })

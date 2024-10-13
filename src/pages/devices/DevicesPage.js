@@ -36,6 +36,7 @@ import Scrollbar from '../../components/scrollbar';
 // sections
 
 import {UserListHead, UserListToolbar} from '../../sections/@dashboard/user';
+import {applySortFilter, getComparator} from "../../utils/table/tableFunctions";
 import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import {formatDate} from "../../utils/formatTime";
 import useMessagesAlert from "../../hooks/messages/useMessagesAlert";
@@ -43,7 +44,6 @@ import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import PROJECT_CONFIG from "../../config/config";
 import useAuthStore from "../../zustand/useAuthStore";
 import palette from "../../theme/palette";
-import {getComparator} from "../../utils/table/tableFunctions";
 
 
 
@@ -72,19 +72,6 @@ const TABLE_HEAD = [
 
 const NAME_PAGE = 'Devices';
 
-function applySortFilter(array, comparator, query) {
-    const stabilizedThis = array.map((el, index) => [el, index]);
-    stabilizedThis.sort((a, b) => {
-        const order = comparator(a[0], b[0]);
-        if (order !== 0) return order;
-        return a[1] - b[1];
-    });
-    if (query) {
-        return filter(array, (_device) => _device.code.toLowerCase().indexOf(query.toLowerCase()) !== -1);
-    }
-    return stabilizedThis.map((el) => el[0]);
-}
-
 export default function DevicePage() {
     const [devices, setDevices] = useState([]);
     const [users, setUsers] = useState([]);
@@ -97,7 +84,7 @@ export default function DevicePage() {
     const [order, setOrder] = useState('asc');
     const [selected, setSelected] = useState([]);
     const [orderBy, setOrderBy] = useState('code');
-    const [filterName, setFilterName] = useState('');
+    const [filterQuery, setFilterQuery] = useState('');
     const [rowsPerPage, setRowsPerPage] = useState(PROJECT_CONFIG.TABLE_CONFIG.ROW_PER_PAGE);
     const [openNewDialog, setOpenNewDialog] = useState(false);
     const [update, setUpdate] = useState(null);
@@ -144,6 +131,100 @@ export default function DevicePage() {
         // }
     };
 
+    function initWS() {
+        if (centrifugal === null) {
+            const wsJwtToken = currentUser.ws_token
+            centrifugal = new Centrifuge(
+                PROJECT_CONFIG.WS_CONFIG.BASE_URL,
+                {
+                    token: wsJwtToken
+                }
+            );
+
+            centrifugal.on('connected', (ctx)=> {
+                console.log(`Client connected: ${ctx.client}`)
+            });
+
+            // Devices Online
+            const sub = centrifugal.newSubscription("status:appOnline");
+            sub.subscribe()
+
+            sub.presence().then((ctx) => {
+                const devicesOnline = Object.entries(ctx.clients).map(([key, value]) => {
+                    return value.user
+                })
+                setClientsOnline(devicesOnline)
+                console.log(devicesOnline);
+            }, (err) => {
+                console.log(err);
+            });
+
+            sub.on('join', (ctx) => {
+                console.log(ctx)
+                setClientsOnline(
+                    prevEntries => [
+                        ...prevEntries,
+                        ctx.info.user
+                    ]
+                )
+                console.log(clientsOnline)
+            });
+
+            sub.on('leave', (ctx)=> {
+                console.log(ctx)
+                setClientsOnline(prevEntries => prevEntries.filter((value) => value !== ctx.info.user))
+                console.log(clientsOnline)
+            });
+
+            // WatchDog Client Online
+            const wdSub = centrifugal.newSubscription("status:wdMonitorOnline");
+            wdSub.subscribe()
+
+            wdSub.presence().then((ctx) => {
+                console.log(ctx)
+                const wdDevices = Object.entries(ctx.clients).map(([key, value]) => {
+                    return value.user
+                })
+                setWdClientsOnline(wdDevices)
+                console.log(wdDevices);
+            }, (err) => {
+                console.log(err);
+            });
+
+            wdSub.on('join', (ctx) => {
+                console.log(ctx)
+                setWdClientsOnline(
+                    prevEntries => [
+                        ...prevEntries,
+                        ctx.info.user
+                    ]
+                )
+                console.log(wdClientsOnline)
+            });
+
+            wdSub.on('leave', (ctx)=> {
+                console.log(ctx)
+                setWdClientsOnline(prevEntries => prevEntries.filter((value) => value !== ctx.info.user))
+                console.log(wdClientsOnline)
+            });
+
+            centrifugal.connect();
+            setCentrifuge(centrifugal)
+        }
+    }
+
+    function startAppClick(deviceID) {
+        console.log(deviceID);
+        console.log(centrifuge);
+        centrifuge.publish('status:wdMonitorOnline', { message: `open_app_${deviceID}` })
+            .then(response => {
+                console.log('Message published successfully:', response);
+            })
+            .catch(err => {
+                console.error('Error publishing message:', err);
+            });
+    }
+
     const getScreens = async () => {
         const response = await api.__get(SCREENS_URL_GET_DATA, (msg) => {
             showMessageSnackbar(msg, 'error');
@@ -181,9 +262,11 @@ export default function DevicePage() {
 
         if (response !== undefined && response.data) {
             if (currentUser && currentUser.user.role.tag === PROJECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
+                console.log(Object.values(response.data))
                 setDevices(Object.values(response.data));
             } else {
                 const filteredDevices = filter(response.data, (_device) => _device.user_id === currentUser.user.id)
+                console.log(filteredDevices)
                 setDevices(filteredDevices);
             }
         }
@@ -357,9 +440,9 @@ export default function DevicePage() {
         setRowsPerPage(parseInt(event.target.value, 10));
     };
 
-    const handleFilterByName = (event) => {
+    const handleFilterByQuery = (event) => {
         setPage(0);
-        setFilterName(event.target.value);
+        setFilterQuery(event.target.value);
     };
 
     const handleDeleteItemClick = (item) => {
@@ -375,110 +458,23 @@ export default function DevicePage() {
 
     const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - devices.length) : 0;
 
-    const filteredDevices = applySortFilter(devices, getComparator(order, orderBy), filterName);
+    const filteredDevices = applySortFilter({
+        array: devices,
+        comparator: getComparator({_order: order, _orderBy: orderBy}),
+        query: filterQuery
+    });
 
-    const isNotFound = !filteredDevices.length && !!filterName;
+    const isNotFound = !filteredDevices.length && !!filterQuery;
 
-    function initWS() {
-        if (centrifugal === null) {
-            const wsJwtToken = currentUser.ws_token
-            centrifugal = new Centrifuge(
-                PROJECT_CONFIG.WS_CONFIG.BASE_URL,
-                {
-                    token: wsJwtToken
-                }
-            );
 
-            centrifugal.on('connected', (ctx)=> {
-                console.log(`Client connected: ${ctx.client}`)
-            });
-
-            // Devices Online
-            const sub = centrifugal.newSubscription("status:appOnline");
-            sub.subscribe()
-
-            sub.presence().then((ctx) => {
-                const devices = Object.entries(ctx.clients).map(([key, value]) => {
-                    return value.user
-                })
-                setClientsOnline(devices)
-                console.log(devices);
-            }, (err) => {
-                console.log(err);
-            });
-
-            sub.on('join', (ctx) => {
-                console.log(ctx)
-                setClientsOnline(
-                    prevEntries => [
-                        ...prevEntries,
-                        ctx.info.user
-                    ]
-                )
-                console.log(clientsOnline)
-            });
-
-            sub.on('leave', (ctx)=> {
-                console.log(ctx)
-                setClientsOnline(prevEntries => prevEntries.filter((value) => value !== ctx.info.user))
-                console.log(clientsOnline)
-            });
-
-            // WatchDog Client Online
-            const wdSub = centrifugal.newSubscription("status:wdMonitorOnline");
-            wdSub.subscribe()
-
-            wdSub.presence().then((ctx) => {
-                console.log(ctx)
-                const wdDevices = Object.entries(ctx.clients).map(([key, value]) => {
-                    return value.user
-                })
-                setWdClientsOnline(wdDevices)
-                console.log(wdDevices);
-            }, (err) => {
-                console.log(err);
-            });
-
-            wdSub.on('join', (ctx) => {
-                console.log(ctx)
-                setWdClientsOnline(
-                    prevEntries => [
-                        ...prevEntries,
-                        ctx.info.user
-                    ]
-                )
-                console.log(wdClientsOnline)
-            });
-
-            wdSub.on('leave', (ctx)=> {
-                console.log(ctx)
-                setWdClientsOnline(prevEntries => prevEntries.filter((value) => value !== ctx.info.user))
-                console.log(wdClientsOnline)
-            });
-
-            centrifugal.connect();
-            setCentrifuge(centrifugal)
-        }
-    }
-
-    function startAppClick(deviceID) {
-        console.log(deviceID);
-        console.log(centrifuge);
-        centrifuge.publish('status:wdMonitorOnline', { message: `open_app_${deviceID}` })
-            .then(response => {
-                console.log('Message published successfully:', response);
-            })
-            .catch(err => {
-                console.error('Error publishing message:', err);
-            });
-    }
 
     useEffect(() => {
         initWS()
         getUsers()
         getScreens()
-        getDevices()
         getMarquees()
+        getDevices()
+
 
         return () => {
             if (centrifugal != null) {
@@ -504,8 +500,8 @@ export default function DevicePage() {
                 <Card>
                     <UserListToolbar
                         numSelected={selected.length}
-                        filterName={filterName}
-                        onFilterName={handleFilterByName}
+                        filterQuery={filterQuery}
+                        onFilterQuery={handleFilterByQuery}
                         onDeleteSelect={handleDeleteSelected}
                         onEditSelect={handleEditSelected}
                         onlyEdit
@@ -626,7 +622,7 @@ export default function DevicePage() {
 
                                                     <Typography variant="body2">
                                                         No results found for &nbsp;
-                                                        <strong>&quot;{filterName}&quot;</strong>.
+                                                        <strong>&quot;{filterQuery}&quot;</strong>.
                                                         <br/> Try checking for typos or using complete words.
                                                     </Typography>
                                                 </Paper>

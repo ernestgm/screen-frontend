@@ -52,7 +52,7 @@ export default function AreasDataTable({business}) {
     const [order, setOrder] = useState('asc');
     const [selected, setSelected] = useState([]);
     const [orderBy, setOrderBy] = useState('name');
-    const [filterName, setFilterName] = useState('');
+    const [filterQuery, setFilterQuery] = useState('');
     const [rowsPerPage, setRowsPerPage] = useState(PROJECT_CONFIG.TABLE_CONFIG.ROW_PER_PAGE);
     const {api} = useApiHandlerStore((state) => state);
     const showMessageAlert = useMessagesAlert();
@@ -152,9 +152,9 @@ export default function AreasDataTable({business}) {
         setRowsPerPage(parseInt(event.target.value, 10));
     };
 
-    const handleFilterByName = (event) => {
+    const handleFilterByQuery = (event) => {
         setPage(0);
-        setFilterName(event.target.value);
+        setFilterQuery(event.target.value);
     };
 
     const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - dataTable.length) : 0;
@@ -162,10 +162,10 @@ export default function AreasDataTable({business}) {
     const filteredDataTable = applySortFilter({
         array: dataTable,
         comparator: getComparator({_order: order, _orderBy: orderBy}),
-        query: filterName
+        query: filterQuery
     });
 
-    const isNotFound = !filteredDataTable.length && !!filterName;
+    const isNotFound = !filteredDataTable.length && !!filterQuery;
 
     const handleEditItemClick = (item) => {
         handleCloseMenu()
@@ -255,8 +255,8 @@ export default function AreasDataTable({business}) {
             <Card>
                 <UserListToolbar
                     numSelected={selected.length}
-                    filterName={filterName}
-                    onFilterName={handleFilterByName}
+                    filterQuery={filterQuery}
+                    onFilterQuery={handleFilterByQuery}
                     onDeleteSelect={handleDeleteSelected}
                     onDetailsSelect={handleDetailsSelected}
                     onEditSelect={handleEditSelected}
@@ -330,7 +330,7 @@ export default function AreasDataTable({business}) {
 
                                                 <Typography variant="body2">
                                                     No results found for &nbsp;
-                                                    <strong>&quot;{filterName}&quot;</strong>.
+                                                    <strong>&quot;{filterQuery}&quot;</strong>.
                                                     <br/> Try checking for typos or using complete words.
                                                 </Typography>
                                             </Paper>

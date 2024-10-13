@@ -34,15 +34,15 @@ const StyledSearch = styled(OutlinedInput)(({ theme }) => ({
 
 UserListToolbar.propTypes = {
   numSelected: PropTypes.number,
-  filterName: PropTypes.string,
-  onFilterName: PropTypes.func,
+  filterQuery: PropTypes.string,
+  onFilterQuery: PropTypes.func,
   onDeleteSelect: PropTypes.func,
   onDetailsSelect: PropTypes.func,
   onEditSelect: PropTypes.func,
   onlyEdit: PropTypes.bool,
 };
 
-export default function UserListToolbar({onlyEdit = false, numSelected, filterName, onFilterName, onDeleteSelect, onDetailsSelect = () => {}, onEditSelect = () => {} }) {
+export default function UserListToolbar({onlyEdit = false, numSelected, filterQuery, onFilterQuery, onDeleteSelect, onDetailsSelect = () => {}, onEditSelect = () => {} }) {
   return (
     <StyledRoot
       sx={{
@@ -58,8 +58,8 @@ export default function UserListToolbar({onlyEdit = false, numSelected, filterNa
         </Typography>
       ) : (
         <StyledSearch
-          value={filterName}
-          onChange={onFilterName}
+          value={filterQuery}
+          onChange={onFilterQuery}
           placeholder="Search ..."
           startAdornment={
             <InputAdornment position="start">

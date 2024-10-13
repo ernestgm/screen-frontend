@@ -35,6 +35,7 @@ import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import PROJECT_CONFIG from "../../config/config";
 import palette from "../../theme/palette";
 import useNavigateTo from "../../hooks/navigateTo";
+import {applySortFilter, getComparator} from "../../utils/table/tableFunctions";
 
 
 
@@ -51,35 +52,6 @@ const TABLE_HEAD = [
 
 // ----------------------------------------------------------------------
 
-function descendingComparator(a, b, orderBy) {
-    if (b[orderBy] < a[orderBy]) {
-        return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-        return 1;
-    }
-    return 0;
-}
-
-function getComparator(order, orderBy) {
-    return order === 'desc'
-        ? (a, b) => descendingComparator(a, b, orderBy)
-        : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function applySortFilter(array, comparator, query) {
-    const stabilizedThis = array.map((el, index) => [el, index]);
-    stabilizedThis.sort((a, b) => {
-        const order = comparator(a[0], b[0]);
-        if (order !== 0) return order;
-        return a[1] - b[1];
-    });
-    if (query) {
-        return filter(array, (_user) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
-    }
-    return stabilizedThis.map((el) => el[0]);
-}
-
 export default function UserPage() {
     const {navigateTo} = useNavigateTo();
     const [users, setUsers] = useState([]);
@@ -91,7 +63,7 @@ export default function UserPage() {
     const [rowsForDelete, setRowsForDelete] = useState([]);
     const [loading, setLoading] = useState(false);
     const [orderBy, setOrderBy] = useState('name');
-    const [filterName, setFilterName] = useState('');
+    const [filterQuery, setFilterQuery] = useState('');
     const [rowsPerPage, setRowsPerPage] = useState(PROJECT_CONFIG.TABLE_CONFIG.ROW_PER_PAGE);
 
 
@@ -191,9 +163,9 @@ export default function UserPage() {
         setRowsPerPage(parseInt(event.target.value, 10));
     };
 
-    const handleFilterByName = (event) => {
+    const handleFilterByQuery = (event) => {
         setPage(0);
-        setFilterName(event.target.value);
+        setFilterQuery(event.target.value);
     };
 
     const newUserHandleClick = () => {
@@ -202,9 +174,13 @@ export default function UserPage() {
 
     const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users.length) : 0;
 
-    const filteredUsers = applySortFilter(users, getComparator(order, orderBy), filterName);
+    const filteredUsers = applySortFilter({
+            array: users,
+            comparator: getComparator({_order: order, _orderBy: orderBy}),
+            query: filterQuery
+    })
 
-    const isNotFound = !filteredUsers.length && !!filterName;
+    const isNotFound = !filteredUsers.length && !!filterQuery;
 
     const handleEditItemClick = (item) => {
         handleCloseMenu()
@@ -247,8 +223,8 @@ export default function UserPage() {
                 <Card>
                     <UserListToolbar
                         numSelected={selected.length}
-                        filterName={filterName}
-                        onFilterName={handleFilterByName}
+                        filterQuery={filterQuery}
+                        onFilterQuery={handleFilterByQuery}
                         onDeleteSelect={handleDeleteSelected}
                         onEditSelect={handleEditSelected}
                         onlyEdit
@@ -326,7 +302,7 @@ export default function UserPage() {
 
                                                     <Typography variant="body2">
                                                         No results found for &nbsp;
-                                                        <strong>&quot;{filterName}&quot;</strong>.
+                                                        <strong>&quot;{filterQuery}&quot;</strong>.
                                                         <br/> Try checking for typos or using complete words.
                                                     </Typography>
                                                 </Paper>

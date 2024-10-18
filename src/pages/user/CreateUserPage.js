@@ -38,7 +38,8 @@ export default function CreateUserPage() {
         role_id: '',
         password: '',
         c_password: '',
-        enabled: 1
+        enabled: 1,
+        limit_devices: 0
     });
 
     const [loading, setLoading] = useState(false);
@@ -83,6 +84,7 @@ export default function CreateUserPage() {
             editFormData.lastname = formData.lastname
             editFormData.role_id = formData.role_id
             editFormData.enabled = formData.enabled
+            editFormData.limit_devices = formData.limit_devices
 
             if (changePassword) {
                 editFormData.password = formData.password
@@ -130,6 +132,7 @@ export default function CreateUserPage() {
                 role_id: response.data.role_id,
                 password: response.data.password,
                 c_password: response.data.password,
+                limit_devices: response.data.limit_devices,
                 enabled: response.data.enabled
             })
         }
@@ -212,6 +215,13 @@ export default function CreateUserPage() {
                                 })}
                             </Select>
                         </FormControl>
+                        <TextField
+                            name="limit_devices"
+                            value={formData.limit_devices ?? 0}
+                            type="number"
+                            onChange={handleChange}
+                            label="Devices Limit"
+                        />
                         <FormControlLabel
                             control={<Checkbox name="changePassword" checked={changePassword} onChange={ handleChangePassword } />}
                             label="Change Password"

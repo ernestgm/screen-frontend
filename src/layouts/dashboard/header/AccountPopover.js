@@ -13,20 +13,10 @@ import useNavigateTo from "../../../hooks/navigateTo";
 
 const MENU_OPTIONS = [
   {
-    label: 'Home',
-    tag: 'home',
+    label: 'Link Device',
+    tag: 'activate',
     icon: 'eva:home-fill',
-  },
-  {
-    label: 'Profile',
-    tag: 'profile',
-    icon: 'eva:person-fill',
-  },
-  {
-    label: 'Settings',
-    tag: 'setting',
-    icon: 'eva:settings-2-fill',
-  },
+  }
 ];
 
 // ----------------------------------------------------------------------
@@ -64,11 +54,11 @@ export default function AccountPopover() {
   };
 
   const handleListItemClick = async (tag) => {
-    if (tag === 'home') {
-      const response = await api.__get('/users', () => {}, () => {
-        handleListItemClick(tag)
-      });
+    if (tag === 'activate') {
+      navigateTo('/dashboard/activate');
     }
+
+    setOpen(null)
   };
 
   return (
@@ -124,7 +114,7 @@ export default function AccountPopover() {
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Stack sx={{ p: 1 }}>
-          {[].map((option) => (
+          {MENU_OPTIONS.map((option) => (
             <MenuItem
                 key={option.label}
                 onClick={() => handleListItemClick(option.tag)}

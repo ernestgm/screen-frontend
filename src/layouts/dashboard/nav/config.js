@@ -43,12 +43,12 @@ const navConfig = [
     icon: icon('material-symbols:rtt'),
     roles: ['admin', 'owner']
   },
-  {
-    title: 'logs',
-    path: '/dashboard/logs',
-    icon: icon('material-symbols:list-alt'),
-    roles: ['admin']
-  },
+  // {
+  //   title: 'logs',
+  //   path: '/dashboard/logs',
+  //   icon: icon('material-symbols:list-alt'),
+  //   roles: ['admin']
+  // },
 ];
 
 export default navConfig;

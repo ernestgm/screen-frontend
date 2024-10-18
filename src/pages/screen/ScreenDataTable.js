@@ -8,7 +8,7 @@ import {
     TableCell,
     TableContainer, TablePagination,
     TableRow, TextField,
-    Typography, InputLabel, Select, FormControl
+    Typography, InputLabel, Select, FormControl, FormControlLabel
 } from "@mui/material";
 import {Delete} from "@mui/icons-material";
 import {LoadingButton} from "@mui/lab";
@@ -58,7 +58,7 @@ export default function ScreenDataTable({ business }) {
     const [order, setOrder] = useState('asc');
     const [selected, setSelected] = useState([]);
     const [orderBy, setOrderBy] = useState('name');
-    const [filterName, setFilterName] = useState('');
+    const [filterQuery, setFilterQuery] = useState('');
     const [rowsPerPage, setRowsPerPage] = useState(PROJECT_CONFIG.TABLE_CONFIG.ROW_PER_PAGE);
     const [areas, setAreas] = useState([]);
     const [businesses, setBusinesses] = useState([]);
@@ -209,9 +209,9 @@ export default function ScreenDataTable({ business }) {
         setRowsPerPage(parseInt(event.target.value, 10));
     };
 
-    const handleFilterByName = (event) => {
+    const handleFilterByQuery = (event) => {
         setPage(0);
-        setFilterName(event.target.value);
+        setFilterQuery(event.target.value);
     };
 
     const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - dataTable.length) : 0;
@@ -219,10 +219,10 @@ export default function ScreenDataTable({ business }) {
     const filteredDataTable = applySortFilter({
         array: dataTable,
         comparator: getComparator({_order: order, _orderBy: orderBy}),
-        query: filterName
+        query: filterQuery
     });
 
-    const isNotFound = !filteredDataTable.length && !!filterName;
+    const isNotFound = !filteredDataTable.length && !!filterQuery;
 
     const handleEditItemClick = (item) => {
         handleCloseMenu()
@@ -255,7 +255,8 @@ export default function ScreenDataTable({ business }) {
         description: '',
         area_id: '',
         business_id: '',
-        enabled: 1
+        enabled: 1,
+        portrait: 1,
     }
     const [formData, setFormData] = useState(initialFormData);
 
@@ -275,6 +276,13 @@ export default function ScreenDataTable({ business }) {
             }));
         }
 
+        if (name === "portrait") {
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                "portrait": formData.portrait === 0 ? 1 : 0,
+            }));
+        }
+
         if (name === "business_id") {
             getAreas(value)
         }
@@ -290,7 +298,8 @@ export default function ScreenDataTable({ business }) {
             description: '',
             area_id: '',
             business_id: business,
-            enabled: 1
+            enabled: 1,
+            portrait: 0
         })
         setOpenNewDialog(true);
     };
@@ -312,6 +321,7 @@ export default function ScreenDataTable({ business }) {
             editFormData.area_id = formData.area_id
             editFormData.business_id = formData.business_id
             editFormData.enabled = formData.enabled
+            editFormData.portrait = formData.portrait
 
             response = await api.__update(`${SCREEN_URL_UPDATE_ROW}${update}`, editFormData, (msg) => {
                 showMessageSnackbar(msg, 'error');
@@ -353,7 +363,8 @@ export default function ScreenDataTable({ business }) {
                 description: response.data.description,
                 area_id: response.data.area_id,
                 business_id: response.data.business_id,
-                enabled: response.data.enabled
+                enabled: response.data.enabled,
+                portrait: response.data.portrait
             })
             getAreas(response.data.business_id)
             setOpenNewDialog(true);
@@ -379,8 +390,8 @@ export default function ScreenDataTable({ business }) {
             <Card>
                 <UserListToolbar
                     numSelected={selected.length}
-                    filterName={filterName}
-                    onFilterName={handleFilterByName}
+                    filterQuery={filterQuery}
+                    onFilterQuery={handleFilterByQuery}
                     onDeleteSelect={handleDeleteSelected}
                     onDetailsSelect={handleDetailsSelected}
                     onEditSelect={handleEditSelected}
@@ -471,7 +482,7 @@ export default function ScreenDataTable({ business }) {
 
                                                 <Typography variant="body2">
                                                     No results found for &nbsp;
-                                                    <strong>&quot;{filterName}&quot;</strong>.
+                                                    <strong>&quot;{filterQuery}&quot;</strong>.
                                                     <br/> Try checking for typos or using complete words.
                                                 </Typography>
                                             </Paper>
@@ -571,6 +582,11 @@ export default function ScreenDataTable({ business }) {
                             }
                         </Select>
                     </FormControl>
+                    <FormControlLabel
+                        control={<Checkbox name="portrait" checked={formData.portrait} onChange={ handleChange } />}
+                        label="Portrait Mode"
+                        sx={{ flexGrow: 1, m: 0 }}
+                    />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseNew}>Cancel</Button>

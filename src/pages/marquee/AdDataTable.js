@@ -49,7 +49,7 @@ export default function AdDataTable({ marquee }) {
     const [order, setOrder] = useState('asc');
     const [selected, setSelected] = useState([]);
     const [orderBy, setOrderBy] = useState('name');
-    const [filterName, setFilterName] = useState('');
+    const [filterQuery, setFilterQuery] = useState('');
     const [rowsPerPage, setRowsPerPage] = useState(PROJECT_CONFIG.TABLE_CONFIG.ROW_PER_PAGE);
     const {api} = useApiHandlerStore((state) => state);
     const showMessageAlert = useMessagesAlert();
@@ -143,9 +143,9 @@ export default function AdDataTable({ marquee }) {
         setRowsPerPage(parseInt(event.target.value, 10));
     };
 
-    const handleFilterByName = (event) => {
+    const handleFilterByQuery = (event) => {
         setPage(0);
-        setFilterName(event.target.value);
+        setFilterQuery(event.target.value);
     };
 
     const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - dataTable.length) : 0;
@@ -153,10 +153,10 @@ export default function AdDataTable({ marquee }) {
     const filteredDataTable = applySortFilter({
         array: dataTable,
         comparator: getComparator({_order: order, _orderBy: orderBy}),
-        query: filterName
+        query: filterQuery
     });
 
-    const isNotFound = !filteredDataTable.length && !!filterName;
+    const isNotFound = !filteredDataTable.length && !!filterQuery;
 
     const handleEditItemClick = (item) => {
         handleCloseMenu()
@@ -268,17 +268,20 @@ export default function AdDataTable({ marquee }) {
                 <Typography variant="h4" gutterBottom>
                     Message List
                 </Typography>
-                <Button variant="outlined" onClick={handleClickNewAd}
-                        startIcon={<Iconify icon="eva:plus-fill"/>}>
-                    New Message
-                </Button>
+
+                {filteredDataTable.length < 1 && (
+                    <Button variant="outlined" onClick={handleClickNewAd}
+                            startIcon={<Iconify icon="eva:plus-fill"/>}>
+                        New Message
+                    </Button>
+                )}
             </Stack>
 
             <Card>
                 <UserListToolbar
                     numSelected={selected.length}
-                    filterName={filterName}
-                    onFilterName={handleFilterByName}
+                    filterQuery={filterQuery}
+                    onFilterQuery={handleFilterByQuery}
                     onDeleteSelect={handleDeleteSelected}
                     onEditSelect={handleEditSelected}
                     onlyEdit
@@ -353,7 +356,7 @@ export default function AdDataTable({ marquee }) {
 
                                                 <Typography variant="body2">
                                                     No results found for &nbsp;
-                                                    <strong>&quot;{filterName}&quot;</strong>.
+                                                    <strong>&quot;{filterQuery}&quot;</strong>.
                                                     <br/> Try checking for typos or using complete words.
                                                 </Typography>
                                             </Paper>
@@ -389,11 +392,6 @@ export default function AdDataTable({ marquee }) {
                         onChange={handleChange}
                         error={validator.message && true}
                         helperText={validator.message}
-                    />
-                    <FormControlLabel
-                        control={<Checkbox name="enabled" checked={formData.enabled === 1} onChange={ handleChange } />}
-                        label="Enabled"
-                        sx={{ flexGrow: 1, m: 0 }}
                     />
                 </DialogContent>
                 <DialogActions>
@@ -457,7 +455,6 @@ export default function AdDataTable({ marquee }) {
                     <Iconify icon={'eva:edit-fill'} sx={{mr: 2}}/>
                     Edit
                 </MenuItem>
-
                 <MenuItem onClick={() => handleDeleteItemClick(open)} sx={{color: 'error.main'}}>
                     <Iconify icon={'eva:trash-2-outline'} sx={{mr: 2}}/>
                     Delete

@@ -73,6 +73,13 @@ const PROJECT_CONFIG = {
             DELETE: '/ads',
             ALL: '/ads',
         },
+        SCHEDULES: {
+            CREATE: '/schedule',
+            GET: '/schedule/',
+            UPDATE: '/schedule/update/',
+            DELETE: '/schedules',
+            ALL: '/schedules',
+        },
         GOOGLE_API_KEY: process.env.GOOGLE_API_KEY,
         ROLES: {
             ADMIN: 'admin'

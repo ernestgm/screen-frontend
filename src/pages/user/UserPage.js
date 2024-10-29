@@ -19,7 +19,7 @@ import {
     Typography,
     IconButton,
     TableContainer,
-    TablePagination, DialogTitle, DialogContent, DialogActions, Dialog, TextField,
+    TablePagination, DialogTitle, DialogContent, DialogActions, Dialog, TextField, Divider,
 } from '@mui/material';
 import {Delete, Phonelink} from "@mui/icons-material";
 import {LoadingButton} from "@mui/lab";
@@ -40,6 +40,8 @@ import {applySortFilter, getComparator} from "../../utils/table/tableFunctions";
 
 
 // ----------------------------------------------------------------------
+
+const NAME_PAGE = "User";
 
 const TABLE_HEAD = [
     {id: 'name', label: 'Name', alignRight: false},
@@ -257,6 +259,7 @@ export default function UserPage() {
         getUsers()
     }, []);
 
+
     return (
         <>
             <Helmet>
@@ -266,9 +269,17 @@ export default function UserPage() {
             <Container>
 
                 <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-                    <Typography variant="h4" gutterBottom>
-                        User
-                    </Typography>
+                    <Stack
+                        direction="row"
+                        divider={<Divider orientation="vertical" flexItem />}
+                        spacing={2}
+                        sx={{padding: "15px 0"}}
+                    >
+                        <Iconify width="35px" icon="material-symbols:supervised-user-circle"/>
+                        <Typography variant="h4" gutterBottom>
+                            {NAME_PAGE}
+                        </Typography>
+                    </Stack>
                     <Button onClick={newUserHandleClick} variant="contained"
                             startIcon={<Iconify icon="eva:plus-fill"/>}>
                         New User

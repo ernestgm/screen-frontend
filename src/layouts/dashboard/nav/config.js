@@ -14,12 +14,6 @@ const navConfig = [
     roles: ['admin', 'owner', 'editor']
   },
   {
-    title: 'user',
-    path: '/dashboard/user',
-    icon: icon('material-symbols:supervised-user-circle'),
-    roles: ['admin']
-  },
-  {
     title: 'business',
     path: '/dashboard/business',
     icon: icon('ion:business-sharp'),
@@ -43,12 +37,18 @@ const navConfig = [
     icon: icon('material-symbols:rtt'),
     roles: ['admin', 'owner']
   },
-  // {
-  //   title: 'logs',
-  //   path: '/dashboard/logs',
-  //   icon: icon('material-symbols:list-alt'),
-  //   roles: ['admin']
-  // },
+  {
+    title: 'Schedules',
+    path: '/dashboard/schedules',
+    icon: icon('eva:clock-outline'),
+    roles: ['admin', 'owner']
+  },
+  {
+    title: 'user',
+    path: '/dashboard/user',
+    icon: icon('material-symbols:supervised-user-circle'),
+    roles: ['admin']
+  },
 ];
 
 export default navConfig;

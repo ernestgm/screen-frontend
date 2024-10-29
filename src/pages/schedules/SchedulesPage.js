@@ -48,33 +48,32 @@ import palette from "../../theme/palette";
 
 
 // ----------------------------------------------------------------------
-const DEVICE_URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.DEVICE.ALL;
-const DEVICE_URL_GET_DATA_UPDATE = PROJECT_CONFIG.API_CONFIG.DEVICE.GET;
-const DEVICE_URL_DELETE_ROW = PROJECT_CONFIG.API_CONFIG.DEVICE.DELETE;
-const DEVICE_URL_UPDATE_ROW = PROJECT_CONFIG.API_CONFIG.DEVICE.UPDATE;
+const SCHEDULES_URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.SCHEDULES.ALL;
+const SCHEDULES_URL_GET_DATA_UPDATE = PROJECT_CONFIG.API_CONFIG.SCHEDULES.GET;
+const SCHEDULES_URL_DELETE_ROW = PROJECT_CONFIG.API_CONFIG.SCHEDULES.DELETE;
+const SCHEDULES_URL_UPDATE_ROW = PROJECT_CONFIG.API_CONFIG.SCHEDULES.UPDATE;
 
 const USERS_URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.USERS.ALL;
 const SCREENS_URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.SCREEN.ALL;
 const MARQUEES_URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.MARQUEE.ALL;
 
 const TABLE_HEAD = [
-    {id: 'code', label: 'Device Code', alignRight: false},
     {id: 'name', label: 'Name', alignRight: false},
-
-    {id: 'user', label: 'User', alignRight: false },
+    {id: 'device', label: 'Device', alignRight: false },
     {id: 'screen', label: 'Screen', alignRight: false },
     {id: 'marquee', label: 'Marquee', alignRight: false },
-    {id: 'device_id', label: 'Device ID', alignRight: false},
+    {id: 'start_time', label: 'Start Time', alignRight: false },
+    {id: 'end_time', label: 'End Time', alignRight: false },
     // {id: 'created_at', label: 'Create At', alignRight: false},
     {id: 'updated_at', label: 'Update At', alignRight: false},
     { id: 'actions', label: 'Actions' },
 ];
 
-const NAME_PAGE = 'Devices';
+const NAME_PAGE = 'Schedules';
 
-export default function DevicePage() {
+export default function SchedulesPage() {
     const [devices, setDevices] = useState([]);
-    const [users, setUsers] = useState([]);
+    const [schedules, setSchedules] = useState([]);
     const [screens, setScreens] = useState([]);
     const [marquees, setMarquees] = useState([]);
     const [filteredScreen, setFilteredScreens] = useState([]);
@@ -89,15 +88,9 @@ export default function DevicePage() {
     const [openNewDialog, setOpenNewDialog] = useState(false);
     const [update, setUpdate] = useState(null);
     const [validator, setValidator] = useState({});
-    const [disabledUserField, setDisabledUserField] = useState(false);
     const [loading, setLoading] = useState(false);
     const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
     const [rowsForDelete, setRowsForDelete] = useState([]);
-    const [clientsOnline, setClientsOnline] = useState([]);
-    const [wdClientsOnline, setWdClientsOnline] = useState([]);
-    const [centrifuge, setCentrifuge] = useState(null);
-    let centrifugal = null
-
 
     const {currentUser} = useAuthStore((state) => state);
     const {api} = useApiHandlerStore((state) => state);
@@ -106,10 +99,14 @@ export default function DevicePage() {
 
     const initialFormData = {
         name: '',
-        user_id: '',
+        device_id: '',
         screen_id: '',
         marquee_id: '',
+        start_time: '',
+        end_time: '',
+        schedule_type: '',
     }
+
     const [formData, setFormData] = useState(initialFormData);
 
     const handleChange = (event) => {
@@ -130,100 +127,6 @@ export default function DevicePage() {
         //     }));
         // }
     };
-
-    function initWS() {
-        if (centrifugal === null) {
-            const wsJwtToken = currentUser.ws_token
-            centrifugal = new Centrifuge(
-                PROJECT_CONFIG.WS_CONFIG.BASE_URL,
-                {
-                    token: wsJwtToken
-                }
-            );
-
-            centrifugal.on('connected', (ctx)=> {
-                console.log(`Client connected: ${ctx.client}`)
-            });
-
-            // Devices Online
-            const sub = centrifugal.newSubscription("status:appOnline");
-            sub.subscribe()
-
-            sub.presence().then((ctx) => {
-                const devicesOnline = Object.entries(ctx.clients).map(([key, value]) => {
-                    return value.user
-                })
-                setClientsOnline(devicesOnline)
-                console.log(devicesOnline);
-            }, (err) => {
-                console.log(err);
-            });
-
-            sub.on('join', (ctx) => {
-                console.log(ctx)
-                setClientsOnline(
-                    prevEntries => [
-                        ...prevEntries,
-                        ctx.info.user
-                    ]
-                )
-                console.log(clientsOnline)
-            });
-
-            sub.on('leave', (ctx)=> {
-                console.log(ctx)
-                setClientsOnline(prevEntries => prevEntries.filter((value) => value !== ctx.info.user))
-                console.log(clientsOnline)
-            });
-
-            // WatchDog Client Online
-            const wdSub = centrifugal.newSubscription("status:wdMonitorOnline");
-            wdSub.subscribe()
-
-            wdSub.presence().then((ctx) => {
-                console.log(ctx)
-                const wdDevices = Object.entries(ctx.clients).map(([key, value]) => {
-                    return value.user
-                })
-                setWdClientsOnline(wdDevices)
-                console.log(wdDevices);
-            }, (err) => {
-                console.log(err);
-            });
-
-            wdSub.on('join', (ctx) => {
-                console.log(ctx)
-                setWdClientsOnline(
-                    prevEntries => [
-                        ...prevEntries,
-                        ctx.info.user
-                    ]
-                )
-                console.log(wdClientsOnline)
-            });
-
-            wdSub.on('leave', (ctx)=> {
-                console.log(ctx)
-                setWdClientsOnline(prevEntries => prevEntries.filter((value) => value !== ctx.info.user))
-                console.log(wdClientsOnline)
-            });
-
-            centrifugal.connect();
-            setCentrifuge(centrifugal)
-        }
-    }
-
-    function startAppClick(deviceID) {
-        console.log(deviceID);
-        console.log(centrifuge);
-        centrifuge.publish('status:wdMonitorOnline', { message: `open_app_${deviceID}` })
-            .then(response => {
-                console.log('Message published successfully:', response);
-            })
-            .catch(err => {
-                console.error('Error publishing message:', err);
-            });
-    }
 
     const getScreens = async () => {
         const response = await api.__get(SCREENS_URL_GET_DATA, (msg) => {
@@ -256,7 +159,7 @@ export default function DevicePage() {
     };
 
     const getDevices = async () => {
-        const response = await api.__get(`${DEVICE_URL_GET_DATA}`, (msg) => {
+        const response = await api.__get(`${SCHEDULES_URL_GET_DATA}`, (msg) => {
             showMessageSnackbar(msg, 'error');
         }, () => { getDevices() })
 
@@ -269,16 +172,6 @@ export default function DevicePage() {
                 console.log(filteredDevices)
                 setDevices(filteredDevices);
             }
-        }
-    };
-
-    const getUsers = async () => {
-        const response = await api.__get(USERS_URL_GET_DATA, (msg) => {
-            showMessageSnackbar(msg, 'error');
-        }, () => { getUsers() })
-
-        if (response !== undefined && response.data) {
-            setUsers(Object.values(response.data));
         }
     };
 
@@ -301,11 +194,6 @@ export default function DevicePage() {
     }
 
     const editRow = (id) => {
-        if (currentUser && currentUser.user.role.tag === PROJECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
-            setDisabledUserField(false)
-        } else {
-            setDisabledUserField(true)
-        }
         editAction(id)
     }
 
@@ -316,16 +204,23 @@ export default function DevicePage() {
 
     const editAction = async (id) => {
         setUpdate(id)
-        const response = await api.__get(`${DEVICE_URL_GET_DATA_UPDATE}${id}`,  (msg) => {
+        const response = await api.__get(`${SCHEDULES_URL_GET_DATA_UPDATE}${id}`,  (msg) => {
             showMessageSnackbar(msg, 'error');
         }, () => { editAction(id) });
 
         if (response !== undefined && response.data) {
             setFormData({
-                name: response.data.name,
-                user_id: response.data.user_id,
-                screen_id: response.data.screen_id,
-                marquee_id: response.data.marquee_id ? response.data.marquee_id : 0
+                name: '',
+                device_id: '',
+                screen_id: '',
+                marquee_id: '',
+                start_time: '',
+                end_time: '',
+                schedule_type: '',
+                // name: response.data.name,
+                // user_id: response.data.user_id,
+                // screen_id: response.data.screen_id,
+                // marquee_id: response.data.marquee_id ? response.data.marquee_id : 0
             })
             filterScreenByUser(response.data.user_id)
             filterMarqueByUser(response.data.user_id)
@@ -335,13 +230,16 @@ export default function DevicePage() {
 
     const createNewAction = async () => {
         const editFormData = {
-            name: formData.name,
-            user_id: formData.user_id,
-            screen_id: formData.screen_id,
-            marquee_id: formData.marquee_id === 0 ? null : formData.marquee_id,
+            name: '',
+            device_id: '',
+            screen_id: '',
+            marquee_id: '',
+            start_time: '',
+            end_time: '',
+            schedule_type: '',
         };
 
-        const response = await api.__update(`${DEVICE_URL_UPDATE_ROW}${update}`, editFormData, (msg) => {
+        const response = await api.__update(`${SCHEDULES_URL_UPDATE_ROW}${update}`, editFormData, (msg) => {
             showMessageSnackbar(msg, 'error');
         }, () => { createNewAction() }, ( isLoading ) => { setLoading(isLoading) });
 
@@ -367,7 +265,7 @@ export default function DevicePage() {
     const deleteDevices = async () => {
         setLoading(true)
         const data = { 'ids': rowsForDelete };
-        const response = await api.__delete(`${DEVICE_URL_DELETE_ROW}`, data, (msg) => {
+        const response = await api.__delete(`${SCHEDULES_URL_DELETE_ROW}`, data, (msg) => {
             showMessageSnackbar(msg, 'error');
         }, () => { deleteDevices() })
 
@@ -469,18 +367,9 @@ export default function DevicePage() {
 
 
     useEffect(() => {
-        initWS()
-        getUsers()
         getScreens()
         getMarquees()
         getDevices()
-
-
-        return () => {
-            if (centrifugal != null) {
-                centrifugal.disconnect();
-            }
-        };
     }, []);
 
     return (
@@ -490,14 +379,13 @@ export default function DevicePage() {
             </Helmet>
 
             <Container>
-
                 <Stack
                     direction="row"
                     divider={<Divider orientation="vertical" flexItem />}
                     spacing={2}
                     sx={{padding: "15px 0"}}
                 >
-                    <Iconify width="35px" icon="mdi:cast-variant"/>
+                    <Iconify width="35px" icon="eva:clock-outline"/>
                     <Typography variant="h4" gutterBottom>
                         {NAME_PAGE}
                     </Typography>
@@ -527,22 +415,8 @@ export default function DevicePage() {
                                 />
                                 <TableBody>
                                     {filteredDevices.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                        const {id, code, name} = row;
+                                        const {id, name} = row;
                                         const selectedDevices = selected.indexOf(id) !== -1;
-                                        const user = (users.find((n) => n.id === row.user_id))
-
-                                        const isDeviceOnline = clientsOnline.some((value) => value === row.device_id)
-                                        const isWDOnline = wdClientsOnline.some((value) => value === row.device_id)
-                                        const showInitAppBtn = (!isDeviceOnline && isWDOnline)
-
-                                        const onlineColor = isDeviceOnline ? palette.success.dark : palette.error.dark
-
-                                        let wdOnlineColor = palette.success.dark;
-                                        let animateClassOnline = "rotationAnimate";
-                                        if (!isWDOnline) {
-                                            wdOnlineColor = palette.error.dark
-                                            animateClassOnline = "";
-                                        }
 
                                         return (
                                             <TableRow hover key={id} tabIndex={-1} role="checkbox"
@@ -554,33 +428,13 @@ export default function DevicePage() {
 
                                                 <TableCell component="th" scope="row" padding="none">
                                                     <Stack direction="row" alignItems="center" spacing={2}>
-                                                        <Iconify icon="mdi:cast-variant" sx={{color: onlineColor}}/>
-                                                        <Stack className={animateClassOnline}>
-                                                            <Iconify icon="mdi:radar" sx={{color: wdOnlineColor}}/>
-                                                        </Stack>
-                                                        { showInitAppBtn && (
-                                                            <Button
-                                                                color="warning"
-                                                                size="small"
-                                                                variant="contained"
-                                                                onClick={() => startAppClick(row.device_id)}
-                                                            >
-                                                                Start
-                                                            </Button>
-                                                        ) }
                                                         <Typography variant="subtitle2" noWrap>
-                                                            {code}
+                                                            {name}
                                                         </Typography>
                                                     </Stack>
                                                 </TableCell>
 
                                                 <TableCell align="left">{ name }</TableCell>
-
-                                                <TableCell align="left">
-                                                    {
-                                                        user && user.name
-                                                    }
-                                                </TableCell>
 
                                                 <TableCell align="center">
                                                     {
@@ -652,7 +506,7 @@ export default function DevicePage() {
                 </Card>
             </Container>
             <Dialog open={openNewDialog} onClose={handleCloseNew}>
-                <DialogTitle>{'Edit'} Devices</DialogTitle>
+                <DialogTitle>{'Edit'} {NAME_PAGE}</DialogTitle>
                 <DialogContent>
                     <TextField
                         margin="dense"
@@ -666,32 +520,6 @@ export default function DevicePage() {
                         error={validator.name && true}
                         helperText={validator.name}
                     />
-                    <FormControl
-                        variant="standard"
-                        fullWidth
-                        defaultValue={''}
-                        sx={{mb: 3}}
-                        disabled={disabledUserField}
-                    >
-                        <InputLabel id="role-select-label">Select User</InputLabel>
-                        <Select
-                            name="user_id"
-                            labelId="user-select-label"
-                            id="user-select"
-                            value={formData.user_id ?? ''}
-                            label="Select User"
-                            onChange={handleChange}
-                        >
-                            {
-                                users.map((item) => {
-                                    return (
-                                        <MenuItem key={item.id}
-                                                  value={item.id}>{item.name}</MenuItem>
-                                    )
-                                })
-                            }
-                        </Select>
-                    </FormControl>
                     <FormControl
                         variant="standard"
                         fullWidth

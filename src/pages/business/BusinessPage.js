@@ -18,7 +18,7 @@ import {
     Typography,
     IconButton,
     TableContainer,
-    TablePagination, Collapse, Alert, Box, DialogTitle, DialogContent, DialogActions, Dialog,
+    TablePagination, Collapse, Alert, Box, DialogTitle, DialogContent, DialogActions, Dialog, Divider,
 } from '@mui/material';
 import {LoadingButton} from "@mui/lab";
 import {Delete} from "@mui/icons-material";
@@ -49,7 +49,7 @@ const TABLE_HEAD = [
     { id: 'actions', label: 'Actions' },
 ];
 
-const PAGE_NAME = 'Business';
+const NAME_PAGE = 'Business';
 const URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.BUSINESS.ALL;
 const URL_DELETE_ROW = PROJECT_CONFIG.API_CONFIG.BUSINESS.DELETE;
 const PATH_EDIT_ROW = `/dashboard/business/edit/`;
@@ -251,13 +251,23 @@ export default function UserPage() {
 
             <Container>
 
+
+
                 <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-                    <Typography variant="h4" gutterBottom>
-                        {PAGE_NAME}
-                    </Typography>
+                    <Stack
+                        direction="row"
+                        divider={<Divider orientation="vertical" flexItem />}
+                        spacing={2}
+                        sx={{padding: "15px 0"}}
+                    >
+                        <Iconify width="35px" icon="ion:business-sharp"/>
+                        <Typography variant="h4" gutterBottom>
+                            {NAME_PAGE}
+                        </Typography>
+                    </Stack>
                     <Button onClick={newRowHandleClick} variant="contained"
                             startIcon={<Iconify icon="eva:plus-fill"/>}>
-                        New {PAGE_NAME}
+                        New {NAME_PAGE}
                     </Button>
                 </Stack>
 

@@ -23,6 +23,7 @@ import MarqueesPage from "./pages/marquee/MarqueesPage";
 import DetailsMarqueePage from "./pages/marquee/DetailsMarqueePage";
 import LogsPage from "./pages/logs/LogsPage";
 import ActivateDevicePage from "./pages/user/ActivateDevicePage";
+import SchedulesPage from "./pages/schedules/SchedulesPage";
 
 // ----------------------------------------------------------------------
 
@@ -67,7 +68,7 @@ export default function Router() {
             { path: 'marquee/details/:id', element: <DetailsMarqueePage /> },
 
             // Others
-            { path: 'products', element: <ProductsPage /> },
+            { path: 'schedules', element: <SchedulesPage /> },
             { path: 'logs', element: <LogsPage /> },
           ],
         },

@@ -42,7 +42,11 @@ export default function Dashboard() {
         navigateTo('/dashboard/devices')
     }
 
-  return (
+    const goToSchedules = () => {
+        navigateTo('/dashboard/schedules')
+    }
+
+    return (
     <>
       <Helmet>
         <title> Dashboard | { PROJECT_CONFIG.NAME } </title>
@@ -72,6 +76,10 @@ export default function Dashboard() {
 
             <Grid item xs={12} sm={3} md={3}>
                 <AppWidgetSummary title="Devices" total={0} color="info" icon={'mdi:cast-variant'} onClicked={goToDevice}/>
+            </Grid>
+
+            <Grid item xs={12} sm={3} md={3}>
+                <AppWidgetSummary title="Schedules" total={0} color="info" icon={'eva:clock-outline'} onClicked={goToSchedules}/>
             </Grid>
         </Grid>
       </Container>

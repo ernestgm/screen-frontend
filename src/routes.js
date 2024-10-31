@@ -23,7 +23,8 @@ import MarqueesPage from "./pages/marquee/MarqueesPage";
 import DetailsMarqueePage from "./pages/marquee/DetailsMarqueePage";
 import LogsPage from "./pages/logs/LogsPage";
 import ActivateDevicePage from "./pages/user/ActivateDevicePage";
-import SchedulesPage from "./pages/schedules/SchedulesPage";
+import SchedulesPage from './pages/schedules/SchedulesPage';
+import CreateSchedulePage from './pages/schedules/CreateSchedulePage';
 
 // ----------------------------------------------------------------------
 
@@ -38,19 +39,19 @@ export default function Router() {
           children: [
             { element: <Navigate to="/dashboard/app" />, index: true },
             { path: 'app', element: <Dashboard /> },
-              // Business
+            // Business
             { path: 'business', element: <BusinessPage /> },
             { path: 'business/create', element: <CreateBusinessPage /> },
             { path: 'business/edit/:id', element: <CreateBusinessPage /> },
             { path: 'business/details/:id', element: <DetailsBusinessPage /> },
             { path: 'business/areas/:id', element: <AreasPage /> },
-              // Areas
+            // Areas
             { path: 'area/details/:id', element: <DetailsAreasPage /> },
-              // Screen
+            // Screen
             { path: 'screen/details/:id', element: <DetailsScreenPage /> },
             { path: 'screen/details/:id/:menu', element: <DetailsScreenPage /> },
             { path: 'screens', element: <ScreensPage /> },
-              // Images
+            // Images
             { path: 'image/edit/:pscreen/:pimage', element: <CreateImagePage /> },
             { path: 'image/create/:pscreen', element: <CreateImagePage /> },
 
@@ -69,6 +70,9 @@ export default function Router() {
 
             // Others
             { path: 'schedules', element: <SchedulesPage /> },
+            { path: 'schedule/create', element: <CreateSchedulePage /> },
+            { path: 'schedule/edit/:id', element: <CreateSchedulePage /> },
+
             { path: 'logs', element: <LogsPage /> },
           ],
         },
@@ -79,7 +83,7 @@ export default function Router() {
       element: <LoginPage />,
     },
     {
-    path: '/404',
+      path: '/404',
       element: <Page404 />,
     },
     {

@@ -59,29 +59,35 @@ class ApiHanler {
             .then(response => {
                 onLoadingCallBack(false)
                 if (response.status === 401 && this._refreshToken) {
-                    this._saveParamsAfterRefreshToken.path = path
-                    this._saveParamsAfterRefreshToken.method = _method
-                    this._saveParamsAfterRefreshToken.data = data
+                  this._saveParamsAfterRefreshToken.path = path;
+                  this._saveParamsAfterRefreshToken.method = _method;
+                  this._saveParamsAfterRefreshToken.data = data;
 
-                    this.mRefreshToken((newToken) => {
-                        if (newToken) {
-                            this.setUserToken(newToken)
-                            const currentUser = JSON.parse(localStorage.getItem('current-user'))
-                            currentUser.state.currentUser.token = newToken
-                            localStorage.removeItem('current-user');
-                            localStorage.setItem('current-user', JSON.stringify(currentUser));
-                            refreshCallBack()
-                        }
-                    }, errorCallback )
-                } else if (response.status === 401){
-                    errorCallback(response.statusText)
-                    throw new Error(response.statusText);
-                } else if(response.status === 500){
-                    errorCallback(response.statusText)
-                    throw new Error(response.statusText);
+                  this.mRefreshToken((newToken) => {
+                    if (newToken) {
+                      this.setUserToken(newToken);
+                      const currentUser = JSON.parse(localStorage.getItem('current-user'));
+                      currentUser.state.currentUser.token = newToken;
+                      localStorage.removeItem('current-user');
+                      localStorage.setItem('current-user', JSON.stringify(currentUser));
+                      refreshCallBack();
+                    }
+                  }, errorCallback);
+                } else if (response.status === 401) {
+                  errorCallback(response.statusText);
+                  throw new Error(response.statusText);
+                } else if (response.status === 500) {
+                  errorCallback(response.statusText);
+                  throw new Error(response.statusText);
+                } else if (response.status === 300) {
+                  response.json().then((error) => {
+                    errorCallback(error.statusText);
+                  });
+                } else {
+                  return response.json();
                 }
 
-                return response.json();
+                return null
             })
             .catch(error => {
                 onLoadingCallBack(false)

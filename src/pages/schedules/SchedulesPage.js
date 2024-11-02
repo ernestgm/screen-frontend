@@ -51,6 +51,7 @@ import PROJECT_CONFIG from '../../config/config';
 import useAuthStore from '../../zustand/useAuthStore';
 import palette from '../../theme/palette';
 import useNavigateTo from '../../hooks/navigateTo';
+import { a11yProps } from '../../utils/tabs/tabsFunctions';
 
 // ----------------------------------------------------------------------
 const SCHEDULES_URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.SCHEDULES.ALL;
@@ -173,7 +174,10 @@ export default function SchedulesPage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = schedules.map((n) => n.id);
+      let newSelecteds = schedules.filter((item) => {
+        return item.schedule_type === filterTab;
+      });
+      newSelecteds = newSelecteds.map((n) => n.id);
       setSelected(newSelecteds);
       return;
     }
@@ -239,13 +243,6 @@ export default function SchedulesPage() {
     setFilterTab(schedulesType[newValue]);
     setValue(newValue);
   };
-
-  function a11yProps(index) {
-    return {
-      id: `simple-tab-${index}`,
-      'aria-controls': `simple-tabpanel-${index}`,
-    };
-  }
 
   useEffect(() => {
     getSchedules();

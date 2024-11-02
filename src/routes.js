@@ -25,6 +25,7 @@ import LogsPage from "./pages/logs/LogsPage";
 import ActivateDevicePage from "./pages/user/ActivateDevicePage";
 import SchedulesPage from './pages/schedules/SchedulesPage';
 import CreateSchedulePage from './pages/schedules/CreateSchedulePage';
+import DetailsDevicePage from './pages/devices/DetailsDevicePage';
 
 // ----------------------------------------------------------------------
 
@@ -62,6 +63,7 @@ export default function Router() {
 
             // Devices
             { path: 'devices', element: <DevicePage /> },
+            { path: 'device/details/:id', element: <DetailsDevicePage /> },
             { path: 'activate', element: <ActivateDevicePage /> },
 
             // Marquee

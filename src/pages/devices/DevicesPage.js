@@ -43,7 +43,8 @@ import useMessagesAlert from "../../hooks/messages/useMessagesAlert";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import PROJECT_CONFIG from "../../config/config";
 import useAuthStore from "../../zustand/useAuthStore";
-import palette from "../../theme/palette";
+import palette from '../../theme/palette';
+import useNavigateTo from '../../hooks/navigateTo';
 
 
 
@@ -56,6 +57,8 @@ const DEVICE_URL_UPDATE_ROW = PROJECT_CONFIG.API_CONFIG.DEVICE.UPDATE;
 const USERS_URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.USERS.ALL;
 const SCREENS_URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.SCREEN.ALL;
 const MARQUEES_URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.MARQUEE.ALL;
+
+const ROUTE_DETAILS_ROW = '/dashboard/device/details/';
 
 const TABLE_HEAD = [
     {id: 'code', label: 'Device Code', alignRight: false},
@@ -73,6 +76,7 @@ const TABLE_HEAD = [
 const NAME_PAGE = 'Devices';
 
 export default function DevicePage() {
+    const { navigateTo } = useNavigateTo();
     const [devices, setDevices] = useState([]);
     const [users, setUsers] = useState([]);
     const [screens, setScreens] = useState([]);
@@ -301,13 +305,18 @@ export default function DevicePage() {
     }
 
     const editRow = (id) => {
-        if (currentUser && currentUser.user.role.tag === PROJECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
-            setDisabledUserField(false)
-        } else {
-            setDisabledUserField(true)
-        }
-        editAction(id)
-    }
+      if (currentUser && currentUser.user.role.tag === PROJECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
+        setDisabledUserField(false);
+      } else {
+        setDisabledUserField(true);
+      }
+      editAction(id);
+    };
+
+    const handleDetailsItemClick = (item) => {
+      handleCloseMenu();
+      navigateTo(`${ROUTE_DETAILS_ROW}${item.id}`);
+    };
 
     const handleEditItemClick = (item) => {
         handleCloseMenu()
@@ -484,332 +493,305 @@ export default function DevicePage() {
     }, []);
 
     return (
-        <>
-            <Helmet>
-                <title> {NAME_PAGE} | { PROJECT_CONFIG.NAME } </title>
-            </Helmet>
+      <>
+        <Helmet>
+          <title>
+            {' '}
+            {NAME_PAGE} | {PROJECT_CONFIG.NAME}{' '}
+          </title>
+        </Helmet>
 
-            <Container>
+        <Container>
+          <Stack
+            direction="row"
+            divider={<Divider orientation="vertical" flexItem />}
+            spacing={2}
+            sx={{ padding: '15px 0' }}
+          >
+            <Iconify width="35px" icon="mdi:cast-variant" />
+            <Typography variant="h4" gutterBottom>
+              {NAME_PAGE}
+            </Typography>
+          </Stack>
 
-                <Stack
-                    direction="row"
-                    divider={<Divider orientation="vertical" flexItem />}
-                    spacing={2}
-                    sx={{padding: "15px 0"}}
-                >
-                    <Iconify width="35px" icon="mdi:cast-variant"/>
-                    <Typography variant="h4" gutterBottom>
-                        {NAME_PAGE}
-                    </Typography>
-                </Stack>
+          <Card>
+            <UserListToolbar
+              numSelected={selected.length}
+              filterQuery={filterQuery}
+              onFilterQuery={handleFilterByQuery}
+              onDeleteSelect={handleDeleteSelected}
+              onEditSelect={handleEditSelected}
+              onlyEdit
+            />
 
-                <Card>
-                    <UserListToolbar
-                        numSelected={selected.length}
-                        filterQuery={filterQuery}
-                        onFilterQuery={handleFilterByQuery}
-                        onDeleteSelect={handleDeleteSelected}
-                        onEditSelect={handleEditSelected}
-                        onlyEdit
-                    />
+            <Scrollbar>
+              <TableContainer sx={{ minWidth: 800 }}>
+                <Table>
+                  <UserListHead
+                    order={order}
+                    orderBy={orderBy}
+                    headLabel={TABLE_HEAD}
+                    rowCount={filteredDevices.length}
+                    numSelected={selected.length}
+                    onRequestSort={handleRequestSort}
+                    onSelectAllClick={handleSelectAllClick}
+                  />
+                  <TableBody>
+                    {filteredDevices.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                      const { id, code, name } = row;
+                      const selectedDevices = selected.indexOf(id) !== -1;
+                      const user = users.find((n) => n.id === row.user_id);
 
-                    <Scrollbar>
-                        <TableContainer sx={{minWidth: 800}}>
-                            <Table>
-                                <UserListHead
-                                    order={order}
-                                    orderBy={orderBy}
-                                    headLabel={TABLE_HEAD}
-                                    rowCount={filteredDevices.length}
-                                    numSelected={selected.length}
-                                    onRequestSort={handleRequestSort}
-                                    onSelectAllClick={handleSelectAllClick}
-                                />
-                                <TableBody>
-                                    {filteredDevices.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                        const {id, code, name} = row;
-                                        const selectedDevices = selected.indexOf(id) !== -1;
-                                        const user = (users.find((n) => n.id === row.user_id))
+                      const isDeviceOnline = clientsOnline.some((value) => value === row.device_id);
+                      const isWDOnline = wdClientsOnline.some((value) => value === row.device_id);
+                      const showInitAppBtn = !isDeviceOnline && isWDOnline;
 
-                                        const isDeviceOnline = clientsOnline.some((value) => value === row.device_id)
-                                        const isWDOnline = wdClientsOnline.some((value) => value === row.device_id)
-                                        const showInitAppBtn = (!isDeviceOnline && isWDOnline)
+                      const onlineColor = isDeviceOnline ? palette.success.dark : palette.error.dark;
 
-                                        const onlineColor = isDeviceOnline ? palette.success.dark : palette.error.dark
+                      let wdOnlineColor = palette.success.dark;
+                      let animateClassOnline = 'rotationAnimate';
+                      if (!isWDOnline) {
+                        wdOnlineColor = palette.error.dark;
+                        animateClassOnline = '';
+                      }
 
-                                        let wdOnlineColor = palette.success.dark;
-                                        let animateClassOnline = "rotationAnimate";
-                                        if (!isWDOnline) {
-                                            wdOnlineColor = palette.error.dark
-                                            animateClassOnline = "";
-                                        }
+                      return (
+                        <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedDevices}>
+                          <TableCell padding="checkbox">
+                            <Checkbox checked={selectedDevices} onChange={(event) => handleClick(event, id)} />
+                          </TableCell>
 
-                                        return (
-                                            <TableRow hover key={id} tabIndex={-1} role="checkbox"
-                                                      selected={selectedDevices}>
-                                                <TableCell padding="checkbox">
-                                                    <Checkbox checked={selectedDevices}
-                                                              onChange={(event) => handleClick(event, id)}/>
-                                                </TableCell>
+                          <TableCell component="th" scope="row" padding="none">
+                            <Stack direction="row" alignItems="center" spacing={2}>
+                              <Iconify icon="mdi:cast-variant" sx={{ color: onlineColor }} />
+                              <Stack className={animateClassOnline}>
+                                <Iconify icon="mdi:radar" sx={{ color: wdOnlineColor }} />
+                              </Stack>
+                              {showInitAppBtn && (
+                                <Button
+                                  color="warning"
+                                  size="small"
+                                  variant="contained"
+                                  onClick={() => startAppClick(row.device_id)}
+                                >
+                                  Start
+                                </Button>
+                              )}
+                              <Typography variant="subtitle2" noWrap>
+                                {code}
+                              </Typography>
+                            </Stack>
+                          </TableCell>
 
-                                                <TableCell component="th" scope="row" padding="none">
-                                                    <Stack direction="row" alignItems="center" spacing={2}>
-                                                        <Iconify icon="mdi:cast-variant" sx={{color: onlineColor}}/>
-                                                        <Stack className={animateClassOnline}>
-                                                            <Iconify icon="mdi:radar" sx={{color: wdOnlineColor}}/>
-                                                        </Stack>
-                                                        { showInitAppBtn && (
-                                                            <Button
-                                                                color="warning"
-                                                                size="small"
-                                                                variant="contained"
-                                                                onClick={() => startAppClick(row.device_id)}
-                                                            >
-                                                                Start
-                                                            </Button>
-                                                        ) }
-                                                        <Typography variant="subtitle2" noWrap>
-                                                            {code}
-                                                        </Typography>
-                                                    </Stack>
-                                                </TableCell>
+                          <TableCell align="left">{name}</TableCell>
 
-                                                <TableCell align="left">{ name }</TableCell>
+                          <TableCell align="left">{user && user.name}</TableCell>
 
-                                                <TableCell align="left">
-                                                    {
-                                                        user && user.name
-                                                    }
-                                                </TableCell>
+                          <TableCell align="center">{row.screen ? row.screen.name : '------'}</TableCell>
 
-                                                <TableCell align="center">
-                                                    {
-                                                        row.screen ? row.screen.name : '------'
-                                                    }
-                                                </TableCell>
+                          <TableCell align="center">{row.marquee ? row.marquee.name : 'No'}</TableCell>
 
-                                                <TableCell align="center">
-                                                    {
-                                                        row.marquee ? row.marquee.name : 'No'
-                                                    }
-                                                </TableCell>
+                          <TableCell align="left">{row.device_id}</TableCell>
 
-                                                <TableCell align="left">{row.device_id}</TableCell>
+                          <TableCell align="left">{formatDate(row.updated_at)}</TableCell>
 
-                                                <TableCell align="left">{formatDate(row.updated_at)}</TableCell>
+                          <TableCell align="right">
+                            <IconButton id={id} size="large" color="inherit" onClick={handleOpenMenu}>
+                              <Iconify icon={'eva:more-vertical-fill'} />
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                    {emptyRows > 0 && (
+                      <TableRow style={{ height: 53 * emptyRows }}>
+                        <TableCell colSpan={6} />
+                      </TableRow>
+                    )}
+                  </TableBody>
 
-                                                <TableCell align="right">
-                                                    <IconButton id={id} size="large" color="inherit" onClick={handleOpenMenu}>
-                                                        <Iconify icon={'eva:more-vertical-fill'}/>
-                                                    </IconButton>
-                                                </TableCell>
-                                            </TableRow>
-                                        );
-                                    })}
-                                    {emptyRows > 0 && (
-                                        <TableRow style={{height: 53 * emptyRows}}>
-                                            <TableCell colSpan={6}/>
-                                        </TableRow>
-                                    )}
-                                </TableBody>
+                  {isNotFound && (
+                    <TableBody>
+                      <TableRow>
+                        <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
+                          <Paper
+                            sx={{
+                              textAlign: 'center',
+                            }}
+                          >
+                            <Typography variant="h6" paragraph>
+                              Not found
+                            </Typography>
 
-                                {isNotFound && (
-                                    <TableBody>
-                                        <TableRow>
-                                            <TableCell align="center" colSpan={6} sx={{py: 3}}>
-                                                <Paper
-                                                    sx={{
-                                                        textAlign: 'center',
-                                                    }}
-                                                >
-                                                    <Typography variant="h6" paragraph>
-                                                        Not found
-                                                    </Typography>
+                            <Typography variant="body2">
+                              No results found for &nbsp;
+                              <strong>&quot;{filterQuery}&quot;</strong>.
+                              <br /> Try checking for typos or using complete words.
+                            </Typography>
+                          </Paper>
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  )}
+                </Table>
+              </TableContainer>
+            </Scrollbar>
 
-                                                    <Typography variant="body2">
-                                                        No results found for &nbsp;
-                                                        <strong>&quot;{filterQuery}&quot;</strong>.
-                                                        <br/> Try checking for typos or using complete words.
-                                                    </Typography>
-                                                </Paper>
-                                            </TableCell>
-                                        </TableRow>
-                                    </TableBody>
-                                )}
-                            </Table>
-                        </TableContainer>
-                    </Scrollbar>
-
-                    <TablePagination
-                        rowsPerPageOptions={PROJECT_CONFIG.TABLE_CONFIG.ROWS_PER_PAGE_OPTIONS}
-                        component="div"
-                        count={filteredDevices.length}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        onPageChange={handleChangePage}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
-                    />
-                </Card>
-            </Container>
-            <Dialog open={openNewDialog} onClose={handleCloseNew}>
-                <DialogTitle>{'Edit'} Devices</DialogTitle>
-                <DialogContent>
-                    <TextField
-                        margin="dense"
-                        name="name"
-                        label="Name"
-                        value={formData.name ?? ''}
-                        type="text"
-                        fullWidth
-                        variant="standard"
-                        onChange={handleChange}
-                        error={validator.name && true}
-                        helperText={validator.name}
-                    />
-                    <FormControl
-                        variant="standard"
-                        fullWidth
-                        defaultValue={''}
-                        sx={{mb: 3}}
-                        disabled={disabledUserField}
-                    >
-                        <InputLabel id="role-select-label">Select User</InputLabel>
-                        <Select
-                            name="user_id"
-                            labelId="user-select-label"
-                            id="user-select"
-                            value={formData.user_id ?? ''}
-                            label="Select User"
-                            onChange={handleChange}
-                        >
-                            {
-                                users.map((item) => {
-                                    return (
-                                        <MenuItem key={item.id}
-                                                  value={item.id}>{item.name}</MenuItem>
-                                    )
-                                })
-                            }
-                        </Select>
-                    </FormControl>
-                    <FormControl
-                        variant="standard"
-                        fullWidth
-                        sx={{mb: 3}}
-                        defaultValue={''}
-                    >
-                        <InputLabel id="role-select-label">Select Screen</InputLabel>
-                        <Select
-                            name="screen_id"
-                            labelId="screen-select-label"
-                            id="screen-select"
-                            value={formData.screen_id ?? ''}
-                            label="Select Screen"
-                            onChange={handleChange}
-                        >
-                            {
-                                filteredScreen.map((item) => {
-                                    return (
-                                        <MenuItem key={item.id}
-                                                  value={item.id}>{item.name}</MenuItem>
-                                    )
-                                })
-                            }
-                        </Select>
-                    </FormControl>
-                    <FormControl
-                        variant="standard"
-                        fullWidth
-                        sx={{mb: 3}}
-                        defaultValue={''}
-                    >
-                        <InputLabel id="marquee-select-label">Select Marquee</InputLabel>
-                        <Select
-                            name="marquee_id"
-                            labelId="marquee-select-label"
-                            id="marquee-select"
-                            value={formData.marquee_id ?? ''}
-                            label="Select Marquee"
-                            onChange={handleChange}
-                        >
-                            <MenuItem key={0} value={0}>{'No'}</MenuItem>
-                            {
-                                filteredMarquees.map((item) => {
-                                    return (
-                                        <MenuItem key={item.id}
-                                                  value={item.id}>{item.name}</MenuItem>
-                                    )
-                                })
-                            }
-                        </Select>
-                    </FormControl>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseNew}>Cancel</Button>
-                    <LoadingButton
-                        color="secondary"
-                        onClick={createNewAction}
-                        loading={loading}
-                        loadingPosition="start"
-                        startIcon={<SaveIcon />}
-                        variant="contained"
-                    >
-                        <span>{ 'Save' }</span>
-                    </LoadingButton>
-                </DialogActions>
-            </Dialog>
-
-            <Dialog open={openConfirmDelete} onClose={handleCloseConfirmDelete}>
-                <DialogTitle>
-                    Delete
-                </DialogTitle>
-                <DialogContent>
-                    <Typography variant="subtitle1" gutterBottom>
-                        Are you sure you want to delete the selected data?
-                    </Typography>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseConfirmDelete}>Cancel</Button>
-                    <LoadingButton
-                        color="error"
-                        onClick={deleteDevices}
-                        loading={loading}
-                        loadingPosition="start"
-                        startIcon={<Delete />}
-                        variant="contained"
-                    >
-                        <span>OK</span>
-                    </LoadingButton>
-                </DialogActions>
-            </Dialog>
-
-            <Popover
-                open={Boolean(open)}
-                anchorEl={open}
-                onClose={handleCloseMenu}
-                anchorOrigin={{vertical: 'top', horizontal: 'left'}}
-                transformOrigin={{vertical: 'top', horizontal: 'right'}}
-                PaperProps={{
-                    sx: {
-                        p: 1,
-                        width: 140,
-                        '& .MuiMenuItem-root': {
-                            px: 1,
-                            typography: 'body2',
-                            borderRadius: 0.75,
-                        },
-                    },
-                }}
+            <TablePagination
+              rowsPerPageOptions={PROJECT_CONFIG.TABLE_CONFIG.ROWS_PER_PAGE_OPTIONS}
+              component="div"
+              count={filteredDevices.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </Card>
+        </Container>
+        <Dialog open={openNewDialog} onClose={handleCloseNew}>
+          <DialogTitle>{'Edit'} Devices</DialogTitle>
+          <DialogContent>
+            <TextField
+              margin="dense"
+              name="name"
+              label="Name"
+              value={formData.name ?? ''}
+              type="text"
+              fullWidth
+              variant="standard"
+              onChange={handleChange}
+              error={validator.name && true}
+              helperText={validator.name}
+            />
+            <FormControl variant="standard" fullWidth defaultValue={''} sx={{ mb: 3 }} disabled={disabledUserField}>
+              <InputLabel id="role-select-label">Select User</InputLabel>
+              <Select
+                name="user_id"
+                labelId="user-select-label"
+                id="user-select"
+                value={formData.user_id ?? ''}
+                label="Select User"
+                onChange={handleChange}
+              >
+                {users.map((item) => {
+                  return (
+                    <MenuItem key={item.id} value={item.id}>
+                      {item.name}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+            <FormControl variant="standard" fullWidth sx={{ mb: 3 }} defaultValue={''}>
+              <InputLabel id="role-select-label">Select Screen</InputLabel>
+              <Select
+                name="screen_id"
+                labelId="screen-select-label"
+                id="screen-select"
+                value={formData.screen_id ?? ''}
+                label="Select Screen"
+                onChange={handleChange}
+              >
+                {filteredScreen.map((item) => {
+                  return (
+                    <MenuItem key={item.id} value={item.id}>
+                      {item.name}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+            <FormControl variant="standard" fullWidth sx={{ mb: 3 }} defaultValue={''}>
+              <InputLabel id="marquee-select-label">Select Marquee</InputLabel>
+              <Select
+                name="marquee_id"
+                labelId="marquee-select-label"
+                id="marquee-select"
+                value={formData.marquee_id ?? ''}
+                label="Select Marquee"
+                onChange={handleChange}
+              >
+                <MenuItem key={0} value={0}>
+                  {'No'}
+                </MenuItem>
+                {filteredMarquees.map((item) => {
+                  return (
+                    <MenuItem key={item.id} value={item.id}>
+                      {item.name}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseNew}>Cancel</Button>
+            <LoadingButton
+              color="secondary"
+              onClick={createNewAction}
+              loading={loading}
+              loadingPosition="start"
+              startIcon={<SaveIcon />}
+              variant="contained"
             >
-                <MenuItem onClick={() => handleEditItemClick(open)}>
-                    <Iconify icon={'eva:edit-fill'} sx={{mr: 2}}/>
-                    Edit
-                </MenuItem>
-                <MenuItem onClick={() => handleDeleteItemClick(open)} sx={{color: 'error.main'}}>
-                    <Iconify icon={'eva:trash-2-outline'} sx={{mr: 2}}/>
-                    Delete
-                </MenuItem>
-            </Popover>
-        </>
+              <span>{'Save'}</span>
+            </LoadingButton>
+          </DialogActions>
+        </Dialog>
+
+        <Dialog open={openConfirmDelete} onClose={handleCloseConfirmDelete}>
+          <DialogTitle>Delete</DialogTitle>
+          <DialogContent>
+            <Typography variant="subtitle1" gutterBottom>
+              Are you sure you want to delete the selected data?
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseConfirmDelete}>Cancel</Button>
+            <LoadingButton
+              color="error"
+              onClick={deleteDevices}
+              loading={loading}
+              loadingPosition="start"
+              startIcon={<Delete />}
+              variant="contained"
+            >
+              <span>OK</span>
+            </LoadingButton>
+          </DialogActions>
+        </Dialog>
+
+        <Popover
+          open={Boolean(open)}
+          anchorEl={open}
+          onClose={handleCloseMenu}
+          anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+          PaperProps={{
+            sx: {
+              p: 1,
+              width: 140,
+              '& .MuiMenuItem-root': {
+                px: 1,
+                typography: 'body2',
+                borderRadius: 0.75,
+              },
+            },
+          }}
+        >
+          <MenuItem onClick={() => handleDetailsItemClick(open)}>
+            <Iconify icon={'tabler:list-details'} sx={{ mr: 2 }} />
+            Details
+          </MenuItem>
+          <MenuItem onClick={() => handleEditItemClick(open)}>
+            <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
+            Edit
+          </MenuItem>
+          <MenuItem onClick={() => handleDeleteItemClick(open)} sx={{ color: 'error.main' }}>
+            <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
+            Delete
+          </MenuItem>
+        </Popover>
+      </>
     );
 }

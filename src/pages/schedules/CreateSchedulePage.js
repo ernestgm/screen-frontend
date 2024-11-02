@@ -53,7 +53,6 @@ export default function CreateSchedulePage() {
   const { navigateTo } = useNavigateTo();
   const { currentUser } = useAuthStore((state) => state);
   const { api } = useApiHandlerStore((state) => state);
-  const showMessageAlert = useMessagesAlert();
   const showMessageSnackbar = useMessagesSnackbar();
 
   const [validator, setValidator] = useState({});
@@ -62,8 +61,8 @@ export default function CreateSchedulePage() {
     device_id: '',
     screen_id: '',
     marquee_id: '',
-    start_time: '',
-    end_time: '',
+    start_time: '00:00:00',
+    end_time: '01:00:00',
     schedule_type: '',
     enabled: 1,
   });
@@ -109,11 +108,10 @@ export default function CreateSchedulePage() {
     );
 
     if (response !== undefined && response.data) {
-      if (currentUser && currentUser.user.role.tag === PROJECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
+      if (currentUser && currentUser.user.role.tag === ADMIN_TAG) {
         setDevices(Object.values(response.data));
       } else {
         const filteredDevices = filter(response.data, (_device) => _device.user_id === currentUser.user.id);
-        console.log(filteredDevices);
         setDevices(filteredDevices);
       }
     }
@@ -152,7 +150,7 @@ export default function CreateSchedulePage() {
     );
 
     if (response !== undefined && response.data) {
-      if (currentUser && currentUser.user.role.tag === PROJECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
+      if (currentUser && currentUser.user.role.tag === ADMIN_TAG) {
         setMarquees(Object.values(response.data));
       } else {
         const filteredMarquee = filter(marquees, (_marquee) => _marquee.business.user_id === id);
@@ -361,23 +359,26 @@ export default function CreateSchedulePage() {
             >
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <Stack direction="row" spacing={3} alignItems="center">
-                  <TimePicker
-                    value={dayjs(`2018-04-04T${formData.start_time}`)}
-                    name="start_time"
-                    minutesStep={15}
-                    label="Start Time"
-                    onChange={handleStartTimeChange}
-                  />
-                  <TimePicker
-                    value={dayjs(`2018-04-04T${formData.end_time}`)}
-                    name="end_time"
-                    minutesStep={15}
-                    label="End Time"
-                    onChange={handleEndTimeChange}
-                  />
+                  <FormControl error={validator.start_time && true} helperText={validator.start_time}>
+                    <TimePicker
+                      value={dayjs(`2018-04-04T${formData.start_time}`)}
+                      name="start_time"
+                      minutesStep={15}
+                      label="Start Time"
+                      onChange={handleStartTimeChange}
+                    />
+                  </FormControl>
+                  <FormControl error={validator.end_time && true} helperText={validator.end_time}>
+                    <TimePicker
+                      value={dayjs(`2018-04-04T${formData.end_time}`)}
+                      name="end_time"
+                      minutesStep={15}
+                      label="End Time"
+                      onChange={handleEndTimeChange}
+                    />
+                  </FormControl>
                 </Stack>
               </LocalizationProvider>
-
               <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                 <Typography>Disabled</Typography>
                 <Switch name="enabled" checked={formData.enabled === 1} onChange={handleChange} />

@@ -218,8 +218,6 @@ export default function DevicePage() {
     }
 
     function startAppClick(deviceID) {
-        console.log(deviceID);
-        console.log(centrifuge);
         centrifuge.publish('status:wdMonitorOnline', { message: `open_app_${deviceID}` })
             .then(response => {
                 console.log('Message published successfully:', response);

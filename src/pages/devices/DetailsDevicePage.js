@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 // @mui
+import { Centrifuge } from 'centrifuge';
 import { Helmet } from 'react-helmet-async';
 import { Stack, Container, Typography, Grid, Card, ListItem, Tabs, Tab, Box, Divider } from '@mui/material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
@@ -10,6 +11,9 @@ import useMessagesSnackbar from '../../hooks/messages/useMessagesSnackbar';
 import PROJECT_CONFIG from '../../config/config';
 import Iconify from '../../components/iconify';
 import ScheduleTimeLine from '../schedules/components/ScheduleTimeLine';
+import useAuthStore from '../../zustand/useAuthStore';
+
+import palette from '../../theme/palette';
 
 // ----------------------------------------------------------------------
 
@@ -18,11 +22,101 @@ const URL_GET_PAGE = PROJECT_CONFIG.API_CONFIG.DEVICE.GET;
 const URL_BACK_PAGE = '/dashboard/devices';
 
 export default function DetailsDevicePage() {
-  const [value, setValue] = useState('1');
+  const { currentUser } = useAuthStore((state) => state);
+  const [tabValue, setTabValue] = useState('1');
   const showSnackbarMessage = useMessagesSnackbar();
   const { id } = useParams();
   const { api } = useApiHandlerStore((state) => state);
   const [device, setDevice] = useState(null);
+  const [deviceOnline, setDeviceOnline] = useState(false);
+  const [wdOnline, setWdOnline] = useState(false);
+  let centrifugal = null;
+
+  function initWS() {
+    if (centrifugal === null) {
+      const wsJwtToken = currentUser.ws_token;
+      centrifugal = new Centrifuge(PROJECT_CONFIG.WS_CONFIG.BASE_URL, {
+        token: wsJwtToken,
+      });
+
+      centrifugal.on('connected', (ctx) => {
+        console.log(`Client connected: ${ctx.client}`);
+      });
+
+      // Devices Online
+      const sub = centrifugal.newSubscription('status:appOnline');
+      sub.subscribe();
+
+      sub.presence().then(
+        (ctx) => {
+          const devicesOnline = Object.entries(ctx.clients).map(([key, value]) => {
+            return value.user;
+          });
+          console.log(device);
+          if (device) {
+            const isDeviceOnline = devicesOnline.some((value) => value === device.device_id);
+            setDeviceOnline(isDeviceOnline);
+          }
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+
+      sub.on('join', (ctx) => {
+        if (device && !deviceOnline) {
+          if (ctx.info.user === device.device_id) {
+            setDeviceOnline(true);
+          }
+        }
+      });
+
+      sub.on('leave', (ctx) => {
+        if (device && deviceOnline) {
+          if (ctx.info.user === device.device_id) {
+            setDeviceOnline(false);
+          }
+        }
+      });
+
+      // WatchDog Client Online
+      const wdSub = centrifugal.newSubscription('status:wdMonitorOnline');
+      wdSub.subscribe();
+
+      wdSub.presence().then(
+        (ctx) => {
+          const wdDevices = Object.entries(ctx.clients).map(([key, value]) => {
+            return value.user;
+          });
+          if (device) {
+            const isWDOnline = wdDevices.some((value) => value === device.device_id);
+            setWdOnline(isWDOnline);
+          }
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+
+      wdSub.on('join', (ctx) => {
+        if (device && !wdOnline) {
+          if (ctx.info.user === device.device_id) {
+            setWdOnline(true);
+          }
+        }
+      });
+
+      wdSub.on('leave', (ctx) => {
+        if (device && wdOnline) {
+          if (ctx.info.user === device.device_id) {
+            setWdOnline(false);
+          }
+        }
+      });
+
+      centrifugal.connect();
+    }
+  }
 
   const getPageDetails = async () => {
     const response = await api.__get(
@@ -35,17 +129,28 @@ export default function DetailsDevicePage() {
       }
     );
     if (response !== undefined && response.data) {
-      console.log(response.data);
       setDevice(response.data);
     }
   };
 
   const handleTabChange = (event, newValue) => {
-    setValue(newValue);
+    setTabValue(newValue);
   };
 
   useEffect(() => {
+    if (device) {
+      initWS();
+    }
+  }, [device]);
+
+  useEffect(() => {
     getPageDetails();
+
+    return () => {
+      if (centrifugal != null) {
+        centrifugal.disconnect();
+      }
+    };
   }, []);
 
   return (
@@ -79,8 +184,18 @@ export default function DetailsDevicePage() {
             >
               <Stack direction="row" divider={<Divider color="#ccc" orientation="vertical" flexItem />} spacing={2}>
                 <Stack direction="column" spacing={1}>
-                  <Iconify width="35px" icon="mdi:cast-variant" sx={{ color: 'red' }} />
-                  <Iconify width="35px" icon="mdi:radar" sx={{ color: 'red' }} />
+                  <Iconify
+                    width="35px"
+                    icon="mdi:cast-variant"
+                    sx={{ color: deviceOnline ? palette.success.dark : palette.error.dark }}
+                  />
+                  <Stack className={wdOnline ? 'rotationAnimate' : ''}>
+                    <Iconify
+                      width="35px"
+                      icon="mdi:radar"
+                      sx={{ color: wdOnline ? palette.success.dark : palette.error.dark }}
+                    />
+                  </Stack>
                 </Stack>
                 <Stack orientation="horizontal" spacing={2} sx={{ padding: '0px 0' }}>
                   <Typography variant="h5" gutterBottom>
@@ -109,7 +224,7 @@ export default function DetailsDevicePage() {
                 bgcolor: (theme) => theme.palette.common.white,
               }}
             >
-              <TabContext value={value}>
+              <TabContext value={tabValue}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                   <TabList onChange={handleTabChange} aria-label="lab API tabs example">
                     <Tab label="Default Screen" value="1" />
@@ -166,7 +281,6 @@ export default function DetailsDevicePage() {
                     </Card>
                   )}
                 </TabPanel>
-                <TabPanel value="3">Item Three</TabPanel>
               </TabContext>
             </Card>
           </Grid>

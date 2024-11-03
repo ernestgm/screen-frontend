@@ -14,6 +14,7 @@ import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import palette from '../../../theme/palette';
+import { parseTime } from '../../../utils/formatTime';
 
 ScheduleTimeLine.propTypes = {
   schedules: PropTypes.array,
@@ -31,7 +32,6 @@ export default function ScheduleTimeLine({ schedules }) {
     };
 
     dayjs.extend(isBetween);
-
     const isActive = dayjs(new Date()).isBetween(startTime, endTime, 'hour', '[)');
 
     // To use `year` granularity pass the third parameter
@@ -41,21 +41,21 @@ export default function ScheduleTimeLine({ schedules }) {
   return (
     <Timeline>
       {schedules
-        .sort((a, b) => (dayjs(`2018-04-04T${a.start_time}`).isAfter(dayjs(`2018-04-04T${b.start_time}`)) ? 1 : -1))
+        .filter((item) => {
+          return item.enabled === 1;
+        })
+        .sort((a, b) => (parseTime(a.start_time).isAfter(parseTime(b.start_time)) ? 1 : -1))
         .map((schedule) => {
-          const activeColors = getActiveColor(
-            dayjs(`2018-04-04T${schedule.start_time}`),
-            dayjs(`2018-04-04T${schedule.end_time}`)
-          );
+          const activeColors = getActiveColor(parseTime(schedule.start_time), parseTime(schedule.end_time));
           return (
             <TimelineItem key={schedule.id}>
               <TimelineOppositeContent color="text.secondary">
                 <Stack direction="column" spacing={1}>
                   <p>
-                    <b>Start:</b> {dayjs(`2018-04-04T${schedule.start_time}`).format('hh:mm A')}
+                    <b>Start:</b> {parseTime(schedule.start_time).format('hh:mm A')}
                   </p>
                   <p>
-                    <b>End:</b> {dayjs(`2018-04-04T${schedule.end_time}`).format('hh:mm A')}
+                    <b>End:</b> {parseTime(schedule.end_time).format('hh:mm A')}
                   </p>
                 </Stack>
               </TimelineOppositeContent>

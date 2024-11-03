@@ -52,7 +52,6 @@ export default function DetailsDevicePage() {
           const devicesOnline = Object.entries(ctx.clients).map(([key, value]) => {
             return value.user;
           });
-          console.log(device);
           if (device) {
             const isDeviceOnline = devicesOnline.some((value) => value === device.device_id);
             setDeviceOnline(isDeviceOnline);
@@ -227,36 +226,11 @@ export default function DetailsDevicePage() {
               <TabContext value={tabValue}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                   <TabList onChange={handleTabChange} aria-label="lab API tabs example">
-                    <Tab label="Default Screen" value="1" />
-                    <Tab label="Active Screen" value="2" />
+                    <Tab label="Active Screen" value="1" />
+                    <Tab label="Default Screen" value="2" />
                   </TabList>
                 </Box>
                 <TabPanel value="1" sx={{ p: 0 }}>
-                  {device && (
-                    <img
-                      src={device.default_screen && device.default_screen.images[0]?.image}
-                      alt={device.default_screen && device.default_screen.name}
-                      loading="lazy"
-                    />
-                  )}
-                  {device && (
-                    <Card
-                      sx={{
-                        p: 1,
-                        boxShadow: 0,
-                        textAlign: 'center',
-                        color: `${device.default_marquee && device.default_marquee.text_color}`,
-                        bgcolor: `${device.default_marquee && device.default_marquee.bg_color}`,
-                        borderRadius: '0',
-                      }}
-                    >
-                      <Typography variant="h5" gutterBottom>
-                        {device.default_marquee && device.default_marquee.ads[0]?.message}
-                      </Typography>
-                    </Card>
-                  )}
-                </TabPanel>
-                <TabPanel value="2" sx={{ p: 0 }}>
                   {device && (
                     <img
                       src={device.screen && device.screen.images[0]?.image}
@@ -277,6 +251,31 @@ export default function DetailsDevicePage() {
                     >
                       <Typography variant="h5" gutterBottom>
                         {device.marquee && device.marquee.ads[0]?.message}
+                      </Typography>
+                    </Card>
+                  )}
+                </TabPanel>
+                <TabPanel value="2" sx={{ p: 0 }}>
+                  {device && (
+                    <img
+                      src={device.default_screen && device.default_screen.images[0]?.image}
+                      alt={device.default_screen && device.default_screen.name}
+                      loading="lazy"
+                    />
+                  )}
+                  {device && (
+                    <Card
+                      sx={{
+                        p: 1,
+                        boxShadow: 0,
+                        textAlign: 'center',
+                        color: `${device.default_marquee && device.default_marquee.text_color}`,
+                        bgcolor: `${device.default_marquee && device.default_marquee.bg_color}`,
+                        borderRadius: '0',
+                      }}
+                    >
+                      <Typography variant="h5" gutterBottom>
+                        {device.default_marquee && device.default_marquee.ads[0]?.message}
                       </Typography>
                     </Card>
                   )}

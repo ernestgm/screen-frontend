@@ -44,7 +44,7 @@ import Scrollbar from '../../components/scrollbar';
 import { UserListHead, UserListToolbar } from '../../sections/@dashboard/user';
 import { applySortFilter, getComparator } from '../../utils/table/tableFunctions';
 import useApiHandlerStore from '../../zustand/useApiHandlerStore';
-import { formatDate } from '../../utils/formatTime';
+import { formatDate, parseTime } from '../../utils/formatTime';
 import useMessagesAlert from '../../hooks/messages/useMessagesAlert';
 import useMessagesSnackbar from '../../hooks/messages/useMessagesSnackbar';
 import PROJECT_CONFIG from '../../config/config';
@@ -337,9 +337,9 @@ export default function SchedulesPage() {
 
                         <TableCell align="center">{row.marquee ? row.marquee.name : 'No'}</TableCell>
 
-                        <TableCell align="center">{dayjs(`2018-04-04T${row.start_time}`).format('hh:mm A')}</TableCell>
+                        <TableCell align="center">{parseTime(row.start_time).format('hh:mm A')}</TableCell>
 
-                        <TableCell align="left">{dayjs(`2018-04-04T${row.end_time}`).format('hh:mm A')}</TableCell>
+                        <TableCell align="left">{parseTime(row.end_time).format('hh:mm A')}</TableCell>
 
                         <TableCell align="left">{formatDate(row.updated_at)}</TableCell>
 

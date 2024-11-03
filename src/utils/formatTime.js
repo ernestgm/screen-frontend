@@ -1,4 +1,5 @@
 import { format, getTime, formatDistanceToNow } from 'date-fns';
+import dayjs from 'dayjs';
 
 // ----------------------------------------------------------------------
 
@@ -37,4 +38,9 @@ export function formatDate(dateString) {
     const year = date.getFullYear();
 
     return `${month} ${day}, ${year}`;
+}
+
+export function parseTime(time) {
+  const now = dayjs(new Date()).format('YYYY-MM-DD');
+  return dayjs(`${now}T${time}`);
 }

@@ -29,6 +29,7 @@ import PROJECT_CONFIG from '../../config/config';
 import useNavigateTo from '../../hooks/navigateTo';
 import useAuthStore from '../../zustand/useAuthStore';
 import useMessagesAlert from '../../hooks/messages/useMessagesAlert';
+import { parseTime } from '../../utils/formatTime';
 
 // ----------------------------------------------------------------------
 
@@ -268,7 +269,7 @@ export default function CreateSchedulePage() {
               label="Name"
               helperText={validator.name}
             />
-            <FormControl fullWidth error={validator.schedule_type && true} helperText={validator.schedule_type}>
+            <FormControl fullWidth error={validator.schedule_type && true}>
               <InputLabel id="type-select-label">Select Schedule Type</InputLabel>
               <Select
                 name="schedule_type"
@@ -289,7 +290,7 @@ export default function CreateSchedulePage() {
               </Select>
             </FormControl>
 
-            <FormControl fullWidth error={validator.device_id && true} helperText={validator.device_id}>
+            <FormControl fullWidth error={validator.device_id && true}>
               <InputLabel id="role-select-label">Select Device</InputLabel>
               <Select
                 name="device_id"
@@ -309,7 +310,7 @@ export default function CreateSchedulePage() {
                 })}
               </Select>
             </FormControl>
-            <FormControl fullWidth error={validator.screen_id && true} helperText={validator.screen_id}>
+            <FormControl fullWidth error={validator.screen_id && true}>
               <InputLabel id="screen-select-label">Select Screen</InputLabel>
               <Select
                 name="screen_id"
@@ -330,7 +331,7 @@ export default function CreateSchedulePage() {
                 })}
               </Select>
             </FormControl>
-            <FormControl fullWidth error={validator.marquee_id && true} helperText={validator.marquee_id}>
+            <FormControl fullWidth error={validator.marquee_id && true}>
               <InputLabel id="marquee-select-label">Select Marquee</InputLabel>
               <Select
                 name="marquee_id"
@@ -359,18 +360,18 @@ export default function CreateSchedulePage() {
             >
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <Stack direction="row" spacing={3} alignItems="center">
-                  <FormControl error={validator.start_time && true} helperText={validator.start_time}>
+                  <FormControl error={validator.start_time && true}>
                     <TimePicker
-                      value={dayjs(`2018-04-04T${formData.start_time}`)}
+                      value={parseTime(formData.start_time)}
                       name="start_time"
                       minutesStep={15}
                       label="Start Time"
                       onChange={handleStartTimeChange}
                     />
                   </FormControl>
-                  <FormControl error={validator.end_time && true} helperText={validator.end_time}>
+                  <FormControl error={validator.end_time && true}>
                     <TimePicker
-                      value={dayjs(`2018-04-04T${formData.end_time}`)}
+                      value={parseTime(formData.end_time)}
                       name="end_time"
                       minutesStep={15}
                       label="End Time"

@@ -232,9 +232,8 @@ export default function CreateSchedulePage() {
       });
 
       if (currentUser.user.role.tag === ADMIN_TAG) {
-        console.log(marquees);
-        const d = devices.find((device) => device.id === response.data.device_id);
-        setFilterUserId(d.user_id);
+        const deviceSelected = devices.find((device) => device.id === response.data.device_id);
+        setFilterUserId(deviceSelected.user_id);
       }
     }
   };

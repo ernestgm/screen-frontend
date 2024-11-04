@@ -113,12 +113,12 @@ export default function SchedulesPage() {
 
     if (response !== undefined && response.data) {
       if (currentUser && currentUser.user.role.tag === ADMIN_TAG) {
-        console.log(Object.values(response.data));
         setSchedules(Object.values(response.data));
       } else {
-        const filteredDevices = filter(response.data, (_device) => _device.user_id === currentUser.user.id);
-        console.log(filteredDevices);
-        setSchedules(filteredDevices);
+        const filteredSchedules = Object.values(response.data).filter(
+          (schedule) => schedule.device.user_id === currentUser.user.id
+        );
+        setSchedules(filteredSchedules);
       }
     }
   };

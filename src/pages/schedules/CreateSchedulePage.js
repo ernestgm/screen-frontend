@@ -48,6 +48,9 @@ export default function CreateSchedulePage() {
   const [devices, setDevices] = useState([]);
   const [screens, setScreens] = useState([]);
   const [marquees, setMarquees] = useState([]);
+  const [filterUserId, setFilterUserId] = useState(null);
+  const [filteredScreens, setFilteredScreens] = useState([]);
+  const [filteredMarquees, setFilteredMarquees] = useState([]);
   const schedulesType = ['screen', 'marquee', 'all'];
 
   const { id } = useParams();
@@ -81,6 +84,12 @@ export default function CreateSchedulePage() {
         enabled: formData.enabled === 0 ? 1 : 0,
       }));
     }
+
+    if (name === 'device_id' && currentUser.user.role.tag === ADMIN_TAG) {
+      console.log(marquees);
+      const d = devices.find((device) => device.id === value);
+      setFilterUserId(d.user_id);
+    }
   };
 
   const handleStartTimeChange = (value) => {
@@ -112,7 +121,9 @@ export default function CreateSchedulePage() {
       if (currentUser && currentUser.user.role.tag === ADMIN_TAG) {
         setDevices(Object.values(response.data));
       } else {
-        const filteredDevices = filter(response.data, (_device) => _device.user_id === currentUser.user.id);
+        const filteredDevices = Object.values(response.data).filter(
+          (_device) => _device.user_id === currentUser.user.id
+        );
         setDevices(filteredDevices);
       }
     }
@@ -130,12 +141,7 @@ export default function CreateSchedulePage() {
     );
 
     if (response !== undefined && response.data) {
-      if (currentUser && currentUser.user.role.tag === ADMIN_TAG) {
-        setScreens(Object.values(response.data));
-      } else {
-        const filteredScreen = filter(screens, (_screen) => _screen.business.user_id === id);
-        setScreens(filteredScreen);
-      }
+      setScreens(Object.values(response.data));
     }
   };
 
@@ -151,12 +157,7 @@ export default function CreateSchedulePage() {
     );
 
     if (response !== undefined && response.data) {
-      if (currentUser && currentUser.user.role.tag === ADMIN_TAG) {
-        setMarquees(Object.values(response.data));
-      } else {
-        const filteredMarquee = filter(marquees, (_marquee) => _marquee.business.user_id === id);
-        setMarquees(filteredMarquee);
-      }
+      setMarquees(Object.values(response.data));
     }
   };
 
@@ -229,16 +230,28 @@ export default function CreateSchedulePage() {
         schedule_type: response.data.schedule_type,
         enabled: response.data.enabled,
       });
+
+      if (currentUser.user.role.tag === ADMIN_TAG) {
+        console.log(marquees);
+        const d = devices.find((device) => device.id === response.data.device_id);
+        setFilterUserId(d.user_id);
+      }
     }
   };
+
+  useEffect(() => {
+    if (devices.length > 0) {
+      if (id) {
+        getItemForUpdate();
+      }
+      setFilterUserId(currentUser.user.id);
+    }
+  }, [devices]);
 
   useEffect(() => {
     getDevices();
     getScreens();
     getMarquees();
-    if (id) {
-      getItemForUpdate();
-    }
   }, []);
 
   return (
@@ -319,16 +332,20 @@ export default function CreateSchedulePage() {
                 value={formData.screen_id ?? ''}
                 label="Select Device"
                 onChange={handleChange}
-                disabled={formData && formData.schedule_type === 'marquee'}
+                disabled={(formData && formData.schedule_type === 'marquee') || formData.schedule_type === ''}
                 variant="outlined"
               >
-                {screens.map((screen) => {
-                  return (
-                    <MenuItem key={screen.id} value={screen.id}>
-                      {screen.name}
-                    </MenuItem>
-                  );
-                })}
+                {screens
+                  .filter((screen) => {
+                    return screen.business.user_id === filterUserId;
+                  })
+                  .map((screen) => {
+                    return (
+                      <MenuItem key={screen.id} value={screen.id}>
+                        {screen.name}
+                      </MenuItem>
+                    );
+                  })}
               </Select>
             </FormControl>
             <FormControl fullWidth error={validator.marquee_id && true}>
@@ -340,16 +357,20 @@ export default function CreateSchedulePage() {
                 value={formData.marquee_id ?? ''}
                 label="Select Device"
                 onChange={handleChange}
-                disabled={formData && formData.schedule_type === 'screen'}
+                disabled={(formData && formData.schedule_type === 'screen') || formData.schedule_type === ''}
                 variant="outlined"
               >
-                {marquees.map((marquee) => {
-                  return (
-                    <MenuItem key={marquee.id} value={marquee.id}>
-                      {marquee.name}
-                    </MenuItem>
-                  );
-                })}
+                {marquees
+                  .filter((marquee) => {
+                    return marquee.business.user_id === filterUserId;
+                  })
+                  .map((marquee) => {
+                    return (
+                      <MenuItem key={marquee.id} value={marquee.id}>
+                        {marquee.name}
+                      </MenuItem>
+                    );
+                  })}
               </Select>
             </FormControl>
             <Stack

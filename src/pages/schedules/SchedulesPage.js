@@ -63,6 +63,7 @@ const ADMIN_TAG = PROJECT_CONFIG.API_CONFIG.ROLES.ADMIN;
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', alignRight: false },
+  { id: 'user', label: 'User', alignRight: false },
   { id: 'device', label: 'Device', alignRight: false },
   { id: 'screen', label: 'Screen', alignRight: false },
   { id: 'marquee', label: 'Marquee', alignRight: false },
@@ -329,6 +330,10 @@ export default function SchedulesPage() {
                               {name}
                             </Typography>
                           </Stack>
+                        </TableCell>
+
+                        <TableCell align="left">
+                          {row.device && row.device.user ? row.device.user.name : '------'}
                         </TableCell>
 
                         <TableCell align="left">{row.device ? row.device.name : '------'}</TableCell>

@@ -284,11 +284,11 @@ export default function ScreenDataTable({ business }) {
             }));
         }
 
-        if (name =='slide'e") {
-            setFormData((prevFormData) => ({
-                ...prevFormData,
-              'slide'e": formData.slide === 0 ? 1 : 0,
-            }));
+        if (name === 'slide') {
+          setFormData((prevFormData) => ({
+            ...prevFormData,
+            slide: for'slide'lide === 0 ? 1 : 0,
+          }));
         }
 
 

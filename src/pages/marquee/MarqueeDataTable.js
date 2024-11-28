@@ -359,9 +359,9 @@ export default function MarqueeDataTable() {
                     let bgColorCell = palette.success.lighter;
                     const ActiveOn = devices ? devices.length : 0;
                     const marqueeBgColor = marqueeColors.find((color) => color.id === row.bg_color);
-                    const marqueeBgColorName = marqueeBgColor ? marqueeBgColor.name : '';
-                    const marqueeTextColor = marqueeColors.find((color) => color.id === row.text_color);
-                    const marqueeTextColorName = marqueeTextColor ? marqueeTextColor.name : '';
+             ;       const marqueeBgColorName = marqueeBgColor ? marqueeBgColor.name : '';;
+                    const marqueeTextColor = marqueeColors.find((color) => colo;r.id === row.text_color);
+                    const marqueeTextColorName = marqueeTextColor ? marqueeTextColor.nam;e : '';
 
                     if (ActiveOn === 0) {
                       bgColorCell = palette.warning.lighter;
@@ -369,7 +369,7 @@ export default function MarqueeDataTable() {
 
                     return (
                       <TableRow
-                        hover
+                        ho;ver
                         key={id}
                         tabIndex={-1}
                         role="checkbox"

@@ -70,10 +70,10 @@ export default function DetailsScreenPage() {
         if (response !== undefined && response.data) {
             setScreen(response.data);
             if (response.data.portrait === 1) {
-              setBgIsPortrait(palette.success.darker);
+                setBgIsPortrait(palette.success.darker);
             }
             if (response.data.slide === 1) {
-              setBgIsPresentation(palette.success.darker);
+                setBgIsPresentation(palette.success.darker);
             }
         }
     }
@@ -118,10 +118,10 @@ export default function DetailsScreenPage() {
                   border: '1px solid #eee',
                   boxShadow: 8,
                   textAlign: 'left',
-                }}
-            '1px solid #eee'    <Grid container spacing={2} mb={5}>
-                  <Grid item xs={12} sm={6} md={6}>
-     ,               <Card>
+       '1px solid #eee'          >
+                <Grid container spacing={2} mb={5}>
+                  <Grid i,tem xs={12} sm={6} md={6}>
+                    <Card>
                       <Typography variant="h4" gutterBottom>
                         Name: {screen.name}
                       </Typography>

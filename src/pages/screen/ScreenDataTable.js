@@ -245,8 +245,8 @@ export default function ScreenDataTable({ business }) {
     }
 
     const handleCloseConfirmDelete = ()=> {
-        setOpenConfirmDelete(false)
-        setRowsForDelete([])
+        setOpenConfirmDelete(false);
+        setRowsForDelete([]);
     }
 
     const [validator, setValidator] = useState({});
@@ -256,7 +256,8 @@ export default function ScreenDataTable({ business }) {
         area_id: '',
         business_id: '',
         enabled: 1,
-        portrait: 1,
+        portrait: 0,
+        slide: 0,
     }
     const [formData, setFormData] = useState(initialFormData);
 
@@ -283,6 +284,15 @@ export default function ScreenDataTable({ business }) {
             }));
         }
 
+        if (name =='slide'e") {
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+              'slide'e": formData.slide === 0 ? 1 : 0,
+            }));
+        }
+
+
+
         if (name === "business_id") {
             getAreas(value)
         }
@@ -299,7 +309,8 @@ export default function ScreenDataTable({ business }) {
             area_id: '',
             business_id: business,
             enabled: 1,
-            portrait: 0
+            portrait: 0,
+            slide: 0,
         })
         setOpenNewDialog(true);
     };
@@ -322,6 +333,7 @@ export default function ScreenDataTable({ business }) {
             editFormData.business_id = formData.business_id
             editFormData.enabled = formData.enabled
             editFormData.portrait = formData.portrait
+            editFormData.slide = formData.slide;
 
             response = await api.__update(`${SCREEN_URL_UPDATE_ROW}${update}`, editFormData, (msg) => {
                 showMessageSnackbar(msg, 'error');
@@ -364,7 +376,8 @@ export default function ScreenDataTable({ business }) {
                 area_id: response.data.area_id,
                 business_id: response.data.business_id,
                 enabled: response.data.enabled,
-                portrait: response.data.portrait
+                portrait: response.data.portrait,
+                slide: response.data.slide,
             })
             getAreas(response.data.business_id)
             setOpenNewDialog(true);
@@ -432,7 +445,13 @@ export default function ScreenDataTable({ business }) {
 
                                             <TableCell component="th" scope="row" padding="none">
                                                 <Stack direction="row" alignItems="center" spacing={2}>
-                                                    <Iconify icon="material-symbols:live-tv-outline-rounded"/>
+
+                                                    {row.slide === 1 ? (
+                                                      <Iconify icon="ri:slideshow-line" />
+                                                    ) : (
+                                                      <Iconify icon="material-symbols:live-tv-outline-rounded" />
+                                                    )}
+
                                                     <Typography variant="subtitle2" noWrap>
                                                         {name}
                                                     </Typography>
@@ -582,11 +601,30 @@ export default function ScreenDataTable({ business }) {
                             }
                         </Select>
                     </FormControl>
-                    <FormControlLabel
-                        control={<Checkbox name="portrait" checked={formData.portrait} onChange={ handleChange } />}
-                        label="Portrait Mode"
-                        sx={{ flexGrow: 1, m: 0 }}
-                    />
+                    <FormControl
+                      variant="standard"
+                      fullWidth
+                      sx={{ mb: 3 }}
+                      defaultValue={''}
+                    >
+                        <FormControlLabel
+                          control={<Checkbox name="slide" checked={formData.slide} onChange={handleChange} />}
+                          label="Show as Presentation"
+                          sx={{ flexGrow: 1, m: 0 }}
+                        />
+                    </FormControl>
+                    <FormControl
+                      variant="standard"
+                      fullWidth
+                      sx={{ mb: 3 }}
+                      defaultValue={''}
+                    >
+                        <FormControlLabel
+                          control={<Checkbox name="portrait" checked={formData.portrait} onChange={handleChange} />}
+                          label="Portrait Mode"
+                          sx={{ flexGrow: 1, m: 0 }}
+                        />
+                    </FormControl>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseNew}>Cancel</Button>

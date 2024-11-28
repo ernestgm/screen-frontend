@@ -323,325 +323,307 @@ export default function MarqueeDataTable() {
     }, []);
 
     return (
-        <>
-            <Stack direction="row" alignItems="end" justifyContent="space-between" mb={5}>
-                <Button variant="outlined" onClick={handleClickNewMarquee}
-                        startIcon={<Iconify icon="eva:plus-fill"/>}>
-                    New Marquee
-                </Button>
-            </Stack>
-            <Card>
-                <UserListToolbar
-                    numSelected={selected.length}
-                    filterQuery={filterQuery}
-                    onFilterQuery={handleFilterByQuery}
-                    onDeleteSelect={handleDeleteSelected}
-                    onDetailsSelect={handleDetailsSelected}
-                    onEditSelect={handleEditSelected}
+      <>
+        <Stack direction="row" alignItems="end" justifyContent="space-between" mb={5}>
+          <Button variant="outlined" onClick={handleClickNewMarquee} startIcon={<Iconify icon="eva:plus-fill" />}>
+            New Marquee
+          </Button>
+        </Stack>
+        <Card>
+          <UserListToolbar
+            numSelected={selected.length}
+            filterQuery={filterQuery}
+            onFilterQuery={handleFilterByQuery}
+            onDeleteSelect={handleDeleteSelected}
+            onDetailsSelect={handleDetailsSelected}
+            onEditSelect={handleEditSelected}
+          />
+
+          <Scrollbar>
+            <TableContainer sx={{ minWidth: 800 }}>
+              <Table>
+                <UserListHead
+                  order={order}
+                  orderBy={orderBy}
+                  headLabel={TABLE_HEAD}
+                  rowCount={filteredDataTable.length}
+                  numSelected={selected.length}
+                  onRequestSort={handleRequestSort}
+                  onSelectAllClick={handleSelectAllClick}
                 />
+                <TableBody>
+                  {filteredDataTable.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                    const { id, name, business, devices } = row;
+                    const selectedRow = selected.indexOf(id) !== -1;
+                    const nameBusiness = business ? business.name : '';
+                    let bgColorCell = palette.success.lighter;
+                    const ActiveOn = devices ? devices.length : 0;
+                    const marqueeBgColor = marqueeColors.find((color) => color.id === row.bg_color);
+                    const marqueeBgColorName = marqueeBgColor ? marqueeBgColor.name : '';
+                    const marqueeTextColor = marqueeColors.find((color) => color.id === row.text_color);
+                    const marqueeTextColorName = marqueeTextColor ? marqueeTextColor.name : '';
 
-                <Scrollbar>
-                    <TableContainer sx={{minWidth: 800}}>
-                        <Table>
-                            <UserListHead
-                                order={order}
-                                orderBy={orderBy}
-                                headLabel={TABLE_HEAD}
-                                rowCount={filteredDataTable.length}
-                                numSelected={selected.length}
-                                onRequestSort={handleRequestSort}
-                                onSelectAllClick={handleSelectAllClick}
-                            />
-                            <TableBody>
-                                {filteredDataTable.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                    const {id, name, business, devices} = row;
-                                    const selectedRow = selected.indexOf(id) !== -1;
-                                    const nameBusiness = business ? business.name : ''
-                                    let bgColorCell = palette.success.lighter
-                                    const ActiveOn = devices ? devices.length : 0
-                                    const marqueeBgColor = marqueeColors.find((color) => color.id === row.bg_color)
-                                    const marqueeBgColorName = marqueeBgColor ? marqueeBgColor.name : '';
-                                    const marqueeTextColor = marqueeColors.find((color) => color.id === row.text_color)
-                                    const marqueeTextColorName = marqueeTextColor ? marqueeTextColor.name : '';
+                    if (ActiveOn === 0) {
+                      bgColorCell = palette.warning.lighter;
+                    }
 
-                                    if (ActiveOn === 0) {
-                                        bgColorCell = palette.warning.lighter
-                                    }
+                    return (
+                      <TableRow
+                        hover
+                        key={id}
+                        tabIndex={-1}
+                        role="checkbox"
+                        selected={selectedRow}
+                        sx={{ background: bgColorCell }}
+                      >
+                        <TableCell padding="checkbox">
+                          <Checkbox checked={selectedRow} onChange={(event) => handleClick(event, id)} />
+                        </TableCell>
 
-                                    return (
-                                        <TableRow hover key={id} tabIndex={-1} role="checkbox"
-                                                  selected={selectedRow} sx={{background: bgColorCell}}>
-                                            <TableCell padding="checkbox">
-                                                <Checkbox checked={selectedRow}
-                                                          onChange={(event) => handleClick(event, id)}/>
-                                            </TableCell>
+                        <TableCell align="center" component="th" scope="row" padding="none">
+                          <Typography variant="subtitle2" noWrap>
+                            {name}
+                          </Typography>
+                        </TableCell>
+                        <TableCell align="left">{nameBusiness}</TableCell>
+                        <TableCell align="left">{marqueeBgColorName}</TableCell>
+                        <TableCell align="left">{marqueeTextColorName}</TableCell>
+                        <TableCell align="left">{row.devices ? row.devices.length : 0} Device(s)</TableCell>
+                        <TableCell align="left">{formatDate(row.created_at)}</TableCell>
+                        <TableCell align="left">{formatDate(row.updated_at)}</TableCell>
+                        <TableCell align="center">
+                          <IconButton id={id} size="large" color="inherit" onClick={handleOpenMenu}>
+                            <Iconify icon={'eva:more-vertical-fill'} />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                  {emptyRows > 0 && (
+                    <TableRow style={{ height: 53 * emptyRows }}>
+                      <TableCell colSpan={6} />
+                    </TableRow>
+                  )}
+                </TableBody>
 
-                                            <TableCell align="center" component="th" scope="row" padding="none">
-                                                <Typography variant="subtitle2" noWrap>
-                                                    {name}
-                                                </Typography>
-                                            </TableCell>
-                                            <TableCell align="left">{nameBusiness}</TableCell>
-                                            <TableCell align="left">
-                                                {
-                                                    marqueeBgColorName
-                                                }
-                                            </TableCell>
-                                            <TableCell align="left">
-                                                {
-                                                    marqueeTextColorName
-                                                }
-                                            </TableCell>
-                                            <TableCell align="left">
-                                                { row.devices ? row.devices.length : 0 } Device(s)
-                                            </TableCell>
-                                            <TableCell align="left">{formatDate(row.created_at)}</TableCell>
-                                            <TableCell align="left">{formatDate(row.updated_at)}</TableCell>
-                                            <TableCell align="center">
-                                                <IconButton id={id} size="large" color="inherit"
-                                                            onClick={handleOpenMenu}>
-                                                    <Iconify icon={'eva:more-vertical-fill'}/>
-                                                </IconButton>
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                })}
-                                {emptyRows > 0 && (
-                                    <TableRow style={{height: 53 * emptyRows}}>
-                                        <TableCell colSpan={6}/>
-                                    </TableRow>
-                                )}
-                            </TableBody>
-
-                            {isNotFound && (
-                                <TableBody>
-                                    <TableRow>
-                                        <TableCell align="center" colSpan={6} sx={{py: 3}}>
-                                            <Paper
-                                                sx={{
-                                                    textAlign: 'center',
-                                                }}
-                                            >
-                                                <Typography variant="h6" paragraph>
-                                                    Not found
-                                                </Typography>
-
-                                                <Typography variant="body2">
-                                                    No results found for &nbsp;
-                                                    <strong>&quot;{filterQuery}&quot;</strong>.
-                                                    <br/> Try checking for typos or using complete words.
-                                                </Typography>
-                                            </Paper>
-                                        </TableCell>
-                                    </TableRow>
-                                </TableBody>
-                            )}
-                        </Table>
-                    </TableContainer>
-                </Scrollbar>
-
-                <TablePagination
-                    rowsPerPageOptions={PROJECT_CONFIG.TABLE_CONFIG.ROWS_PER_PAGE_OPTIONS}
-                    component="div"
-                    count={filteredDataTable.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                />
-            </Card>
-            <Dialog open={openNewDialog} onClose={handleCloseNew}>
-                <DialogTitle>{update ? 'Edit' : 'Create a new'} Marquee</DialogTitle>
-                <DialogContent>
-                    <TextField
-                        margin="dense"
-                        name="name"
-                        label="Name"
-                        value={formData.name ?? ''}
-                        type="text"
-                        fullWidth
-                        variant="standard"
-                        onChange={handleChange}
-                        error={validator.name && true}
-                        helperText={validator.name}
-                        sx={{mb:3}}
-                    />
-                    <FormControl
-                        variant="standard"
-                        fullWidth
-                        disabled={disabledAreaField}
-                        defaultValue={''}
-                        sx={{mb: 3}}
-                        error={validator.business_id && true}
-                    >
-                        <InputLabel id="role-select-label">Select Business</InputLabel>
-                        <Select
-                            name="business_id"
-                            labelId="business-select-label"
-                            id="business-select"
-                            value={formData.business_id ?? ''}
-                            label="Select Business"
-                            onChange={handleChange}
+                {isNotFound && (
+                  <TableBody>
+                    <TableRow>
+                      <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
+                        <Paper
+                          sx={{
+                            textAlign: 'center',
+                          }}
                         >
-                            {
-                                businesses.map((item) => {
-                                    return (
-                                        <MenuItem key={item.id}
-                                                  value={item.id}>{item.name}</MenuItem>
-                                    )
-                                })
-                            }
-                        </Select>
-                    </FormControl>
-                    <FormControl
-                        variant="standard"
-                        fullWidth
-                        defaultValue={''}
-                        sx={{mb: 3}}
-                    >
-                        <InputLabel id="role-select-label">Select Background Color</InputLabel>
-                        <Select
-                            name="bg_color"
-                            labelId="bg-color-select-label"
-                            id="bg-color-select"
-                            value={formData.bg_color ?? ''}
-                            label="Select Background Color"
-                            onChange={handleChange}
-                        >
-                            {
-                                marqueeColors.map( (item) => {
-                                        return (
-                                            <MenuItem key={item.id} value={item.id}>
-                                                <Stack sx={{pl:2}} component="span" direction="row" alignItems="center" justifyContent="flex-start">
-                                                    <SingleColorPreview color={item.id}  sx={{ mr: 2 }} /> {item.name}
-                                                </Stack>
-                                            </MenuItem>
-                                        )
-                                    }
-                                )
-                            }
-                        </Select>
-                    </FormControl>
-                    <FormControl
-                        variant="standard"
-                        fullWidth
-                        sx={{mb: 3}}
-                        defaultValue={''}
-                    >
-                        <InputLabel id="text-color-select-label">Select Text Color</InputLabel>
-                        <Select
-                            name="text_color"
-                            labelId="text-color-select-label"
-                            id="text-color-select"
-                            value={formData.text_color ?? ''}
-                            label="Select Text Color"
-                            onChange={handleChange}
-                        >
-                            {
-                                marqueeColors.map( (item) => {
-                                        return (
-                                            <MenuItem key={item.id} value={item.id}>
-                                                <Stack sx={{pl:2}} component="span" direction="row" alignItems="center" justifyContent="flex-start">
-                                                    <SingleColorPreview color={item.id}  sx={{ mr: 2 }} /> {item.name}
-                                                </Stack>
-                                            </MenuItem>
-                                        )
-                                    }
-                                )
-                            }
-                        </Select>
-                    </FormControl>
-                    <FormControl
-                        variant="standard"
-                        fullWidth
-                        sx={{mb: 3}}
-                        defaultValue={''}
-                    >
-                        <Stack direction="column" alignItems="start" spacing={2}>
-                            <Typography variant="body1" gutterBottom>Message</Typography>
-                            <textarea
-                                id="message"
-                                name="message"
-                                style={{width: "100%", border: "1px solid #ccc", padding: "5px"}}
-                                onChange={handleChange}
-                                value={formData.message ?? ''}
-                            />
-                        </Stack>
-                    </FormControl>
+                          <Typography variant="h6" paragraph>
+                            Not found
+                          </Typography>
 
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseNew}>Cancel</Button>
-                    <LoadingButton
-                        color="secondary"
-                        onClick={createNewAction}
-                        loading={loading}
-                        loadingPosition="start"
-                        startIcon={<SaveIcon />}
-                        variant="contained"
-                    >
-                        <span>{update ? 'Save' : 'Create'}</span>
-                    </LoadingButton>
-                </DialogActions>
-            </Dialog>
+                          <Typography variant="body2">
+                            No results found for &nbsp;
+                            <strong>&quot;{filterQuery}&quot;</strong>.
+                            <br /> Try checking for typos or using complete words.
+                          </Typography>
+                        </Paper>
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                )}
+              </Table>
+            </TableContainer>
+          </Scrollbar>
 
-            <Dialog open={openConfirmDelete} onClose={handleCloseConfirmDelete}>
-                <DialogTitle>
-                    Delete
-                </DialogTitle>
-                <DialogContent>
-                    <Typography variant="subtitle1" gutterBottom>
-                        Are you sure you want to delete the selected data?
-                    </Typography>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseConfirmDelete}>Cancel</Button>
-                    <LoadingButton
-                        color="error"
-                        onClick={deleteRows}
-                        loading={loading}
-                        loadingPosition="start"
-                        startIcon={<Delete />}
-                        variant="contained"
-                    >
-                        <span>OK</span>
-                    </LoadingButton>
-                </DialogActions>
-            </Dialog>
-
-            <Popover
-                open={Boolean(open)}
-                anchorEl={open}
-                onClose={handleCloseMenu}
-                anchorOrigin={{vertical: 'top', horizontal: 'left'}}
-                transformOrigin={{vertical: 'top', horizontal: 'right'}}
-                PaperProps={{
-                    sx: {
-                        p: 1,
-                        width: 140,
-                        '& .MuiMenuItem-root': {
-                            px: 1,
-                            typography: 'body2',
-                            borderRadius: 0.75,
-                        },
-                    },
-                }}
+          <TablePagination
+            rowsPerPageOptions={PROJECT_CONFIG.TABLE_CONFIG.ROWS_PER_PAGE_OPTIONS}
+            component="div"
+            count={filteredDataTable.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Card>
+        <Dialog open={openNewDialog} onClose={handleCloseNew}>
+          <DialogTitle>{update ? 'Edit' : 'Create a new'} Marquee</DialogTitle>
+          <DialogContent>
+            <TextField
+              margin="dense"
+              name="name"
+              label="Name"
+              value={formData.name ?? ''}
+              type="text"
+              fullWidth
+              variant="standard"
+              onChange={handleChange}
+              error={validator.name && true}
+              helperText={validator.name}
+              sx={{ mb: 3 }}
+            />
+            <FormControl
+              variant="standard"
+              fullWidth
+              disabled={disabledAreaField}
+              defaultValue={''}
+              sx={{ mb: 3 }}
+              error={validator.business_id && true}
             >
-                <MenuItem onClick={() => handleDetailsItemClick(open)}>
-                    <Iconify icon={'tabler:list-details'} sx={{mr: 2}}/>
-                    Details
-                </MenuItem>
+              <InputLabel id="role-select-label">Select Business</InputLabel>
+              <Select
+                name="business_id"
+                labelId="business-select-label"
+                id="business-select"
+                value={formData.business_id ?? ''}
+                label="Select Business"
+                onChange={handleChange}
+              >
+                {businesses.map((item) => {
+                  return (
+                    <MenuItem key={item.id} value={item.id}>
+                      {item.name}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+            <FormControl variant="standard" fullWidth defaultValue={''} sx={{ mb: 3 }}>
+              <InputLabel id="role-select-label">Select Background Color</InputLabel>
+              <Select
+                name="bg_color"
+                labelId="bg-color-select-label"
+                id="bg-color-select"
+                value={formData.bg_color ?? ''}
+                label="Select Background Color"
+                onChange={handleChange}
+              >
+                {marqueeColors.map((item) => {
+                  return (
+                    <MenuItem key={item.id} value={item.id}>
+                      <Stack
+                        sx={{ pl: 2 }}
+                        component="span"
+                        direction="row"
+                        alignItems="center"
+                        justifyContent="flex-start"
+                      >
+                        <SingleColorPreview color={item.id} sx={{ mr: 2 }} /> {item.name}
+                      </Stack>
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+            <FormControl variant="standard" fullWidth sx={{ mb: 3 }} defaultValue={''}>
+              <InputLabel id="text-color-select-label">Select Text Color</InputLabel>
+              <Select
+                name="text_color"
+                labelId="text-color-select-label"
+                id="text-color-select"
+                value={formData.text_color ?? ''}
+                label="Select Text Color"
+                onChange={handleChange}
+              >
+                {marqueeColors.map((item) => {
+                  return (
+                    <MenuItem key={item.id} value={item.id}>
+                      <Stack
+                        sx={{ pl: 2 }}
+                        component="span"
+                        direction="row"
+                        alignItems="center"
+                        justifyContent="flex-start"
+                      >
+                        <SingleColorPreview color={item.id} sx={{ mr: 2 }} /> {item.name}
+                      </Stack>
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+            <TextField
+              margin="dense"
+              name="message"
+              label="Message"
+              value={formData.message ?? ''}
+              type="text"
+              fullWidth
+              variant="standard"
+              onChange={handleChange}
+              error={validator.message && true}
+              helperText={validator.message}
+              multiline
+              maxRows={10}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseNew}>Cancel</Button>
+            <LoadingButton
+              color="secondary"
+              onClick={createNewAction}
+              loading={loading}
+              loadingPosition="start"
+              startIcon={<SaveIcon />}
+              variant="contained"
+            >
+              <span>{update ? 'Save' : 'Create'}</span>
+            </LoadingButton>
+          </DialogActions>
+        </Dialog>
 
-                <MenuItem onClick={() => handleEditItemClick(open)}>
-                    <Iconify icon={'eva:edit-fill'} sx={{mr: 2}}/>
-                    Edit
-                </MenuItem>
+        <Dialog open={openConfirmDelete} onClose={handleCloseConfirmDelete}>
+          <DialogTitle>Delete</DialogTitle>
+          <DialogContent>
+            <Typography variant="subtitle1" gutterBottom>
+              Are you sure you want to delete the selected data?
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseConfirmDelete}>Cancel</Button>
+            <LoadingButton
+              color="error"
+              onClick={deleteRows}
+              loading={loading}
+              loadingPosition="start"
+              startIcon={<Delete />}
+              variant="contained"
+            >
+              <span>OK</span>
+            </LoadingButton>
+          </DialogActions>
+        </Dialog>
 
-                <MenuItem onClick={() => handleDeleteItemClick(open)} sx={{color: 'error.main'}}>
-                    <Iconify icon={'eva:trash-2-outline'} sx={{mr: 2}}/>
-                    Delete
-                </MenuItem>
-            </Popover>
-        </>
+        <Popover
+          open={Boolean(open)}
+          anchorEl={open}
+          onClose={handleCloseMenu}
+          anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+          PaperProps={{
+            sx: {
+              p: 1,
+              width: 140,
+              '& .MuiMenuItem-root': {
+                px: 1,
+                typography: 'body2',
+                borderRadius: 0.75,
+              },
+            },
+          }}
+        >
+          <MenuItem onClick={() => handleDetailsItemClick(open)}>
+            <Iconify icon={'tabler:list-details'} sx={{ mr: 2 }} />
+            Details
+          </MenuItem>
+
+          <MenuItem onClick={() => handleEditItemClick(open)}>
+            <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
+            Edit
+          </MenuItem>
+
+          <MenuItem onClick={() => handleDeleteItemClick(open)} sx={{ color: 'error.main' }}>
+            <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
+            Delete
+          </MenuItem>
+        </Popover>
+      </>
     );
 }

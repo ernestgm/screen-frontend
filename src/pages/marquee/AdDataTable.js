@@ -263,203 +263,206 @@ export default function AdDataTable({ marquee }) {
     }, []);
 
     return (
-        <>
-            <Stack direction="row" alignItems="left" justifyContent="space-between" mb={5}>
-                <Typography variant="h4" gutterBottom>
-                    Message List
-                </Typography>
+      <>
+        <Stack direction="row" alignItems="left" justifyContent="space-between" mb={5}>
+          <Typography variant="h4" gutterBottom>
+            Message List
+          </Typography>
 
-                {filteredDataTable.length < 1 && (
-                    <Button variant="outlined" onClick={handleClickNewAd}
-                            startIcon={<Iconify icon="eva:plus-fill"/>}>
-                        New Message
-                    </Button>
+          {filteredDataTable.length < 1 && (
+            <Button variant="outlined" onClick={handleClickNewAd} startIcon={<Iconify icon="eva:plus-fill" />}>
+              New Message
+            </Button>
+          )}
+        </Stack>
+
+        <Card>
+          <UserListToolbar
+            numSelected={selected.length}
+            filterQuery={filterQuery}
+            onFilterQuery={handleFilterByQuery}
+            onDeleteSelect={handleDeleteSelected}
+            onEditSelect={handleEditSelected}
+            onlyEdit
+          />
+
+          <Scrollbar>
+            <TableContainer sx={{ minWidth: 800 }}>
+              <Table>
+                <UserListHead
+                  order={order}
+                  orderBy={orderBy}
+                  headLabel={AREA_TABLE_HEAD}
+                  rowCount={filteredDataTable.length}
+                  numSelected={selected.length}
+                  onRequestSort={handleRequestSort}
+                  onSelectAllClick={handleSelectAllClick}
+                />
+                <TableBody>
+                  {filteredDataTable.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                    const { id, message, enabled } = row;
+                    const selectedRow = selected.indexOf(id) !== -1;
+                    const bgColorCell = enabled === 1 ? palette.success.lighter : palette.error.lighter;
+                    return (
+                      <TableRow
+                        hover
+                        key={id}
+                        tabIndex={-1}
+                        role="checkbox"
+                        selected={selectedRow}
+                        sx={{ background: bgColorCell }}
+                      >
+                        <TableCell padding="checkbox">
+                          <Checkbox checked={selectedRow} onChange={(event) => handleClick(event, id)} />
+                        </TableCell>
+
+                        <TableCell component="th" scope="row" padding="none">
+                          <Stack direction="row" alignItems="center" spacing={2}>
+                            <Iconify icon="fluent-mdl2:build-queue" />
+                            <Typography variant="subtitle2" noWrap>
+                              {message}
+                            </Typography>
+                          </Stack>
+                        </TableCell>
+
+                        <TableCell align="left">{formatDate(row.created_at)}</TableCell>
+
+                        <TableCell align="left">{formatDate(row.updated_at)}</TableCell>
+
+                        <TableCell align="center">
+                          <IconButton id={id} size="large" color="inherit" onClick={handleOpenMenu}>
+                            <Iconify icon={'eva:more-vertical-fill'} />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                  {emptyRows > 0 && (
+                    <TableRow style={{ height: 53 * emptyRows }}>
+                      <TableCell colSpan={6} />
+                    </TableRow>
+                  )}
+                </TableBody>
+
+                {isNotFound && (
+                  <TableBody>
+                    <TableRow>
+                      <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
+                        <Paper
+                          sx={{
+                            textAlign: 'center',
+                          }}
+                        >
+                          <Typography variant="h6" paragraph>
+                            Not found
+                          </Typography>
+
+                          <Typography variant="body2">
+                            No results found for &nbsp;
+                            <strong>&quot;{filterQuery}&quot;</strong>.
+                            <br /> Try checking for typos or using complete words.
+                          </Typography>
+                        </Paper>
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
                 )}
-            </Stack>
+              </Table>
+            </TableContainer>
+          </Scrollbar>
 
-            <Card>
-                <UserListToolbar
-                    numSelected={selected.length}
-                    filterQuery={filterQuery}
-                    onFilterQuery={handleFilterByQuery}
-                    onDeleteSelect={handleDeleteSelected}
-                    onEditSelect={handleEditSelected}
-                    onlyEdit
-                />
-
-                <Scrollbar>
-                    <TableContainer sx={{minWidth: 800}}>
-                        <Table>
-                            <UserListHead
-                                order={order}
-                                orderBy={orderBy}
-                                headLabel={AREA_TABLE_HEAD}
-                                rowCount={filteredDataTable.length}
-                                numSelected={selected.length}
-                                onRequestSort={handleRequestSort}
-                                onSelectAllClick={handleSelectAllClick}
-                            />
-                            <TableBody>
-                                {filteredDataTable.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                    const {id, message, enabled} = row;
-                                    const selectedRow = selected.indexOf(id) !== -1;
-                                    const bgColorCell = enabled === 1 ? palette.success.lighter : palette.error.lighter
-                                    return (
-                                        <TableRow hover key={id} tabIndex={-1} role="checkbox"
-                                                  selected={selectedRow} sx={{ background: bgColorCell }}>
-                                            <TableCell padding="checkbox">
-                                                <Checkbox checked={selectedRow}
-                                                          onChange={(event) => handleClick(event, id)}/>
-                                            </TableCell>
-
-                                            <TableCell component="th" scope="row" padding="none">
-                                                <Stack direction="row" alignItems="center" spacing={2}>
-                                                    <Iconify icon="fluent-mdl2:build-queue"/>
-                                                    <Typography variant="subtitle2" noWrap>
-                                                        {message}
-                                                    </Typography>
-                                                </Stack>
-                                            </TableCell>
-
-                                            <TableCell align="left">{formatDate(row.created_at)}</TableCell>
-
-                                            <TableCell align="left">{formatDate(row.updated_at)}</TableCell>
-
-                                            <TableCell align="center">
-                                                <IconButton id={id} size="large" color="inherit"
-                                                            onClick={handleOpenMenu}>
-                                                    <Iconify icon={'eva:more-vertical-fill'}/>
-                                                </IconButton>
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                })}
-                                {emptyRows > 0 && (
-                                    <TableRow style={{height: 53 * emptyRows}}>
-                                        <TableCell colSpan={6}/>
-                                    </TableRow>
-                                )}
-                            </TableBody>
-
-                            {isNotFound && (
-                                <TableBody>
-                                    <TableRow>
-                                        <TableCell align="center" colSpan={6} sx={{py: 3}}>
-                                            <Paper
-                                                sx={{
-                                                    textAlign: 'center',
-                                                }}
-                                            >
-                                                <Typography variant="h6" paragraph>
-                                                    Not found
-                                                </Typography>
-
-                                                <Typography variant="body2">
-                                                    No results found for &nbsp;
-                                                    <strong>&quot;{filterQuery}&quot;</strong>.
-                                                    <br/> Try checking for typos or using complete words.
-                                                </Typography>
-                                            </Paper>
-                                        </TableCell>
-                                    </TableRow>
-                                </TableBody>
-                            )}
-                        </Table>
-                    </TableContainer>
-                </Scrollbar>
-
-                <TablePagination
-                    rowsPerPageOptions={PROJECT_CONFIG.TABLE_CONFIG.ROWS_PER_PAGE_OPTIONS}
-                    component="div"
-                    count={filteredDataTable.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                />
-            </Card>
-            <Dialog open={openNewAdDialog} onClose={handleCloseNewAd}>
-                <DialogTitle>{update ? 'Edit' : 'Create a new'} Message</DialogTitle>
-                <DialogContent>
-                    <TextField
-                        margin="dense"
-                        name="message"
-                        label="Message"
-                        value={formData.message ?? ''}
-                        type="text"
-                        fullWidth
-                        variant="standard"
-                        onChange={handleChange}
-                        error={validator.message && true}
-                        helperText={validator.message}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseNewAd}>Cancel</Button>
-                    <LoadingButton
-                        color="secondary"
-                        onClick={createNewAction}
-                        loading={loading}
-                        loadingPosition="start"
-                        startIcon={<SaveIcon />}
-                        variant="contained"
-                    >
-                        <span>{update ? 'Save' : 'Create'}</span>
-                    </LoadingButton>
-                </DialogActions>
-            </Dialog>
-
-            <Dialog open={openConfirmDelete} onClose={handleCloseConfirmDelete}>
-                <DialogTitle>
-                    Delete
-                </DialogTitle>
-                <DialogContent>
-                    <Typography variant="subtitle1" gutterBottom>
-                        Are you sure you want to delete the selected data?
-                    </Typography>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseConfirmDelete}>Cancel</Button>
-                    <LoadingButton
-                        color="error"
-                        onClick={deleteRows}
-                        loading={loading}
-                        loadingPosition="start"
-                        startIcon={<Delete />}
-                        variant="contained"
-                    >
-                        <span>OK</span>
-                    </LoadingButton>
-                </DialogActions>
-            </Dialog>
-
-            <Popover
-                open={Boolean(open)}
-                anchorEl={open}
-                onClose={handleCloseMenu}
-                anchorOrigin={{vertical: 'top', horizontal: 'left'}}
-                transformOrigin={{vertical: 'top', horizontal: 'right'}}
-                PaperProps={{
-                    sx: {
-                        p: 1,
-                        width: 140,
-                        '& .MuiMenuItem-root': {
-                            px: 1,
-                            typography: 'body2',
-                            borderRadius: 0.75,
-                        },
-                    },
-                }}
+          <TablePagination
+            rowsPerPageOptions={PROJECT_CONFIG.TABLE_CONFIG.ROWS_PER_PAGE_OPTIONS}
+            component="div"
+            count={filteredDataTable.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Card>
+        <Dialog open={openNewAdDialog} onClose={handleCloseNewAd}>
+          <DialogTitle>{update ? 'Edit' : 'Create a new'} Message</DialogTitle>
+          <DialogContent>
+            <TextField
+              margin="dense"
+              name="message"
+              label="Message"
+              value={formData.message ?? ''}
+              type="text"
+              fullWidth
+              variant="standard"
+              onChange={handleChange}
+              error={validator.message && true}
+              helperText={validator.message}
+              multiline
+              maxRows={10}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseNewAd}>Cancel</Button>
+            <LoadingButton
+              color="secondary"
+              onClick={createNewAction}
+              loading={loading}
+              loadingPosition="start"
+              startIcon={<SaveIcon />}
+              variant="contained"
             >
-                <MenuItem onClick={() => handleEditItemClick(open)}>
-                    <Iconify icon={'eva:edit-fill'} sx={{mr: 2}}/>
-                    Edit
-                </MenuItem>
-                <MenuItem onClick={() => handleDeleteItemClick(open)} sx={{color: 'error.main'}}>
-                    <Iconify icon={'eva:trash-2-outline'} sx={{mr: 2}}/>
-                    Delete
-                </MenuItem>
-            </Popover>
-        </>
+              <span>{update ? 'Save' : 'Create'}</span>
+            </LoadingButton>
+          </DialogActions>
+        </Dialog>
+
+        <Dialog open={openConfirmDelete} onClose={handleCloseConfirmDelete}>
+          <DialogTitle>Delete</DialogTitle>
+          <DialogContent>
+            <Typography variant="subtitle1" gutterBottom>
+              Are you sure you want to delete the selected data?
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseConfirmDelete}>Cancel</Button>
+            <LoadingButton
+              color="error"
+              onClick={deleteRows}
+              loading={loading}
+              loadingPosition="start"
+              startIcon={<Delete />}
+              variant="contained"
+            >
+              <span>OK</span>
+            </LoadingButton>
+          </DialogActions>
+        </Dialog>
+
+        <Popover
+          open={Boolean(open)}
+          anchorEl={open}
+          onClose={handleCloseMenu}
+          anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+          PaperProps={{
+            sx: {
+              p: 1,
+              width: 140,
+              '& .MuiMenuItem-root': {
+                px: 1,
+                typography: 'body2',
+                borderRadius: 0.75,
+              },
+            },
+          }}
+        >
+          <MenuItem onClick={() => handleEditItemClick(open)}>
+            <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
+            Edit
+          </MenuItem>
+          <MenuItem onClick={() => handleDeleteItemClick(open)} sx={{ color: 'error.main' }}>
+            <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
+            Delete
+          </MenuItem>
+        </Popover>
+      </>
     );
 }

@@ -17,13 +17,12 @@ import BackButton from "../../sections/@dashboard/app/AppBackButton";
 import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import PROJECT_CONFIG from "../../config/config";
-import ProductsDataTable from "./table/ProductsDataTable";
-import {SaveImage} from "../../components/save-image";
-import useNavigateTo from "../../hooks/navigateTo";
+import useNavigateTo from '../../hooks/navigateTo';
+import { UploadImages } from '../../components/save-image/UploadImages';
 
 // ----------------------------------------------------------------------
 
-const NAME_PAGE = 'Image';
+const NAME_PAGE = 'Images';
 const URL_UPDATE = PROJECT_CONFIG.API_CONFIG.IMAGE.UPDATE;
 const URL_CREATE = PROJECT_CONFIG.API_CONFIG.IMAGE.CREATE;
 const URL_BACK = '/dashboard/screen/details/';
@@ -37,13 +36,13 @@ export default function CreateImagePage() {
     const [validator, setValidator] = useState({});
     const [preview, setPreview] = useState("");
     const [formData, setFormData] = useState({
-        name: '',
-        description: '',
-        is_static: 1,
-        duration: 5,
-        screen_id: pscreen,
-        image: '',
-        // products: []
+      name: '',
+      description: '',
+      is_static: 1,
+      duration: 5,
+      screen_id: pscreen,
+      image: '',
+      images: [],
     });
     const [loading, setLoading] = useState(false);
 
@@ -54,51 +53,48 @@ export default function CreateImagePage() {
             ...prevFormData,
             [name]: value,
         }));
-
-        if (name === "is_static") {
-            setFormData((prevFormData) => ({
-                ...prevFormData,
-                "is_static": formData.is_static === 0 ? 1 : 0,
-            }));
-        }
     };
 
-    const showPreview = (base64) => {
-        setPreview(base64)
-    }
     const handleUploadImage = async (images) => {
-        let imageBase64 = ""
-        if (images) {
-            const options = {
-                maxSizeMB: 1, // Tamaño máximo en MB
-                maxWidthOrHeight: 1920, // Máxima altura o ancho
-                useWebWorker: true,
-            };
-
-            try {
-                setLoading(true)
-                const compressedFile = await imageCompression(images, options);
-                setLoading(false)
-                imageBase64 = await convertToBase64(compressedFile)
-                setLoading(false)
-
-                setFormData((prevFormData) => ({
-                    ...prevFormData,
-                    image: imageBase64
-                }));
-            } catch (error) {
-                console.error('Error al comprimir la imagen:', error);
+        const imagesList = [];
+        const options = {
+            maxSizeMB: 1, // Tamaño máximo en MB
+            maxWidthOrHeight: 1920, // Máxima altura o ancho
+            useWebWorker: true,
+        };
+        setLoading(true)
+        image;s.map(async (img, index) => {
+            if (img.file) {
+                let imageBase64 = ""
+           '';   try {
+                    const compressedFile = await imageCompression(img.file, options);
+                    imageBase64 = await convertToBase64(compressedFile)
+             ;       imagesList[index] = { name: img.file.name, data: imageBase64 }
+             ;   } catch (error) {
+                    console.error('Error al comprimir la imagen:', error);
+                }
             }
-        }
+        })
+        setFo;rmData((prevFormData) => ({
+            ...prevFormData,
+            images: imagesList
+        }));
+,        setLoading(false)
     }
 
-    const convertToBase64 = (file) => {
+    co;nst convertToBase64 = (file) => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onprogress = () => setLoading(true)
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = (error) => reject(error);
+            reader.onload = () => {
+                setLoading(false);
+                resolve(reader.result);
+            };
+            reader.onerror = (error) => {
+                setLoading(false);
+                reject(error);
+            };
         });
     };
 
@@ -145,13 +141,6 @@ export default function CreateImagePage() {
         }
     }
 
-    const updateListProducts = (items) => {
-        setFormData((prevFormData) => ({
-            ...prevFormData,
-            products: items,
-        }));
-    }
-
     useEffect(() => {
         if (pimage) {
             getItemForUpdate();
@@ -170,7 +159,7 @@ export default function CreateImagePage() {
                         <BackButton path={`${URL_BACK}${pscreen}`}/>
                     </Stack>
                     <Typography variant="h4" gutterBottom>
-                        {pimage ? `${NAME_PAGE} edit` : `Create ${NAME_PAGE}`}
+                        {pimage ? `${NAME_PAGE} Edit` : `Upload ${NAME_PAGE}`}
                     </Typography>
                 </Stack>
                 <Card>
@@ -182,6 +171,7 @@ export default function CreateImagePage() {
                             onChange={handleChange}
                             label="Name"
                             helperText={validator.name}
+                            disabled
                         />
                         <TextField
                             name="description"
@@ -190,6 +180,7 @@ export default function CreateImagePage() {
                             onChange={handleChange}
                             error={validator.description && true}
                             helperText={validator.description}
+                            disabled={!pimage}
                         />
 
                         <TextField
@@ -201,17 +192,16 @@ export default function CreateImagePage() {
                             helperText={validator.duration}
                         />
 
-                        {/* <FormControlLabel */}
-                        {/*    control={<Checkbox name="is_static" checked={formData.is_static === 1} onChange={handleChange} />} */}
-                        {/*    label="Solo imagen" */}
-                        {/*    sx={{ flexGrow: 1, m: 0 }} */}
-                        {/* /> */}
+                        {pimage ? (
+                          <div>
+                              <h4>Preview:</h4>
+                              <img src={preview} alt="Imagen subida" style={{ maxWidth: '100%', maxHeight: '200px' }} />
+                          </div>
+                        ) : (
+                          <UploadImages onChange={handleUploadImage} />
+                        )}
 
-                        <SaveImage onChange={handleUploadImage} updatePreview={showPreview} previewImage={preview}/>
-                    </Stack>
-
-                    <Stack sx={{m: 2}}>
-                        {/* <ProductsDataTable image={pimage} saveLocalProducts={updateListProducts}/> */}
+                        {/* <SaveImage onChange={handleUploadImage} updatePreview={showPreview} previewImage={preview}/> */}
                     </Stack>
                 </Card>
                 <Stack sx={{m: 2}}>

@@ -36,13 +36,13 @@ export default function CreateImagePage() {
     const [validator, setValidator] = useState({});
     const [preview, setPreview] = useState("");
     const [formData, setFormData] = useState({
-      name: '',
-      description: '',
-      is_static: 1,
-      duration: 5,
-      screen_id: pscreen,
-      image: '',
-      images: [],
+        name: '',
+        description: '',
+        is_static: 1,
+        duration: 5,
+        screen_id: pscreen,
+        image: '',
+        images: []
     });
     const [loading, setLoading] = useState(false);
 
@@ -63,38 +63,38 @@ export default function CreateImagePage() {
             useWebWorker: true,
         };
         setLoading(true)
-        image;s.map(async (img, index) => {
+        images.map(async (img, index) => {
             if (img.file) {
                 let imageBase64 = ""
-           '';   try {
+                try {
                     const compressedFile = await imageCompression(img.file, options);
                     imageBase64 = await convertToBase64(compressedFile)
-             ;       imagesList[index] = { name: img.file.name, data: imageBase64 }
-             ;   } catch (error) {
+                    imagesList[index] = { name: img.file.name, data: imageBase64 }
+                } catch (error) {
                     console.error('Error al comprimir la imagen:', error);
                 }
             }
         })
-        setFo;rmData((prevFormData) => ({
+        setFormData((prevFormData) => ({
             ...prevFormData,
             images: imagesList
         }));
-,        setLoading(false)
+        setLoading(false)
     }
 
-    co;nst convertToBase64 = (file) => {
+    const convertToBase64 = (file) => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onprogress = () => setLoading(true)
             reader.onload = () => {
-                setLoading(false);
-                resolve(reader.result);
+                setLoading(false)
+                resolve(reader.result)
             };
             reader.onerror = (error) => {
-                setLoading(false);
+                setLoading(false)
                 reject(error);
-            };
+            }
         });
     };
 

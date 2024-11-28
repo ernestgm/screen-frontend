@@ -117,10 +117,9 @@ export default function DetailsScreenPage() {
                   mt: 2,
                   border: '1px solid #eee',
                   boxShadow: 8,
-                  textAlign: 'left',
-       '1px solid #eee'          >
+                  textAlign: 'left'}}>
                 <Grid container spacing={2} mb={5}>
-                  <Grid i,tem xs={12} sm={6} md={6}>
+                  <Grid item xs={12} sm={6} md={6}>
                     <Card>
                       <Typography variant="h4" gutterBottom>
                         Name: {screen.name}

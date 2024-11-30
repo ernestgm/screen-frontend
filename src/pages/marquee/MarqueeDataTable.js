@@ -325,6 +325,9 @@ export default function MarqueeDataTable() {
     return (
       <>
         <Stack direction="row" alignItems="end" justifyContent="space-between" mb={5}>
+          <Typography variant="h4" gutterBottom>
+            { '' }
+          </Typography>
           <Button variant="outlined" onClick={handleClickNewMarquee} startIcon={<Iconify icon="eva:plus-fill" />}>
             New Marquee
           </Button>

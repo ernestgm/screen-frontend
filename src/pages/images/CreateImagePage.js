@@ -19,6 +19,7 @@ import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import PROJECT_CONFIG from "../../config/config";
 import useNavigateTo from '../../hooks/navigateTo';
 import { UploadImages } from '../../components/save-image/UploadImages';
+import { SaveImage } from '../../components/save-image';
 
 // ----------------------------------------------------------------------
 
@@ -27,6 +28,12 @@ const URL_UPDATE = PROJECT_CONFIG.API_CONFIG.IMAGE.UPDATE;
 const URL_CREATE = PROJECT_CONFIG.API_CONFIG.IMAGE.CREATE;
 const URL_BACK = '/dashboard/screen/details/';
 const URL_GET_ITEM_FOR_UPDATE = PROJECT_CONFIG.API_CONFIG.IMAGE.GET;
+
+const options = {
+    maxSizeMB: 1,
+    maxWidthOrHeight: 1920,
+    useWebWorker: true
+};
 
 export default function CreateImagePage() {
     const showSnackbarMessage = useMessagesSnackbar();
@@ -55,13 +62,13 @@ export default function CreateImagePage() {
         }));
     };
 
+    const showPreview = (base64) => {
+        setPreview(base64)
+    }
+
     const handleUploadImage = async (images) => {
         const imagesList = [];
-        const options = {
-            maxSizeMB: 1, // Tamaño máximo en MB
-            maxWidthOrHeight: 1920, // Máxima altura o ancho
-            useWebWorker: true,
-        };
+
         setLoading(true)
         images.map(async (img, index) => {
             if (img.file) {
@@ -80,6 +87,27 @@ export default function CreateImagePage() {
             images: imagesList
         }));
         setLoading(false)
+    }
+
+    const handleUpdateImage = async (images) => {
+        let imageBase64 = ""
+        if (images) {
+            try {
+                setLoading(true)
+                const compressedFile = await imageCompression(images, options);
+                setLoading(false)
+                imageBase64 = await convertToBase64(compressedFile)
+                setLoading(false)
+
+                setFormData((prevFormData) => ({
+                    ...prevFormData,
+                    image: imageBase64
+                }));
+            } catch (error) {
+                setLoading(false)
+                console.error('Error al comprimir la imagen:', error);
+            }
+        }
     }
 
     const convertToBase64 = (file) => {
@@ -193,15 +221,10 @@ export default function CreateImagePage() {
                         />
 
                         {pimage ? (
-                          <div>
-                              <h4>Preview:</h4>
-                              <img src={preview} alt="Imagen subida" style={{ maxWidth: '100%', maxHeight: '200px' }} />
-                          </div>
+                          <SaveImage onChange={handleUpdateImage} updatePreview={showPreview} previewImage={preview}/>
                         ) : (
                           <UploadImages onChange={handleUploadImage} />
                         )}
-
-                        {/* <SaveImage onChange={handleUploadImage} updatePreview={showPreview} previewImage={preview}/> */}
                     </Stack>
                 </Card>
                 <Stack sx={{m: 2}}>

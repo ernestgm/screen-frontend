@@ -34,7 +34,7 @@ export default function DetailsBusinessPage() {
 
     const [business, setBusiness] = useState({
         id: 0,
-        cover: `/assets/images/covers/cover_4.jpg`,
+        cover: `/assets/images/covers/cover_21.jpg`,
         title: '',
         description: '',
         createdAt: '',
@@ -44,7 +44,7 @@ export default function DetailsBusinessPage() {
         favorite: 0,
         author: {
             name: '',
-            avatarUrl: `/assets/images/avatars/avatar_4.jpg`,
+            avatarUrl: `/assets/images/avatars/avatar_18.jpg`,
         },
         geolocation: {
             address: '',

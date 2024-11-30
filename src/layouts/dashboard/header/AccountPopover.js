@@ -8,6 +8,7 @@ import useApiHandlerStore from "../../../zustand/useApiHandlerStore";
 import useAccontHandlerStore from "../../../zustand/useAccontHandlerStore";
 import useMessagesSnackbar from "../../../hooks/messages/useMessagesSnackbar";
 import useNavigateTo from "../../../hooks/navigateTo";
+import MyAvatar from '../../../components/avatar/MyAvatar';
 
 // ----------------------------------------------------------------------
 
@@ -80,7 +81,7 @@ export default function AccountPopover() {
           }),
         }}
       >
-        <Avatar src={account.photoURL} alt="photoURL" />
+        <MyAvatar account={account} />
       </IconButton>
 
       <Popover

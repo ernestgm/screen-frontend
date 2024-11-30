@@ -25,7 +25,7 @@ import {
     FormControl,
     InputLabel,
     Select,
-    DialogActions, Button, Dialog,
+    DialogActions, Button, Dialog, Divider,
 } from '@mui/material';
 import {LoadingButton} from "@mui/lab";
 import SaveIcon from '@mui/icons-material/Save';
@@ -491,7 +491,13 @@ export default function DevicePage() {
 
             <Container>
 
-                <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+                <Stack
+                  direction="row"
+                  divider={<Divider orientation="vertical" flexItem />}
+                  spacing={2}
+                  sx={{ padding: '15px 0' }}
+                >
+                    <Iconify width="35px" icon="mdi:cast-variant" />
                     <Typography variant="h4" gutterBottom>
                         {NAME_PAGE}
                     </Typography>

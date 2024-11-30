@@ -8,8 +8,7 @@ import { Box, Link } from '@mui/material';
 
 const Logo = forwardRef(({ disabledLink = false, sx}, ref) => {
   const logo = (
-      <Box component="img" alt="EScreen" src='/assets/logo.png'
-           sx={{width: 48, height: 48, borderRadius: 1.5, flexShrink: 0}}/>
+    <Box component="img" alt="PlayAds" src="/assets/logo.png" sx={{ width: 150, borderRadius: 1.5, flexShrink: 0 }} />
   );
 
   if (disabledLink) {

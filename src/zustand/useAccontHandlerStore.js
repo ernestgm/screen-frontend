@@ -14,6 +14,11 @@ const useAccountHandlerStore = create(
             email: `${useAuthStore.getState().currentUser ? useAuthStore.getState().currentUser.user.email : ''}`,
             role: useAuthStore.getState().currentUser ? useAuthStore.getState().currentUser.user.role : '',
             photoURL: '/assets/images/avatars/avatar_default.jpg',
+            sign: `${
+              useAuthStore.getState().currentUser ? useAuthStore.getState().currentUser.user.name.charAt(0) : ''
+            }${
+              useAuthStore.getState().currentUser ? useAuthStore.getState().currentUser.user.lastname.charAt(0) : ''
+            }`
         },
 
         // new ApiHandler(),
@@ -24,6 +29,7 @@ const useAccountHandlerStore = create(
                 email: `${user.email}`,
                 role: user.role,
                 photoURL: '/assets/images/avatars/avatar_default.jpg',
+                sign: `${user.name.charAt(0).toLocaleUpperCase()}${user.lastname.charAt(0).toUpperCase()}`
             }
         }),
     })

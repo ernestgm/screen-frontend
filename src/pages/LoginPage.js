@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Link, Container, Typography, Divider, Stack, Button } from '@mui/material';
+import { Link, Container, Typography, Divider, Stack, Button, Box } from '@mui/material';
 // hooks
 import useResponsive from '../hooks/useResponsive';
 // table
@@ -25,9 +25,9 @@ const StyledRoot = styled('div')(({ theme }) => ({
 
 const StyledSection = styled('div')(({ theme }) => ({
   width: '100%',
-  maxWidth: 480,
   display: 'flex',
   flexDirection: 'column',
+  alignItems: 'center',
   justifyContent: 'center',
   boxShadow: theme.customShadows.card,
   backgroundColor: theme.palette.background.default,
@@ -59,36 +59,40 @@ export default function LoginPage(props) {
   return (
     <>
       <Helmet>
-        <title> Login | { PROJECT_CONFIG.NAME } </title>
+        <title> Login | {PROJECT_CONFIG.NAME} </title>
       </Helmet>
-      <GlobalNotification/>
+      <GlobalNotification />
       <StyledRoot>
         {mdUp && (
           <StyledSection>
-            <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-              Hi, Welcome Back
+            <Typography alignSelf="center" variant="h4" sx={{ px: 5, mt: 0, mb: 5 }}>
+              Hi, Welcome
             </Typography>
-            <img src="/assets/illustrations/illustration_login.png" alt="login" />
+            <Stack direction="column" alignItems="center">
+              <Box
+                component="img"
+                alt="PlayAds"
+                src="/assets/logo.png"
+                sx={{ width: 450, borderRadius: 1.5, flexShrink: 0 }}
+              />
+            </Stack>
           </StyledSection>
         )}
 
-        <Container maxWidth="sm">
+        <Container >
           <StyledContent>
-            <Stack direction="row" spacing={2}>
-              <Logo
-                  sx={{
-                    position: 'fixed',
-                    top: { xs: 16, sm: 24, md: 40 },
-                    left: { xs: 16, sm: 24, md: 40 },
-                  }}
+            <Stack direction="row" spacing={2} alignItems="center"  justifyContent="center">
+              <Box
+                component="img"
+                alt="PlayAds"
+                src="/assets/logo.png"
+                sx={{ width: 150, borderRadius: 1.5, flexShrink: 0, display: {lg: 'none', md: 'none', sm: 'block', xs: 'block'} }}
               />
-              <Typography variant="h4" alignSelf="center">
-              Sign in to { PROJECT_CONFIG.NAME }
-            </Typography>
+              <Typography variant="h4" alignSelf="right">
+                Sign in
+              </Typography>
             </Stack>
-
-            <Divider sx={{ my: 3 }}/>
-
+            <Divider sx={{ my: 3 }} />
             <LoginForm />
           </StyledContent>
         </Container>

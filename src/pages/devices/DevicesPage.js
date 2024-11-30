@@ -60,9 +60,8 @@ const MARQUEES_URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.MARQUEE.ALL;
 const TABLE_HEAD = [
     {id: 'code', label: 'Device Code', alignRight: false},
     {id: 'name', label: 'Name', alignRight: false},
-
     {id: 'user', label: 'User', alignRight: false },
-    {id: 'screen', label: 'Screen', alignRight: false },
+    {id: 'slide', label: 'Slide', alignRight: false },
     {id: 'marquee', label: 'Marquee', alignRight: false },
     {id: 'device_id', label: 'Device ID', alignRight: false},
     // {id: 'created_at', label: 'Create At', alignRight: false},
@@ -497,7 +496,7 @@ export default function DevicePage() {
                   spacing={2}
                   sx={{ padding: '15px 0' }}
                 >
-                    <Iconify width="35px" icon="mdi:cast-variant" />
+                    <Iconify width="35px" icon="ic:outline-tv" />
                     <Typography variant="h4" gutterBottom>
                         {NAME_PAGE}
                     </Typography>
@@ -698,13 +697,13 @@ export default function DevicePage() {
                         sx={{mb: 3}}
                         defaultValue={''}
                     >
-                        <InputLabel id="role-select-label">Select Screen</InputLabel>
+                        <InputLabel id="role-select-label">Select Slide</InputLabel>
                         <Select
                             name="screen_id"
                             labelId="screen-select-label"
                             id="screen-select"
                             value={formData.screen_id ?? ''}
-                            label="Select Screen"
+                            label="Select Slide"
                             onChange={handleChange}
                         >
                             {

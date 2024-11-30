@@ -14,27 +14,21 @@ const navConfig = [
     roles: ['admin', 'owner', 'editor']
   },
   {
-    title: 'user',
-    path: '/dashboard/user',
-    icon: icon('material-symbols:supervised-user-circle'),
-    roles: ['admin']
-  },
-  {
     title: 'business',
     path: '/dashboard/business',
     icon: icon('ion:business-sharp'),
     roles: ['admin', 'owner', 'editor']
   },
   {
-    title: 'screens',
-    path: '/dashboard/screens',
-    icon: icon('mdi:monitor-dashboard'),
+    title: 'slides',
+    path: '/dashboard/slides',
+    icon: icon('simple-icons:slides'),
     roles: ['admin', 'owner']
   },
   {
     title: 'Devices',
     path: '/dashboard/devices',
-    icon: icon('mdi:cast-variant'),
+    icon: icon('ic:outline-tv'),
     roles: ['admin', 'owner']
   },
   {
@@ -48,6 +42,12 @@ const navConfig = [
     path: '/dashboard/qr',
     icon: icon('material-symbols:qr-code-2'),
     roles: ['admin', 'owner']
+  },
+  {
+    title: 'user',
+    path: '/dashboard/user',
+    icon: icon('material-symbols:supervised-user-circle'),
+    roles: ['admin']
   },
 ];
 

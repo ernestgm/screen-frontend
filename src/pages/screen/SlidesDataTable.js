@@ -36,7 +36,7 @@ const SCREEN_URL_GET_DATA_UPDATE = PROJECT_CONFIG.API_CONFIG.SCREEN.GET;
 const SCREEN_URL_DELETE_ROW = PROJECT_CONFIG.API_CONFIG.SCREEN.DELETE;
 const SCREEN_URL_CREATE_ROW = PROJECT_CONFIG.API_CONFIG.SCREEN.CREATE;
 const SCREEN_URL_UPDATE_ROW = PROJECT_CONFIG.API_CONFIG.SCREEN.UPDATE;
-const ROUTE_DETAILS_ROW = '/dashboard/screen/details/';
+const ROUTE_DETAILS_ROW = '/dashboard/slides/details/';
 
 const TABLE_HEAD = [
     {id: 'name', label: 'Name', alignRight: false},
@@ -49,7 +49,7 @@ const TABLE_HEAD = [
 ];
 
 
-export default function ScreenDataTable({ business }) {
+export default function SlidesDataTable({ business }) {
     const { navigateTo } = useNavigateTo();
     const [dataTable, setDataTable] = useState([]);
     const [open, setOpen] = useState(false);
@@ -349,7 +349,7 @@ export default function ScreenDataTable({ business }) {
 
         if (response) {
             if (response.success) {
-                const msg = update ? `Screen updated successfully!` : `Screen added successfully!`;
+                const msg = update ? `Slide updated successfully!` : `Slide added successfully!`;
                 showMessageSnackbar(msg, 'success');
                 setOpenNewDialog(false);
                 getScreens();
@@ -393,11 +393,11 @@ export default function ScreenDataTable({ business }) {
         <>
             <Stack direction="row" alignItems="start" justifyContent="space-between" mb={5}>
                 <Typography variant="h4" gutterBottom>
-                    { business ?  'Screens' : '' }
+                    { business ?  'Slides' : '' }
                 </Typography>
                 <Button variant="outlined" onClick={handleClickNewScreen}
                         startIcon={<Iconify icon="eva:plus-fill"/>}>
-                    New Screen
+                    New Slide
                 </Button>
             </Stack>
             <Card>
@@ -524,7 +524,7 @@ export default function ScreenDataTable({ business }) {
                 />
             </Card>
             <Dialog open={openNewDialog} onClose={handleCloseNew}>
-                <DialogTitle>{update ? 'Edit' : 'Create a new'} Screen</DialogTitle>
+                <DialogTitle>{update ? 'Edit' : 'Create a new'} Slide</DialogTitle>
                 <DialogContent>
                     <TextField
                         margin="dense"

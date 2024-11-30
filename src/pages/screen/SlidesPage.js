@@ -7,15 +7,15 @@ import {
 } from '@mui/material';
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import PROJECT_CONFIG from "../../config/config";
-import ScreenDataTable from "./ScreenDataTable";
+import SlidesDataTable from "./SlidesDataTable";
 import Iconify from '../../components/iconify';
 
 
 
 // ----------------------------------------------------------------------
 
-const NAME_PAGE = 'Screens';
-export default function ScreensPage() {
+const NAME_PAGE = 'Slides';
+export default function SlidesPage() {
     useMessagesSnackbar();
 
     return (
@@ -31,14 +31,14 @@ export default function ScreensPage() {
                   spacing={2}
                   sx={{padding: "15px 0"}}
                 >
-                    <Iconify width="35px" icon="mdi:monitor-dashboard"/>
+                    <Iconify width="35px" icon="simple-icons:slides"/>
                     <Typography variant="h4" gutterBottom>
                         {NAME_PAGE}
                     </Typography>
                 </Stack>
                 <Stack>
                     <Grid item xs={12} md={6} lg={8}>
-                        <ScreenDataTable />
+                        <SlidesDataTable />
                     </Grid>
                 </Stack>
             </Container>

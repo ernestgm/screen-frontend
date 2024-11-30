@@ -12,7 +12,6 @@ import BackButton from "../../sections/@dashboard/app/AppBackButton";
 import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import PROJECT_CONFIG from "../../config/config";
-import TitlePageDetails from "../../sections/@dashboard/app/TitlePageDetails";
 import ImageDataTable from "./ImageDataTable";
 import Iconify from "../../components/iconify";
 import useNavigateTo from '../../hooks/navigateTo';
@@ -22,13 +21,13 @@ import palette from '../../theme/palette';
 
 // ----------------------------------------------------------------------
 
-const NAME_PAGE = 'Screen Details';
+const NAME_PAGE = 'Slide Details';
 const URL_GET_PAGE = PROJECT_CONFIG.API_CONFIG.SCREEN.GET;
 const URL_TABLES_PAGE = '/dashboard/business/details/';
-const URL_MENU_SCREEN_PAGE = '/dashboard/screens';
+const URL_MENU_SCREEN_PAGE = '/dashboard/slides';
 const URL_CREATE_IMAGE = '/dashboard/image/create/';
 
-export default function DetailsScreenPage() {
+export default function DetailsSlidesPage() {
     const {navigateTo} = useNavigateTo();
     const showSnackbarMessage = useMessagesSnackbar();
     const {id, menu} = useParams();

@@ -13,10 +13,10 @@ import CreateBusinessPage from "./pages/business/CreateBusinessPage";
 import Page401 from "./pages/Page401";
 import DetailsBusinessPage from "./pages/business/DetailsBusinessPage";
 import DetailsAreasPage from "./pages/areas/DetailsAreasPage";
-import DetailsScreenPage from "./pages/screen/DetailsScreenPage";
+import DetailsSlidesPage from "./pages/screen/DetailsSlidesPage";
 import CreateImagePage from "./pages/images/CreateImagePage";
 import Dashboard from "./pages/main/Dashboard";
-import ScreensPage from "./pages/screen/ScreensPage";
+import SlidesPage from "./pages/screen/SlidesPage";
 import DevicePage from "./pages/devices/DevicesPage";
 import AreasPage from "./pages/areas/AreasPage";
 import MarqueesPage from "./pages/marquee/MarqueesPage";
@@ -46,10 +46,10 @@ export default function Router() {
             { path: 'business/areas/:id', element: <AreasPage /> },
               // Areas
             { path: 'area/details/:id', element: <DetailsAreasPage /> },
-              // Screen
-            { path: 'screen/details/:id', element: <DetailsScreenPage /> },
-            { path: 'screen/details/:id/:menu', element: <DetailsScreenPage /> },
-            { path: 'screens', element: <ScreensPage /> },
+              // Slides
+            { path: 'slides/details/:id', element: <DetailsSlidesPage /> },
+            { path: 'slides/details/:id/:menu', element: <DetailsSlidesPage /> },
+            { path: 'slides', element: <SlidesPage /> },
               // Images
             { path: 'image/edit/:pscreen/:pimage', element: <CreateImagePage /> },
             { path: 'image/create/:pscreen', element: <CreateImagePage /> },

@@ -43,12 +43,12 @@ const navConfig = [
     icon: icon('material-symbols:rtt'),
     roles: ['admin', 'owner']
   },
-  // {
-  //   title: 'logs',
-  //   path: '/dashboard/logs',
-  //   icon: icon('material-symbols:list-alt'),
-  //   roles: ['admin']
-  // },
+  {
+    title: 'QR Codes',
+    path: '/dashboard/qr',
+    icon: icon('material-symbols:qr-code-2'),
+    roles: ['admin', 'owner']
+  },
 ];
 
 export default navConfig;

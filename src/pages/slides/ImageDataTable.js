@@ -41,6 +41,7 @@ const URL_EDIT_IMAGE = '/dashboard/image/edit/';
 const TABLE_HEAD = [
     {id: 'name', label: 'Name', alignRight: false},
     {id: 'duration', label: 'Duration', alignRight: false},
+    {id: 'qr', label: 'QR', alignRight: false},
     {id: 'created_at', label: 'Create At', alignRight: false},
     {id: 'updated_at', label: 'Update At', alignRight: false},
     {id: 'actions', label: 'Actions'},
@@ -232,6 +233,11 @@ export default function ImageDataTable({screen}) {
                                                 </Stack>
                                             </TableCell>
                                             <TableCell align="center">{duration}s</TableCell>
+                                            <TableCell align="center">
+                                                { row.qr_info && (
+                                                  <Iconify width="25px" icon="material-symbols:qr-code-2"/>
+                                                ) }
+                                            </TableCell>
                                             <TableCell align="center">{formatDate(row.created_at)}</TableCell>
                                             <TableCell align="center">{formatDate(row.updated_at)}</TableCell>
 

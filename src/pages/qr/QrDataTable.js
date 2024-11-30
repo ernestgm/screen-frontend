@@ -44,19 +44,18 @@ import marqueeColors from "../../_mock/colors";
 import SingleColorPreview from "../../components/color-utils/SingleColorPreview";
 
 
-const MARQUEE_URL_GET_ALL_DATA = PROJECT_CONFIG.API_CONFIG.MARQUEE.ALL;
-const MARQUEE_URL_GET_DATA_UPDATE = PROJECT_CONFIG.API_CONFIG.MARQUEE.GET;
-const MARQUEE_URL_DELETE_ROW = PROJECT_CONFIG.API_CONFIG.MARQUEE.DELETE;
-const MARQUEE_URL_CREATE_ROW = PROJECT_CONFIG.API_CONFIG.MARQUEE.CREATE;
-const MARQUEE_URL_UPDATE_ROW = PROJECT_CONFIG.API_CONFIG.MARQUEE.UPDATE;
+const QR_URL_GET_ALL_DATA = PROJECT_CONFIG.API_CONFIG.QR.ALL;
+const QR_URL_GET_DATA_UPDATE = PROJECT_CONFIG.API_CONFIG.QR.GET;
+const QR_URL_DELETE_ROW = PROJECT_CONFIG.API_CONFIG.QR.DELETE;
+const QR_URL_CREATE_ROW = PROJECT_CONFIG.API_CONFIG.QR.CREATE;
+const QR_URL_UPDATE_ROW = PROJECT_CONFIG.API_CONFIG.QR.UPDATE;
 const BUSINESS_URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.BUSINESS.ALL;
-const ROUTE_DETAILS_ROW = '/dashboard/marquee/details/';
 
 const TABLE_HEAD = [
     {id: 'name', label: 'Name', alignRight: false},
     {id: 'business', label: 'Business', alignRight: false},
-    {id: 'bg_color', label: 'Background Color', alignRight: false},
-    {id: 'text_color', label: 'Text Color', alignRight: false},
+    {id: 'message', label: 'Message', alignRight: false},
+    {id: 'info', label: 'Info', alignRight: false},
     {id: 'active_on', label: 'Active On', alignRight: false},
     {id: 'created_at', label: 'Create At', alignRight: false},
     {id: 'updated_at', label: 'Update At', alignRight: false},
@@ -102,10 +101,10 @@ export default function QrDataTable() {
             }
         }
     };
-    const getMarquees = async () => {
-        const response = await api.__get(MARQUEE_URL_GET_ALL_DATA, (msg) => {
+    const getQrs = async () => {
+        const response = await api.__get(QR_URL_GET_ALL_DATA, (msg) => {
             showMessageSnackbar(msg, 'error');
-        }, () => { getMarquees() })
+        }, () => { getQrs() })
 
         if (response !== undefined && response.data) {
             if (currentUser && currentUser.user.role.tag === PROJECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
@@ -120,13 +119,13 @@ export default function QrDataTable() {
     const deleteRows = async () => {
         setLoading(true)
         const data = {'ids': rowsForDelete};
-        const response = await api.__delete(MARQUEE_URL_DELETE_ROW, data, (msg) => {
+        const response = await api.__delete(QR_URL_DELETE_ROW, data, (msg) => {
             showMessageSnackbar(msg, 'error');
         }, () => { deleteRows() })
 
         if (response) {
             showMessageAlert(response.message, 'success');
-            getMarquees();
+            getQrs();
             setSelected([]);
         }
         setLoading(false)
@@ -141,12 +140,6 @@ export default function QrDataTable() {
     const handleEditSelected = () => {
         if (selected.length === 1) {
             editAction(selected[0])
-        }
-    }
-
-    const handleDetailsSelected = () => {
-        if (selected.length === 1) {
-            navigateTo(`${ROUTE_DETAILS_ROW}${selected[0]}`)
         }
     }
 
@@ -218,11 +211,6 @@ export default function QrDataTable() {
         editAction(item.id)
     }
 
-    const handleDetailsItemClick = (item) => {
-        handleCloseMenu()
-        navigateTo(`${ROUTE_DETAILS_ROW}${item.id}`)
-    }
-
     const handleDeleteItemClick = (item) => {
         handleCloseMenu()
         setRowsForDelete([item.id])
@@ -238,9 +226,8 @@ export default function QrDataTable() {
     const initialFormData = {
         name: '',
         business_id: '',
-        bg_color: '#000000',
-        text_color: '#FFFFFF',
-        message: '',
+        message: 'SCAN ME',
+        info: '',
     }
     const [formData, setFormData] = useState(initialFormData);
 
@@ -270,15 +257,14 @@ export default function QrDataTable() {
         if (update) {
             editFormData.name = formData.name
             editFormData.business_id = formData.business_id
-            editFormData.bg_color = formData.bg_color
-            editFormData.text_color = formData.text_color
             editFormData.message = formData.message
+            editFormData.info = formData.info
 
-            response = await api.__update(`${MARQUEE_URL_UPDATE_ROW}${update}`, editFormData, (msg) => {
+            response = await api.__update(`${QR_URL_UPDATE_ROW}${update}`, editFormData, (msg) => {
                 showMessageSnackbar(msg, 'error');
             }, () => { createNewAction() }, ( isLoading ) => { setLoading(isLoading) });
         } else {
-            response = await api.__post(MARQUEE_URL_CREATE_ROW, formData, (msg) => {
+            response = await api.__post(QR_URL_CREATE_ROW, formData, (msg) => {
                 showMessageSnackbar(msg, 'error');
             }, () => { createNewAction() }, ( isLoading ) => { setLoading(isLoading) });
         }
@@ -289,7 +275,7 @@ export default function QrDataTable() {
                 const msg = update ? `Marquee updated successfully!` : `Marquee added successfully!`;
                 showMessageSnackbar(msg, 'success');
                 setOpenNewDialog(false);
-                getMarquees();
+                getQrs();
                 setUpdate(null);
                 setFormData(initialFormData);
                 setValidator([]);
@@ -301,17 +287,16 @@ export default function QrDataTable() {
 
     const editAction = async (id) => {
         setUpdate(id);
-        const response = await api.__get(`${MARQUEE_URL_GET_DATA_UPDATE}${id}`,  (msg) => {
+        const response = await api.__get(`${QR_URL_GET_DATA_UPDATE}${id}`,  (msg) => {
             showMessageSnackbar(msg, 'error');
         }, () => { editAction(id) });
 
         if (response.data) {
             setFormData({
                 name: response.data.name,
+                message: response.data.message,
+                info: response.data.info,
                 business_id: response.data.business_id,
-                bg_color: response.data.bg_color,
-                text_color: response.data.text_color,
-                message: response.data.ads.length > 0 ? response.data.ads[0].message : '' ,
             })
             setOpenNewDialog(true);
         }
@@ -319,7 +304,7 @@ export default function QrDataTable() {
 
     useEffect(() => {
         getBusiness()
-        getMarquees()
+        getQrs()
     }, []);
 
     return (
@@ -338,7 +323,6 @@ export default function QrDataTable() {
             filterQuery={filterQuery}
             onFilterQuery={handleFilterByQuery}
             onDeleteSelect={handleDeleteSelected}
-            onDetailsSelect={handleDetailsSelected}
             onEditSelect={handleEditSelected}
           />
 
@@ -356,15 +340,11 @@ export default function QrDataTable() {
                 />
                 <TableBody>
                   {filteredDataTable.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, name, business, devices } = row;
+                    const { id, name, business, message, info, devices } = row;
                     const selectedRow = selected.indexOf(id) !== -1;
                     const nameBusiness = business ? business.name : '';
                     let bgColorCell = palette.success.lighter;
                     const ActiveOn = devices ? devices.length : 0;
-                    const marqueeBgColor = marqueeColors.find((color) => color.id === row.bg_color);
-             ;       const marqueeBgColorName = marqueeBgColor ? marqueeBgColor.name : '';;
-                    const marqueeTextColor = marqueeColors.find((color) => color.id === row.text_color);
-                    const marqueeTextColorName = marqueeTextColor ? marqueeTextColor.name : '';
 
                     if (ActiveOn === 0) {
                       bgColorCell = palette.warning.lighter;
@@ -389,8 +369,8 @@ export default function QrDataTable() {
                           </Typography>
                         </TableCell>
                         <TableCell align="left">{nameBusiness}</TableCell>
-                        <TableCell align="left">{marqueeBgColorName}</TableCell>
-                        <TableCell align="left">{marqueeTextColorName}</TableCell>
+                        <TableCell align="left">{message}</TableCell>
+                        <TableCell align="left">{info}</TableCell>
                         <TableCell align="left">{row.devices ? row.devices.length : 0} Device(s)</TableCell>
                         <TableCell align="left">{formatDate(row.created_at)}</TableCell>
                         <TableCell align="left">{formatDate(row.updated_at)}</TableCell>
@@ -488,60 +468,6 @@ export default function QrDataTable() {
                 })}
               </Select>
             </FormControl>
-            <FormControl variant="standard" fullWidth defaultValue={''} sx={{ mb: 3 }}>
-              <InputLabel id="role-select-label">Select Background Color</InputLabel>
-              <Select
-                name="bg_color"
-                labelId="bg-color-select-label"
-                id="bg-color-select"
-                value={formData.bg_color ?? ''}
-                label="Select Background Color"
-                onChange={handleChange}
-              >
-                {marqueeColors.map((item) => {
-                  return (
-                    <MenuItem key={item.id} value={item.id}>
-                      <Stack
-                        sx={{ pl: 2 }}
-                        component="span"
-                        direction="row"
-                        alignItems="center"
-                        justifyContent="flex-start"
-                      >
-                        <SingleColorPreview color={item.id} sx={{ mr: 2 }} /> {item.name}
-                      </Stack>
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            </FormControl>
-            <FormControl variant="standard" fullWidth sx={{ mb: 3 }} defaultValue={''}>
-              <InputLabel id="text-color-select-label">Select Text Color</InputLabel>
-              <Select
-                name="text_color"
-                labelId="text-color-select-label"
-                id="text-color-select"
-                value={formData.text_color ?? ''}
-                label="Select Text Color"
-                onChange={handleChange}
-              >
-                {marqueeColors.map((item) => {
-                  return (
-                    <MenuItem key={item.id} value={item.id}>
-                      <Stack
-                        sx={{ pl: 2 }}
-                        component="span"
-                        direction="row"
-                        alignItems="center"
-                        justifyContent="flex-start"
-                      >
-                        <SingleColorPreview color={item.id} sx={{ mr: 2 }} /> {item.name}
-                      </Stack>
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            </FormControl>
             <TextField
               margin="dense"
               name="message"
@@ -555,6 +481,19 @@ export default function QrDataTable() {
               helperText={validator.message}
               multiline
               maxRows={10}
+            />
+            <TextField
+              margin="dense"
+              name="info"
+              label="Info"
+              value={formData.info ?? ''}
+              type="text"
+              fullWidth
+              variant="standard"
+              onChange={handleChange}
+              error={validator.info && true}
+              helperText={validator.info}
+              sx={{ mb: 3 }}
             />
           </DialogContent>
           <DialogActions>
@@ -612,11 +551,6 @@ export default function QrDataTable() {
             },
           }}
         >
-          <MenuItem onClick={() => handleDetailsItemClick(open)}>
-            <Iconify icon={'tabler:list-details'} sx={{ mr: 2 }} />
-            Details
-          </MenuItem>
-
           <MenuItem onClick={() => handleEditItemClick(open)}>
             <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
             Edit

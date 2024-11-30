@@ -3,16 +3,19 @@ import {useParams} from "react-router-dom";
 // @mui
 import {Helmet} from 'react-helmet-async';
 import {
-    Card,
-    Stack,
-    Checkbox,
-    Container,
-    Typography,
-    TextField, FormControlLabel,
+  Card,
+  Stack,
+  Checkbox,
+  Container,
+  Typography,
+  TextField, FormControlLabel, Paper,
 } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import SaveIcon from '@mui/icons-material/Save';
 import imageCompression from "browser-image-compression";
-import {LoadingButton} from "@mui/lab";
+import { LoadingButton } from '@mui/lab';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import BackButton from "../../sections/@dashboard/app/AppBackButton";
 import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
@@ -20,13 +23,15 @@ import PROJECT_CONFIG from "../../config/config";
 import useNavigateTo from '../../hooks/navigateTo';
 import { UploadImages } from '../../components/save-image/UploadImages';
 import { SaveImage } from '../../components/save-image';
+import Iconify from '../../components/iconify';
+
 
 // ----------------------------------------------------------------------
 
 const NAME_PAGE = 'Images';
 const URL_UPDATE = PROJECT_CONFIG.API_CONFIG.IMAGE.UPDATE;
 const URL_CREATE = PROJECT_CONFIG.API_CONFIG.IMAGE.CREATE;
-const URL_BACK = '/dashboard/screen/details/';
+const URL_BACK = '/dashboard/slides/details/';
 const URL_GET_ITEM_FOR_UPDATE = PROJECT_CONFIG.API_CONFIG.IMAGE.GET;
 
 const options = {
@@ -45,6 +50,8 @@ export default function CreateImagePage() {
     const [formData, setFormData] = useState({
         name: '',
         description: '',
+        description_position: 'bc',
+        qr_info: '',
         is_static: 1,
         duration: 5,
         screen_id: pscreen,
@@ -53,14 +60,62 @@ export default function CreateImagePage() {
     });
     const [loading, setLoading] = useState(false);
 
+  const children = [
+    <ToggleButton value="tl" key="tl">
+        <Iconify width="35px" icon="simple-icons:slides"/>
+    </ToggleButton>,
+    <ToggleButton value="tc" key="tc">
+        <Iconify width="35px" icon="simple-icons:slides"/>
+    </ToggleButton>,
+    <ToggleButton value="tr" key="tr">
+        <Iconify width="35px" icon="simple-icons:slides"/>
+    </ToggleButton>,
+    <ToggleButton value="cl" key="cl">
+        <Iconify width="35px" icon="simple-icons:slides"/>
+    </ToggleButton>,
+      <ToggleButton value="cc" key="cc">
+          <Iconify width="35px" icon="simple-icons:slides"/>
+      </ToggleButton>,
+      <ToggleButton value="cr" key="cr">
+          <Iconify width="35px" icon="simple-icons:slides"/>
+      </ToggleButton>,
+      <ToggleButton value="bl" key="bl">
+          <Iconify width="35px" icon="simple-icons:slides"/>
+      </ToggleButton>,
+      <ToggleButton value="bc" key="bc">
+          <Iconify width="35px" icon="simple-icons:slides"/>
+      </ToggleButton>,
+      <ToggleButton value="br" key="br">
+          <Iconify width="35px" icon="simple-icons:slides"/>
+      </ToggleButton>,
+  ];
+
+
+
     const handleChange = (event) => {
         const {name, value} = event.target;
+
+        console.log(name)
 
         setFormData((prevFormData) => ({
             ...prevFormData,
             [name]: value,
         }));
     };
+
+  const handlePositionChange = (event, newAlignment) => {
+    console.log(newAlignment)
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      description_position: newAlignment
+    }));
+  };
+
+  const control = {
+    value: formData.description_position ? formData.description_position : 'bc',
+    onChange: handlePositionChange,
+    exclusive: true,
+  };
 
     const showPreview = (base64) => {
         setPreview(base64)
@@ -160,6 +215,8 @@ export default function CreateImagePage() {
             setFormData({
                 name: response.data.name,
                 description: response.data.description,
+                description_position: response.data.description_position,
+                qr_info: response.data.qr_info,
                 screen_id: pscreen,
                 is_static: response.data.is_static,
                 duration: response.data.duration,
@@ -209,6 +266,32 @@ export default function CreateImagePage() {
                             error={validator.description && true}
                             helperText={validator.description}
                             disabled={!pimage}
+                        />
+                      <Stack direction="row" alignItems="center" spacing={3} sx={{m: 2}}>
+                        <Typography variant="body1" gutterBottom>
+                          Description Position
+                        </Typography>
+                      <Paper
+                        elevation={0}
+                        sx={(theme) => ({
+                          display: 'flex',
+                          border: `1px solid ${theme.palette.divider}`,
+                          flexWrap: 'wrap',
+                        })}
+                      >
+                        <ToggleButtonGroup size="small" {...control} aria-label="Small sizes">
+                            {children}
+                        </ToggleButtonGroup>
+                      </Paper>
+                      </Stack>
+                        <TextField
+                          name="qr_info"
+                          label="QR Info"
+                          value={formData.qr_info ?? ''}
+                          onChange={handleChange}
+                          error={validator.qr_info && true}
+                          helperText={validator.qr_info}
+                          disabled={!pimage}
                         />
 
                         <TextField

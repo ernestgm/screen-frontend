@@ -62,6 +62,13 @@ const PROJECT_CONFIG = {
             DELETE: '/marquees',
             ALL: '/marquees',
         },
+        QR: {
+            CREATE: '/qr',
+            GET: '/qr/',
+            UPDATE: '/qr/update/',
+            DELETE: '/qrs',
+            ALL: '/qrs',
+        },
         LOGS: {
             VIEW: '/getcontentlogfiles',
             ALL: '/getlogfiles',

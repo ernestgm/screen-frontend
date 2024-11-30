@@ -16,7 +16,7 @@ import PROJECT_CONFIG from "../../config/config";
 import BusinessDetailsCard from "../../sections/@dashboard/business/BusinessDetailsCard";
 import {MapContainer} from "../../components/map";
 import AreasDataTable from "./table/AreasDataTable";
-import SlidesDataTable from "../screen/SlidesDataTable";
+import SlidesDataTable from "../slides/SlidesDataTable";
 
 
 // ----------------------------------------------------------------------

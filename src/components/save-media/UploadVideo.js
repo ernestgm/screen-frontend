@@ -5,6 +5,7 @@ import { Button } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled } from '@mui/material/styles';
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
+import Iconify from '../iconify';
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -20,18 +21,13 @@ const VisuallyHiddenInput = styled('input')({
 
 
 
-export default function SaveImage({ onChange, updatePreview, previewImage }) {
-    const showSnackbarMessage = useMessagesSnackbar();
-
-    const [image, setImage] = useState(null);
+export default function UploadVideo({ onChange }) {
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
-                setImage(file);
                 onChange(file);
-                updatePreview(reader.result);
             };
             reader.readAsDataURL(file);
         }
@@ -44,17 +40,11 @@ export default function SaveImage({ onChange, updatePreview, previewImage }) {
                 role={undefined}
                 variant="contained"
                 tabIndex={-1}
-                startIcon={<CloudUploadIcon />}
+                startIcon={<Iconify icon="material-symbols:video-camera-back-add-outline" />}
             >
-                Upload Image
+                Upload Video
                 <VisuallyHiddenInput type="file" onChange={handleImageChange}/>
             </Button>
-            {previewImage !== '' && (
-                <div>
-                    <h4>Preview:</h4>
-                    <img src={previewImage} alt="Imagen subida" style={{ maxWidth: '100%', maxHeight: '200px' }} />
-                </div>
-            )}
         </div>
     );
 }

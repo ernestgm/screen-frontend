@@ -3,6 +3,7 @@ import ImageUploading from 'react-images-uploading';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { Box, Button, Card, Grid, IconButton, Stack } from '@mui/material';
 import { DeleteOutline } from '@mui/icons-material';
+import Iconify from '../iconify';
 
 export function UploadImages({ onChange }) {
   const [images, setImages] = React.useState([]);
@@ -35,7 +36,7 @@ export function UploadImages({ onChange }) {
                 role={undefined}
                 variant="contained"
                 tabIndex={-1}
-                startIcon={<CloudUploadIcon />}
+                startIcon={<Iconify icon="material-symbols:add-photo-alternate-outline" />}
               >
                 Upload Images
               </Button>

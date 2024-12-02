@@ -14,7 +14,7 @@ import Page401 from "./pages/Page401";
 import DetailsBusinessPage from "./pages/business/DetailsBusinessPage";
 import DetailsAreasPage from "./pages/areas/DetailsAreasPage";
 import DetailsSlidesPage from "./pages/slides/DetailsSlidesPage";
-import CreateImagePage from "./pages/images/CreateImagePage";
+import UploadImagePage from "./pages/media/UploadImagePage";
 import Dashboard from "./pages/main/Dashboard";
 import SlidesPage from "./pages/slides/SlidesPage";
 import DevicePage from "./pages/devices/DevicesPage";
@@ -24,6 +24,7 @@ import DetailsMarqueePage from "./pages/marquee/DetailsMarqueePage";
 import LogsPage from "./pages/logs/LogsPage";
 import ActivateDevicePage from "./pages/user/ActivateDevicePage";
 import QrPage from './pages/qr/QrPage';
+import UploadVideoPage from './pages/media/UploadVideoPage';
 
 // ----------------------------------------------------------------------
 
@@ -51,8 +52,10 @@ export default function Router() {
             { path: 'slides/details/:id/:menu', element: <DetailsSlidesPage /> },
             { path: 'slides', element: <SlidesPage /> },
               // Images
-            { path: 'image/edit/:pscreen/:pimage', element: <CreateImagePage /> },
-            { path: 'image/create/:pscreen', element: <CreateImagePage /> },
+            { path: 'image/edit/:pscreen/:pimage', element: <UploadImagePage /> },
+            { path: 'video/edit/:pscreen/:pvideo', element: <UploadVideoPage /> },
+            { path: 'image/upload/:pscreen', element: <UploadImagePage /> },
+            { path: 'video/upload/:pscreen', element: <UploadVideoPage /> },
 
             // Users
             { path: 'user', element: <UserPage /> },

@@ -24,23 +24,23 @@ const POSITION_VALUE = [
 ];
 
 const POSITION_ICON = [
-  'tl',
-  'tc',
-  'tr',
-  'cl' ,
-  'cc',
-  'cr',
-  'bl',
-  'bc',
-  'br',
+  'tabler:align-box-left-top',
+  'tabler:align-box-center-top',
+  'tabler:align-box-right-top',
+  'tabler:align-box-left-middle' ,
+  'tabler:align-box-center-middle',
+  'icon-park-outline:alignment-right-center',
+  'tabler:align-box-left-bottom',
+  'tabler:align-box-center-bottom',
+  'tabler:align-box-right-bottom',
 ];
 
 // ----------------------------------------------------------------------
 
-const positions = [...Array(5)].map((_, index) => {
+const positions = [...Array(9)].map((_, index) => {
   return {
-    id: POSITION_NAME[index],
-    name: POSITION_VALUE[index],
+    id: POSITION_VALUE[index],
+    name: POSITION_NAME[index],
     icon: POSITION_ICON[index],
   };
 });

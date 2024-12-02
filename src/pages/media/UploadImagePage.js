@@ -21,9 +21,10 @@ import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import PROJECT_CONFIG from "../../config/config";
 import useNavigateTo from '../../hooks/navigateTo';
-import { UploadImages } from '../../components/save-image/UploadImages';
-import { SaveImage } from '../../components/save-image';
+import { UploadImages } from '../../components/save-media/UploadImages';
+import { SaveImage } from '../../components/save-media';
 import Iconify from '../../components/iconify';
+import positions from '../../_mock/positions';
 
 
 // ----------------------------------------------------------------------
@@ -40,7 +41,7 @@ const options = {
     useWebWorker: true
 };
 
-export default function CreateImagePage() {
+export default function UploadImagePage() {
     const showSnackbarMessage = useMessagesSnackbar();
     const {pscreen, pimage } = useParams();
     const {navigateTo} = useNavigateTo();
@@ -59,38 +60,6 @@ export default function CreateImagePage() {
         images: []
     });
     const [loading, setLoading] = useState(false);
-
-  const children = [
-    <ToggleButton value="tl" key="tl">
-        <Iconify width="35px" icon="simple-icons:slides"/>
-    </ToggleButton>,
-    <ToggleButton value="tc" key="tc">
-        <Iconify width="35px" icon="simple-icons:slides"/>
-    </ToggleButton>,
-    <ToggleButton value="tr" key="tr">
-        <Iconify width="35px" icon="simple-icons:slides"/>
-    </ToggleButton>,
-    <ToggleButton value="cl" key="cl">
-        <Iconify width="35px" icon="simple-icons:slides"/>
-    </ToggleButton>,
-      <ToggleButton value="cc" key="cc">
-          <Iconify width="35px" icon="simple-icons:slides"/>
-      </ToggleButton>,
-      <ToggleButton value="cr" key="cr">
-          <Iconify width="35px" icon="simple-icons:slides"/>
-      </ToggleButton>,
-      <ToggleButton value="bl" key="bl">
-          <Iconify width="35px" icon="simple-icons:slides"/>
-      </ToggleButton>,
-      <ToggleButton value="bc" key="bc">
-          <Iconify width="35px" icon="simple-icons:slides"/>
-      </ToggleButton>,
-      <ToggleButton value="br" key="br">
-          <Iconify width="35px" icon="simple-icons:slides"/>
-      </ToggleButton>,
-  ];
-
-
 
     const handleChange = (event) => {
         const {name, value} = event.target;
@@ -235,7 +204,7 @@ export default function CreateImagePage() {
     return (
         <>
             <Helmet>
-                <title> {pimage ? `${NAME_PAGE} edit` : `Create ${NAME_PAGE}`} | {PROJECT_CONFIG.NAME} </title>
+                <title> {pimage ? `${NAME_PAGE} edit` : `Upload ${NAME_PAGE}`} | {PROJECT_CONFIG.NAME} </title>
             </Helmet>
 
             <Container>
@@ -267,6 +236,7 @@ export default function CreateImagePage() {
                             helperText={validator.description}
                             disabled={!pimage}
                         />
+                      { pimage && (
                       <Stack direction="row" alignItems="center" spacing={3} sx={{m: 2}}>
                         <Typography variant="body1" gutterBottom>
                           Description Position
@@ -280,10 +250,15 @@ export default function CreateImagePage() {
                         })}
                       >
                         <ToggleButtonGroup size="small" {...control} aria-label="Small sizes">
-                            {children}
+                          { positions.map((pos) => (
+                            <ToggleButton value={pos.id} key={pos.id}>
+                              <Iconify width="35px" icon={pos.icon}/>
+                            </ToggleButton>
+                          )) }
                         </ToggleButtonGroup>
                       </Paper>
                       </Stack>
+                        )}
                         <TextField
                           name="qr_info"
                           label="QR Info"

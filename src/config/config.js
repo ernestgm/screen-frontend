@@ -41,6 +41,13 @@ const PROJECT_CONFIG = {
             DELETE: '/images',
             ALL: '/images',
         },
+        VIDEO: {
+            CREATE: '/video',
+            GET: '/video/',
+            UPDATE: '/video/update/',
+            DELETE: '/videos',
+            ALL: '/videos',
+        },
         PRODUCT: {
             CREATE: '/product',
             GET: '/product/',

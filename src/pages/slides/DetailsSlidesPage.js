@@ -12,7 +12,7 @@ import BackButton from "../../sections/@dashboard/app/AppBackButton";
 import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import PROJECT_CONFIG from "../../config/config";
-import ImageDataTable from "./ImageDataTable";
+import MediaDataTable from "./MediaDataTable";
 import Iconify from "../../components/iconify";
 import useNavigateTo from '../../hooks/navigateTo';
 import palette from '../../theme/palette';
@@ -25,7 +25,8 @@ const NAME_PAGE = 'Slide Details';
 const URL_GET_PAGE = PROJECT_CONFIG.API_CONFIG.SCREEN.GET;
 const URL_TABLES_PAGE = '/dashboard/business/details/';
 const URL_MENU_SCREEN_PAGE = '/dashboard/slides';
-const URL_CREATE_IMAGE = '/dashboard/image/create/';
+const URL_UPLOAD_IMAGE = '/dashboard/image/upload/';
+const URL_UPLOAD_VIDEO = '/dashboard/video/upload/';
 
 export default function DetailsSlidesPage() {
     const {navigateTo} = useNavigateTo();
@@ -81,9 +82,12 @@ export default function DetailsSlidesPage() {
         getPageDetails();
     }, [])
 
-    const handleClickNew = () => {
-        navigateTo(`${URL_CREATE_IMAGE}${id}`);
+    const goToUploadVideo = () => {
+        navigateTo(`${URL_UPLOAD_VIDEO}${id}`);
     }
+  const goToUploadImage = () => {
+    navigateTo(`${URL_UPLOAD_IMAGE}${id}`);
+  }
 
     return (
       <>
@@ -190,12 +194,18 @@ export default function DetailsSlidesPage() {
               <Typography variant="h4" gutterBottom>
                 Image List
               </Typography>
-              <Button variant="outlined" onClick={handleClickNew} startIcon={<Iconify icon="eva:plus-fill" />}>
-                Upload Images
-              </Button>
+              <Stack direction="row" spacing={1}>
+                <Button variant="outlined" color="primary" onClick={goToUploadVideo} startIcon={<Iconify icon="material-symbols:video-camera-back-add-outline" />}>
+                  Upload Video
+                </Button>
+                <Button variant="outlined" onClick={goToUploadImage} startIcon={<Iconify icon="material-symbols:add-photo-alternate-outline" />}>
+                  Upload Images
+                </Button>
+              </Stack>
+
             </Stack>
             <Grid item xs={12} md={6} lg={8}>
-              <ImageDataTable screen={id} />
+              <MediaDataTable screen={id} />
             </Grid>
           </Stack>
         </Container>

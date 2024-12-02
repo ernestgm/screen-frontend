@@ -32,11 +32,13 @@ import useNavigateTo from "../../hooks/navigateTo";
 import {UserListHead, UserListToolbar} from "../../sections/@dashboard/user";
 import Scrollbar from "../../components/scrollbar/Scrollbar";
 import {applySortFilter, getComparator} from "../../utils/table/tableFunctions";
+import palette from '../../theme/palette';
 
 
 const URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.IMAGE.ALL;
 const URL_DELETE_DATA = PROJECT_CONFIG.API_CONFIG.IMAGE.DELETE;
 const URL_EDIT_IMAGE = '/dashboard/image/edit/';
+const URL_EDIT_VIDEO = '/dashboard/video/edit/';
 
 const TABLE_HEAD = [
     {id: 'name', label: 'Name', alignRight: false},
@@ -47,7 +49,7 @@ const TABLE_HEAD = [
     {id: 'actions', label: 'Actions'},
 ];
 
-export default function ImageDataTable({screen}) {
+export default function MediaDataTable({screen}) {
     const {navigateTo} = useNavigateTo();
     const [open, setOpen] = useState(false);
     const {api} = useApiHandlerStore((state) => state);
@@ -153,9 +155,13 @@ export default function ImageDataTable({screen}) {
         setOpenConfirmDelete(false)
     }
 
-    const editAction = async (id) => {
+    const editAction = async (item) => {
         handleCloseMenu()
-        navigateTo(`${URL_EDIT_IMAGE}${screen}/${id}`);
+        if (item.dataset.type === "image") {
+            navigateTo(`${URL_EDIT_IMAGE}${screen}/${item.id}`);
+        } else {
+            navigateTo(`${URL_EDIT_VIDEO}${screen}/${item.id}`);
+        }
     }
 
     const handleDeleteItemClick = (item) => {
@@ -171,7 +177,7 @@ export default function ImageDataTable({screen}) {
 
     const handleEditItemClick = (item) => {
         handleCloseMenu()
-        editAction(item.id)
+        editAction(item)
     }
 
     const getData = async () => {
@@ -216,6 +222,7 @@ export default function ImageDataTable({screen}) {
                                 {filteredDataTable.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                                     const {id, name, duration} = row;
                                     const selectedRow = selected.indexOf(id) !== -1;
+                                    const isVideo = row.image === "";
 
                                     return (
                                         <TableRow hover key={id} tabIndex={-1} role="checkbox"
@@ -226,7 +233,17 @@ export default function ImageDataTable({screen}) {
                                             </TableCell>
                                             <TableCell component="th" scope="row" padding="none">
                                                 <Stack direction="row" alignItems="center" spacing={2}>
-                                                    <img src={row.image} alt={row.description} width="70px"/>
+                                                    {
+                                                        isVideo ? (
+                                                          <Card sx={{p:2}}>
+                                                              <Iconify sx={{color: palette.secondary.darker}} width={45} icon={'mdi:video-vintage'}/>
+                                                          </Card>
+
+                                                        ) : (
+                                                          <img src={row.image} alt={row.description} width="70px" />
+                                                        )
+                                                    }
+
                                                     <Typography variant="subtitle2" noWrap>
                                                         {name}
                                                     </Typography>
@@ -242,7 +259,7 @@ export default function ImageDataTable({screen}) {
                                             <TableCell align="center">{formatDate(row.updated_at)}</TableCell>
 
                                             <TableCell align="center">
-                                                <IconButton id={id} size="large" color="inherit"
+                                                <IconButton id={id} data-type={isVideo ? "video" : "image"} size="large" color="inherit"
                                                             onClick={handleOpenMenu}>
                                                     <Iconify icon={'eva:more-vertical-fill'}/>
                                                 </IconButton>

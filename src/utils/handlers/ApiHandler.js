@@ -75,10 +75,12 @@ class ApiHanler {
                     }, errorCallback )
                 } else if (response.status === 401){
                     errorCallback(response.statusText)
-                    throw new Error(response.statusText);
                 } else if(response.status === 500){
                     errorCallback(response.statusText)
-                    throw new Error(response.statusText);
+                } else if(response.status === 300){
+                    response.json().then((value) => {
+                        errorCallback(value.statusText)
+                    })
                 }
 
                 return response.json();

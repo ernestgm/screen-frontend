@@ -56,6 +56,7 @@ const DEVICE_URL_UPDATE_ROW = PROJECT_CONFIG.API_CONFIG.DEVICE.UPDATE;
 const USERS_URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.USERS.ALL;
 const SCREENS_URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.SCREEN.ALL;
 const MARQUEES_URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.MARQUEE.ALL;
+const QR_URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.QR.ALL;
 
 const TABLE_HEAD = [
     {id: 'code', label: 'Device Code', alignRight: false},
@@ -63,6 +64,7 @@ const TABLE_HEAD = [
     {id: 'user', label: 'User', alignRight: false },
     {id: 'slide', label: 'Slide', alignRight: false },
     {id: 'marquee', label: 'Marquee', alignRight: false },
+    {id: 'qr', label: 'QR', alignRight: false },
     {id: 'device_id', label: 'Device ID', alignRight: false},
     // {id: 'created_at', label: 'Create At', alignRight: false},
     {id: 'updated_at', label: 'Update At', alignRight: false},
@@ -76,8 +78,10 @@ export default function DevicePage() {
     const [users, setUsers] = useState([]);
     const [screens, setScreens] = useState([]);
     const [marquees, setMarquees] = useState([]);
+    const [qrs, setQrs] = useState([]);
     const [filteredScreen, setFilteredScreens] = useState([]);
     const [filteredMarquees, setFilteredMarquees] = useState([]);
+    const [filteredQrs, setFilteredQrs] = useState([]);
     const [open, setOpen] = useState(null);
     const [page, setPage] = useState(0);
     const [order, setOrder] = useState('asc');
@@ -108,6 +112,7 @@ export default function DevicePage() {
         user_id: '',
         screen_id: '',
         marquee_id: '',
+        qr_id: '',
     }
     const [formData, setFormData] = useState(initialFormData);
 
@@ -122,12 +127,6 @@ export default function DevicePage() {
             filterScreenByUser(value)
             filterMarqueByUser(value)
         }
-        // if (name === 'marquee_id') {
-        //     setFormData((prevFormData) => ({
-        //         ...prevFormData,
-        //         "marquee_id": formData.marquee_id === "No" ? -1 : formData.marquee_id,
-        //     }));
-        // }
     };
 
     function initWS() {
@@ -242,7 +241,7 @@ export default function DevicePage() {
     const getMarquees = async () => {
         const response = await api.__get(MARQUEES_URL_GET_DATA, (msg) => {
             showMessageSnackbar(msg, 'error');
-        }, () => { getScreens() })
+        }, () => { getMarquees() })
 
         if (response !== undefined && response.data) {
             setMarquees(Object.values(response.data));
@@ -250,6 +249,21 @@ export default function DevicePage() {
                 filterMarqueByUser(null)
             } else {
                 filterMarqueByUser(currentUser.user.id)
+            }
+        }
+    };
+
+    const getQrs = async () => {
+        const response = await api.__get(QR_URL_GET_DATA, (msg) => {
+            showMessageSnackbar(msg, 'error');
+        }, () => { getQrs() })
+
+        if (response !== undefined && response.data) {
+            setQrs(Object.values(response.data));
+            if (currentUser && currentUser.user.role.tag === PROJECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
+                filterQrByUser(null)
+            } else {
+                filterQrByUser(currentUser.user.id)
             }
         }
     };
@@ -280,6 +294,15 @@ export default function DevicePage() {
             setUsers(Object.values(response.data));
         }
     };
+
+    const filterQrByUser = (id) => {
+        if (id) {
+            const filtered = filter(qrs, (_qr) => _qr.business.user_id === id)
+            setFilteredQrs(filtered)
+        } else {
+            setFilteredQrs(marquees)
+        }
+    }
 
     const filterMarqueByUser = (id) => {
         if (id) {
@@ -324,10 +347,12 @@ export default function DevicePage() {
                 name: response.data.name,
                 user_id: response.data.user_id,
                 screen_id: response.data.screen_id,
-                marquee_id: response.data.marquee_id ? response.data.marquee_id : 0
+                marquee_id: response.data.marquee_id ? response.data.marquee_id : 0,
+                qr_id: response.data.qr_id ? response.data.qr_id : 0
             })
             filterScreenByUser(response.data.user_id)
             filterMarqueByUser(response.data.user_id)
+            filterQrByUser(response.data.user_id)
             setOpenNewDialog(true);
         }
     }
@@ -338,6 +363,7 @@ export default function DevicePage() {
             user_id: formData.user_id,
             screen_id: formData.screen_id,
             marquee_id: formData.marquee_id === 0 ? null : formData.marquee_id,
+            qr_id: formData.qr_id === 0 ? null : formData.qr_id,
         };
 
         const response = await api.__update(`${DEVICE_URL_UPDATE_ROW}${update}`, editFormData, (msg) => {
@@ -472,6 +498,7 @@ export default function DevicePage() {
         getUsers()
         getScreens()
         getMarquees()
+        getQrs()
         getDevices()
 
 
@@ -593,6 +620,12 @@ export default function DevicePage() {
                                                     }
                                                 </TableCell>
 
+                                                <TableCell align="center">
+                                                    {
+                                                        row.qr ? row.qr.name : 'No'
+                                                    }
+                                                </TableCell>
+
                                                 <TableCell align="left">{row.device_id}</TableCell>
 
                                                 <TableCell align="left">{formatDate(row.updated_at)}</TableCell>
@@ -680,7 +713,7 @@ export default function DevicePage() {
                             value={formData.user_id ?? ''}
                             label="Select User"
                             onChange={handleChange}
-                        >
+                            variant="standard">
                             {
                                 users.map((item) => {
                                     return (
@@ -705,7 +738,7 @@ export default function DevicePage() {
                             value={formData.screen_id ?? ''}
                             label="Select Slide"
                             onChange={handleChange}
-                        >
+                            variant="standard">
                             {
                                 filteredScreen.map((item) => {
                                     return (
@@ -730,13 +763,39 @@ export default function DevicePage() {
                             value={formData.marquee_id ?? ''}
                             label="Select Marquee"
                             onChange={handleChange}
-                        >
+                            variant="standard">
                             <MenuItem key={0} value={0}>{'No'}</MenuItem>
                             {
                                 filteredMarquees.map((item) => {
                                     return (
                                         <MenuItem key={item.id}
                                                   value={item.id}>{item.name}</MenuItem>
+                                    )
+                                })
+                            }
+                        </Select>
+                    </FormControl>
+                    <FormControl
+                      variant="standard"
+                      fullWidth
+                      sx={{mb: 3}}
+                      defaultValue={''}
+                    >
+                        <InputLabel id="marquee-select-label">Select QR</InputLabel>
+                        <Select
+                          name="qr_id"
+                          labelId="qr-select-label"
+                          id="qr-select"
+                          value={formData.qr_id ?? ''}
+                          label="Select QR"
+                          onChange={handleChange}
+                          variant="standard">
+                            <MenuItem key={0} value={0}>{'No'}</MenuItem>
+                            {
+                                filteredQrs.map((item) => {
+                                    return (
+                                      <MenuItem key={item.id}
+                                                value={item.id}>{item.name}</MenuItem>
                                     )
                                 })
                             }

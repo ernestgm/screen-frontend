@@ -73,7 +73,6 @@ export default function UploadImagePage() {
     };
 
   const handlePositionChange = (event, newAlignment) => {
-    console.log(newAlignment)
     setFormData((prevFormData) => ({
       ...prevFormData,
       description_position: newAlignment

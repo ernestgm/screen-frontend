@@ -30,7 +30,8 @@ import { Delete } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
 import SaveIcon from '@mui/icons-material/Save';
 import { filter } from 'lodash';
-import PROJECT_CONFIG from '../../config/config';
+import { QRCodeSVG } from 'qrcode.react';
+
 import { UserListHead, UserListToolbar } from '../../sections/@dashboard/user';
 import Scrollbar from '../../components/scrollbar/Scrollbar';
 import { formatDate } from '../../utils/formatTime';
@@ -43,6 +44,8 @@ import palette from '../../theme/palette';
 import useNavigateTo from '../../hooks/navigateTo';
 import useAuthStore from '../../zustand/useAuthStore';
 import positions from '../../_mock/positions';
+import PROJECT_CONFIG from '../../config/config';
+
 
 const QR_URL_GET_ALL_DATA = PROJECT_CONFIG.API_CONFIG.QR.ALL;
 const QR_URL_GET_DATA_UPDATE = PROJECT_CONFIG.API_CONFIG.QR.GET;
@@ -52,9 +55,9 @@ const QR_URL_UPDATE_ROW = PROJECT_CONFIG.API_CONFIG.QR.UPDATE;
 const BUSINESS_URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.BUSINESS.ALL;
 
 const TABLE_HEAD = [
+  { id: 'preview', label: 'Preview', alignRight: false },
   { id: 'name', label: 'Name', alignRight: false },
   { id: 'business', label: 'Business', alignRight: false },
-  { id: 'message', label: 'Message', alignRight: false },
   { id: 'info', label: 'Info', alignRight: false },
   { id: 'active_on', label: 'Active On', alignRight: false },
   { id: 'created_at', label: 'Create At', alignRight: false },
@@ -420,13 +423,20 @@ export default function QrDataTable() {
                         <Checkbox checked={selectedRow} onChange={(event) => handleClick(event, id)} />
                       </TableCell>
 
-                      <TableCell align="center" component="th" scope="row" padding="none">
+                      <TableCell align="left">
+                        <QRCodeSVG
+                          value={info}
+                          size={70}
+                          bgColor="#ffffff"
+                          fgColor="#000000"
+                        />
+                      </TableCell>
+                      <TableCell align="left" component="th" scope="row" padding="none">
                         <Typography variant="subtitle2" noWrap>
                           {name}
                         </Typography>
                       </TableCell>
                       <TableCell align="left">{nameBusiness}</TableCell>
-                      <TableCell align="left">{message}</TableCell>
                       <TableCell align="left">{info}</TableCell>
                       <TableCell align="left">{row.devices ? row.devices.length : 0} Device(s)</TableCell>
                       <TableCell align="left">{formatDate(row.created_at)}</TableCell>
@@ -525,20 +535,6 @@ export default function QrDataTable() {
               })}
             </Select>
           </FormControl>
-          <TextField
-            margin="dense"
-            name="message"
-            label="Message"
-            value={formData.message ?? ''}
-            type="text"
-            fullWidth
-            variant="standard"
-            onChange={handleChange}
-            error={validator.message && true}
-            helperText={validator.message}
-            multiline
-            maxRows={10}
-          />
           <TextField
             margin="dense"
             name="info"

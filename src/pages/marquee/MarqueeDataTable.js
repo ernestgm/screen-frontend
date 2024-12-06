@@ -612,11 +612,6 @@ export default function MarqueeDataTable() {
             },
           }}
         >
-          <MenuItem onClick={() => handleDetailsItemClick(open)}>
-            <Iconify icon={'tabler:list-details'} sx={{ mr: 2 }} />
-            Details
-          </MenuItem>
-
           <MenuItem onClick={() => handleEditItemClick(open)}>
             <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
             Edit

@@ -25,7 +25,7 @@ import {
     FormControl,
     InputLabel,
     Select,
-    DialogActions, Button, Dialog, Divider,
+    DialogActions, Button, Dialog, Divider, FormControlLabel,
 } from '@mui/material';
 import {LoadingButton} from "@mui/lab";
 import SaveIcon from '@mui/icons-material/Save';
@@ -66,7 +66,6 @@ const TABLE_HEAD = [
     {id: 'marquee', label: 'Marquee', alignRight: false },
     {id: 'qr', label: 'QR', alignRight: false },
     {id: 'device_id', label: 'Device ID', alignRight: false},
-    // {id: 'created_at', label: 'Create At', alignRight: false},
     {id: 'updated_at', label: 'Update At', alignRight: false},
     { id: 'actions', label: 'Actions' },
 ];
@@ -113,6 +112,8 @@ export default function DevicePage() {
         screen_id: '',
         marquee_id: '',
         qr_id: '',
+        portrait: 0,
+        slide: 0,
     }
     const [formData, setFormData] = useState(initialFormData);
 
@@ -126,6 +127,20 @@ export default function DevicePage() {
         if (name === 'user_id') {
             filterScreenByUser(value)
             filterMarqueByUser(value)
+        }
+
+        if (name === "portrait") {
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                "portrait": formData.portrait === 0 ? 1 : 0,
+            }));
+        }
+
+        if (name === "slide") {
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                "slide": formData.slide === 0 ? 1 : 0,
+            }));
         }
     };
 
@@ -348,7 +363,9 @@ export default function DevicePage() {
                 user_id: response.data.user_id,
                 screen_id: response.data.screen_id,
                 marquee_id: response.data.marquee_id ? response.data.marquee_id : 0,
-                qr_id: response.data.qr_id ? response.data.qr_id : 0
+                qr_id: response.data.qr_id ? response.data.qr_id : 0,
+                portrait: response.data.portrait ? response.data.portrait : 0,
+                slide: response.data.slide ? response.data.slide : 0,
             })
             filterScreenByUser(response.data.user_id)
             filterMarqueByUser(response.data.user_id)
@@ -364,6 +381,8 @@ export default function DevicePage() {
             screen_id: formData.screen_id,
             marquee_id: formData.marquee_id === 0 ? null : formData.marquee_id,
             qr_id: formData.qr_id === 0 ? null : formData.qr_id,
+            portrait: formData.portrait,
+            slide: formData.slide
         };
 
         const response = await api.__update(`${DEVICE_URL_UPDATE_ROW}${update}`, editFormData, (msg) => {
@@ -627,7 +646,6 @@ export default function DevicePage() {
                                                 </TableCell>
 
                                                 <TableCell align="left">{row.device_id}</TableCell>
-
                                                 <TableCell align="left">{formatDate(row.updated_at)}</TableCell>
 
                                                 <TableCell align="right">
@@ -800,6 +818,30 @@ export default function DevicePage() {
                                 })
                             }
                         </Select>
+                    </FormControl>
+                    <FormControl
+                      variant="standard"
+                      fullWidth
+                      sx={{ mb: 3 }}
+                      defaultValue={''}
+                    >
+                        <FormControlLabel
+                          control={<Checkbox name="slide" checked={formData.slide} onChange={handleChange} />}
+                          label="Show as Presentation"
+                          sx={{ flexGrow: 1, m: 0 }}
+                        />
+                    </FormControl>
+                    <FormControl
+                      variant="standard"
+                      fullWidth
+                      sx={{ mb: 3 }}
+                      defaultValue={''}
+                    >
+                        <FormControlLabel
+                          control={<Checkbox name="portrait" checked={formData.portrait} onChange={handleChange} />}
+                          label="Portrait Mode"
+                          sx={{ flexGrow: 1, m: 0 }}
+                        />
                     </FormControl>
                 </DialogContent>
                 <DialogActions>

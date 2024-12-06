@@ -33,8 +33,6 @@ export default function DetailsSlidesPage() {
     const showSnackbarMessage = useMessagesSnackbar();
     const {id, menu} = useParams();
     const {api} = useApiHandlerStore((state) => state);
-    const [bgIsPresentation, setBgIsPresentation] = useState(palette.grey['500']);
-    const [bgIsPortrait, setBgIsPortrait] = useState(palette.grey['500']);
     const [screen, setScreen] = useState({
         area_id : '',
         business_id: '',
@@ -69,12 +67,6 @@ export default function DetailsSlidesPage() {
         }, () => { getPageDetails() });
         if (response !== undefined && response.data) {
             setScreen(response.data);
-            if (response.data.portrait === 1) {
-                setBgIsPortrait(palette.success.darker);
-            }
-            if (response.data.slide === 1) {
-                setBgIsPresentation(palette.success.darker);
-            }
         }
     }
 
@@ -136,25 +128,6 @@ export default function DetailsSlidesPage() {
                       <Typography variant="body1" gutterBottom>
                         Owner: {screen.business.user.name} {screen.business.user.lastname}
                       </Typography>
-
-                      <Stack direction="row" spacing={2}>
-                        <Card sx={{ p: 2, bgcolor: bgIsPresentation, color: '#FFF' }}>
-                          <Stack direction="column" alignItems="center">
-                            <Iconify icon="ri:slideshow-line" width={35} height={35} />
-                            <Typography variant="caption" gutterBottom>
-                              Presentation
-                            </Typography>
-                          </Stack>
-                        </Card>
-                        <Card sx={{ p: 2, bgcolor: bgIsPortrait, color: '#FFF' }}>
-                          <Stack direction="column" alignItems="center">
-                            <Iconify icon="ion:tablet-portrait-outline" width={35} height={35} />
-                            <Typography variant="caption" gutterBottom>
-                              Portrait
-                            </Typography>
-                          </Stack>
-                        </Card>
-                      </Stack>
                     </Card>
                   </Grid>
                   <Grid item xs={12} sm={6} md={6}>

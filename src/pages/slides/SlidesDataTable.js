@@ -1,15 +1,32 @@
 import React, {useEffect, useState} from "react";
 import {
-    Button, Card, Dialog,
-    Checkbox, DialogActions, DialogContent, DialogTitle, IconButton, MenuItem, Paper, Popover,
+    Button,
+    Card,
+    Dialog,
+    Checkbox,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    MenuItem,
+    Paper,
+    Popover,
     Stack,
     Table,
     TableBody,
     TableCell,
     TableContainer, TablePagination,
     TableRow, TextField,
-    Typography, InputLabel, Select, FormControl, FormControlLabel
-} from "@mui/material";
+    Typography,
+    InputLabel,
+    Select,
+    FormControl,
+    CardContent,
+    Divider,
+    ToggleButtonGroup,
+    ToggleButton
+} from '@mui/material';
+
 import {Delete} from "@mui/icons-material";
 import {LoadingButton} from "@mui/lab";
 import SaveIcon from '@mui/icons-material/Save';
@@ -26,6 +43,7 @@ import {applySortFilter, getComparator} from "../../utils/table/tableFunctions";
 import palette from "../../theme/palette";
 import useNavigateTo from "../../hooks/navigateTo";
 import useAuthStore from "../../zustand/useAuthStore";
+import positions from '../../_mock/positions';
 
 
 
@@ -71,6 +89,18 @@ export default function SlidesDataTable({ business }) {
     const [loading, setLoading] = useState(false);
     const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
     const [rowsForDelete, setRowsForDelete] = useState([]);
+
+    const [validator, setValidator] = useState({});
+    const initialFormData = {
+        name: '',
+        description: '',
+        area_id: '',
+        business_id: '',
+        enabled: 1,
+        description_position: 'bc',
+        description_size: 'm'
+    }
+    const [formData, setFormData] = useState(initialFormData);
 
     const getAreas = async (pBusiness) => {
         const path = pBusiness ? `${AREA_URL_GET_DATA}?business_id=${pBusiness}` : `${AREA_URL_GET_DATA}`
@@ -249,17 +279,18 @@ export default function SlidesDataTable({ business }) {
         setRowsForDelete([]);
     }
 
-    const [validator, setValidator] = useState({});
-    const initialFormData = {
-        name: '',
-        description: '',
-        area_id: '',
-        business_id: '',
-        enabled: 1,
-        portrait: 0,
-        slide: 0,
-    }
-    const [formData, setFormData] = useState(initialFormData);
+    const handleDescPositionChange = (event, newAlignment) => {
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            description_position: newAlignment,
+        }));
+    };
+
+    const controlDescPosition = {
+        value: formData.description_position ? formData.description_position : 'bc',
+        onChange: handleDescPositionChange,
+        exclusive: true,
+    };
 
     const [update, setUpdate] = useState(null);
 
@@ -277,22 +308,6 @@ export default function SlidesDataTable({ business }) {
             }));
         }
 
-        if (name === "portrait") {
-            setFormData((prevFormData) => ({
-                ...prevFormData,
-                "portrait": formData.portrait === 0 ? 1 : 0,
-            }));
-        }
-
-        if (name === "slide") {
-            setFormData((prevFormData) => ({
-                ...prevFormData,
-                "slide": formData.slide === 0 ? 1 : 0,
-            }));
-        }
-
-
-
         if (name === "business_id") {
             getAreas(value)
         }
@@ -309,8 +324,8 @@ export default function SlidesDataTable({ business }) {
             area_id: '',
             business_id: business,
             enabled: 1,
-            portrait: 0,
-            slide: 0,
+            description_position: 'bc',
+            description_size: 'm'
         })
         setOpenNewDialog(true);
     };
@@ -332,8 +347,8 @@ export default function SlidesDataTable({ business }) {
             editFormData.area_id = formData.area_id
             editFormData.business_id = formData.business_id
             editFormData.enabled = formData.enabled
-            editFormData.portrait = formData.portrait
-            editFormData.slide = formData.slide;
+            editFormData.description_position = formData.description_position
+            editFormData.description_size = formData.description_size
 
             response = await api.__update(`${SCREEN_URL_UPDATE_ROW}${update}`, editFormData, (msg) => {
                 showMessageSnackbar(msg, 'error');
@@ -376,8 +391,8 @@ export default function SlidesDataTable({ business }) {
                 area_id: response.data.area_id,
                 business_id: response.data.business_id,
                 enabled: response.data.enabled,
-                portrait: response.data.portrait,
-                slide: response.data.slide,
+                description_position: response.data.description_position,
+                description_size: response.data.description_size
             })
             getAreas(response.data.business_id)
             setOpenNewDialog(true);
@@ -445,13 +460,7 @@ export default function SlidesDataTable({ business }) {
 
                                             <TableCell component="th" scope="row" padding="none">
                                                 <Stack direction="row" alignItems="center" spacing={2}>
-
-                                                    {row.slide === 1 ? (
-                                                      <Iconify icon="ri:slideshow-line" />
-                                                    ) : (
-                                                      <Iconify icon="material-symbols:live-tv-outline-rounded" />
-                                                    )}
-
+                                                    <Iconify icon="material-symbols:live-tv-outline-rounded" />
                                                     <Typography variant="subtitle2" noWrap>
                                                         {name}
                                                     </Typography>
@@ -575,55 +584,59 @@ export default function SlidesDataTable({ business }) {
                                 })
                             }
                         </Select>
-                    </FormControl>
-                    <FormControl
-                        variant="standard"
-                        fullWidth
-                        sx={{mb: 3}}
-                        defaultValue={''}
-                    >
-                        <InputLabel id="role-select-label">Select Area (optional)</InputLabel>
-                        <Select
-                            name="area_id"
-                            labelId="area-select-label"
-                            id="area-select"
-                            value={formData.area_id ?? ''}
-                            label="Select Area"
-                            onChange={handleChange}
-                        >
-                            {
-                                areas.map((item) => {
-                                    return (
-                                        <MenuItem key={item.id}
-                                                  value={item.id}>{item.name}</MenuItem>
-                                    )
-                                })
-                            }
-                        </Select>
-                    </FormControl>
-                    <FormControl
-                      variant="standard"
-                      fullWidth
-                      sx={{ mb: 3 }}
-                      defaultValue={''}
-                    >
-                        <FormControlLabel
-                          control={<Checkbox name="slide" checked={formData.slide} onChange={handleChange} />}
-                          label="Show as Presentation"
-                          sx={{ flexGrow: 1, m: 0 }}
-                        />
-                    </FormControl>
-                    <FormControl
-                      variant="standard"
-                      fullWidth
-                      sx={{ mb: 3 }}
-                      defaultValue={''}
-                    >
-                        <FormControlLabel
-                          control={<Checkbox name="portrait" checked={formData.portrait} onChange={handleChange} />}
-                          label="Portrait Mode"
-                          sx={{ flexGrow: 1, m: 0 }}
-                        />
+                        <Divider sx={{ mt: 0, mb: 2 }} />
+                        <Card sx={{ border: `1px solid ${palette.divider}` }}>
+                            <CardContent>
+                                <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 16 }}>
+                                    Images Description Settings
+                                </Typography>
+                                <Divider sx={{ mt: 0, mb: 2 }} />
+                                <Stack spacing={1}>
+                                    <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 14 }}>
+                                        Position
+                                    </Typography>
+                                    <Paper
+                                      elevation={0}
+                                      sx={(theme) => ({
+                                          display: 'flex',
+                                          border: `0px solid ${theme.palette.divider}`,
+                                          flexWrap: 'wrap',
+                                      })}
+                                    >
+                                        <ToggleButtonGroup size="small" {...controlDescPosition} aria-label="Description Positions">
+                                            {positions.map((pos) => (
+                                              <ToggleButton value={pos.id} key={pos.id}>
+                                                  <Iconify width="35px" icon={pos.icon} />
+                                              </ToggleButton>
+                                            ))}
+                                        </ToggleButtonGroup>
+                                    </Paper>
+                                    <Divider sx={{ m: 1, p:1, border: '0px' }} />
+                                    <FormControl variant="outlined" defaultValue={''}>
+                                        <InputLabel id="text-color-select-label">Select Text Size</InputLabel>
+                                        <Select
+                                          name="description_size"
+                                          labelId="description-size-select-label"
+                                          id="description-size-select"
+                                          value={formData.description_size ?? ''}
+                                          label="Select Text Size"
+                                          onChange={handleChange}
+                                          variant="outlined"
+                                        >
+                                            <MenuItem key={'s'} value={'s'}>
+                                                {'Small'}
+                                            </MenuItem>
+                                            <MenuItem key={'m'} value={'m'}>
+                                                {'Medium'}
+                                            </MenuItem>
+                                            <MenuItem key={'l'} value={'l'}>
+                                                {'Large'}
+                                            </MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </Stack>
+                            </CardContent>
+                        </Card>
                     </FormControl>
                 </DialogContent>
                 <DialogActions>

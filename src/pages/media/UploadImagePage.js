@@ -305,7 +305,16 @@ export default function UploadImagePage() {
                           flexWrap: 'wrap',
                         })}
                       >
-                        <ToggleButtonGroup size="small" {...controlDescPosition} aria-label="Description Positions">
+                        <ToggleButtonGroup
+                          size="small"
+                          {...controlDescPosition}
+                          aria-label="Description Positions"
+                          sx={(theme) => ({
+                            display: 'flex',
+                            border: `0px solid ${theme.palette.divider}`,
+                            flexWrap: 'wrap',
+                          })}
+                        >
                           <ToggleButton value={'none'} key={'none'}>
                             Global
                           </ToggleButton>
@@ -373,7 +382,15 @@ export default function UploadImagePage() {
                           flexWrap: 'wrap',
                         })}
                       >
-                        <ToggleButtonGroup size="small" {...controlQrPosition} aria-label="QR position">
+                        <ToggleButtonGroup
+                          size="small" {...controlQrPosition}
+                          aria-label="QR position"
+                          sx={(theme) => ({
+                            display: 'flex',
+                            border: `0px solid ${theme.palette.divider}`,
+                            flexWrap: 'wrap',
+                          })}
+                        >
                           {positions.map((pos) => (
                             <ToggleButton value={pos.id} key={pos.id}>
                               <Iconify width="35px" icon={pos.icon} />

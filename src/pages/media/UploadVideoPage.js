@@ -5,27 +5,20 @@ import {Helmet} from 'react-helmet-async';
 import {
   Card,
   Stack,
-  Checkbox,
   Container,
   Typography,
-  TextField, FormControlLabel, Paper, Grid, CardMedia, CardContent, Box, Divider, Alert,
+  TextField, FormControlLabel, Paper, Grid, CardMedia, CardContent, Box, Divider, Alert, CardActions, Button, Link,
 } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { Apple, NetworkCell, TravelExplore } from '@mui/icons-material';
 import SaveIcon from '@mui/icons-material/Save';
-import imageCompression from "browser-image-compression";
 import { LoadingButton } from '@mui/lab';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import BackButton from "../../sections/@dashboard/app/AppBackButton";
 import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import PROJECT_CONFIG from "../../config/config";
 import useNavigateTo from '../../hooks/navigateTo';
-import { UploadImages } from '../../components/save-media/UploadImages';
-import { SaveImage } from '../../components/save-media';
-import Iconify from '../../components/iconify';
-import positions from '../../_mock/positions';
 import UploadVideo from '../../components/save-media/UploadVideo';
+import palette from '../../theme/palette';
 
 
 // ----------------------------------------------------------------------
@@ -168,11 +161,43 @@ export default function UploadVideoPage() {
                     disabled
                   />
                   {!loading && (<UploadVideo onChange={handleUploadImage} />)}
+                  <Divider />
+                  <Alert  variant="outlined" severity="info">
+                    Use these tools to convert your videos to the format supported by the application (MP4). Remember that the video length must be less than 30 seconds.
+                  </Alert>
+                  <Stack direction="row" sx={{ m: 2 }} spacing={2}>
+                    <Card sx={{ bgcolor: palette.success.lighter }}>
+                      <CardContent>
+                        <Typography variant="h5" component="div">
+                            Iphone App
+                        </Typography>
+                        <Apple sx={{width:'100%', height: '50px'}}/>
+                      </CardContent>
+                      <CardActions>
+                        <Link target="_black" href="https://apps.apple.com/us/app/mp4-maker-convert-to-mp4/id1486681436">
+                          <Button size="small">Go to App</Button>
+                        </Link>
+                      </CardActions>
+                    </Card>
+                    <Card sx={{ bgcolor: palette.warning.lighter }}>
+                      <CardContent>
+                        <Typography variant="h5" component="div">
+                          Online App
+                        </Typography>
+                        <TravelExplore sx={{width:'100%', height: '50px'}}/>
+                      </CardContent>
+                      <CardActions>
+                        <Link target="_black" href="https://cloudconvert.com/mp4-converter">
+                          <Button size="small">Go to App</Button>
+                        </Link>
+                      </CardActions>
+                    </Card>
+                  </Stack>
                 </Stack>
               </Card>
             </Grid>
             <Grid item xs={12} sm={6} md={6}>
-              <Card sx={{ display: 'flex', p: 2 }}>
+              <Card sx={{ p: 2 }}>
                 <Stack>
                   <Typography component="div" variant="h5">
                     Preview Video

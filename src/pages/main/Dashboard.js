@@ -30,7 +30,7 @@ export default function Dashboard() {
        navigateTo('/dashboard/business')
     }
     const goToScreen = () => {
-        navigateTo('/dashboard/screens')
+        navigateTo('/dashboard/slides')
     }
     const goToUser = () => {
         navigateTo('/dashboard/user')
@@ -59,7 +59,7 @@ export default function Dashboard() {
             </Grid>
 
             <Grid item xs={12} sm={3} md={3}>
-                <AppWidgetSummary title="Screens" total={0} color="info" icon={'mdi:monitor-dashboard'} onClicked={goToScreen}/>
+                <AppWidgetSummary title="Slides" total={0} color="info" icon={'simple-icons:slides'} onClicked={goToScreen}/>
             </Grid>
 
             <Grid item xs={12} sm={3} md={3} sx={{display: isAdmin() ? 'block' : 'none' }}>

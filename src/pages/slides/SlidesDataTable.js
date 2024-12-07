@@ -603,7 +603,16 @@ export default function SlidesDataTable({ business }) {
                                           flexWrap: 'wrap',
                                       })}
                                     >
-                                        <ToggleButtonGroup size="small" {...controlDescPosition} aria-label="Description Positions">
+                                        <ToggleButtonGroup
+                                          size="small"
+                                          {...controlDescPosition}
+                                          aria-label="Description Positions"
+                                          sx={(theme) => ({
+                                              display: 'flex',
+                                              border: `0px solid ${theme.palette.divider}`,
+                                              flexWrap: 'wrap',
+                                          })}
+                                        >
                                             {positions.map((pos) => (
                                               <ToggleButton value={pos.id} key={pos.id}>
                                                   <Iconify width="35px" icon={pos.icon} />

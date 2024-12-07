@@ -5,11 +5,9 @@ import { Helmet } from 'react-helmet-async';
 import {
   Card,
   Stack,
-  Checkbox,
   Container,
   Typography,
   TextField,
-  FormControlLabel,
   Paper,
   CardContent,
   Divider,
@@ -18,7 +16,6 @@ import {
   MenuItem,
   FormControl,
 } from '@mui/material';
-import { styled } from '@mui/material/styles';
 import SaveIcon from '@mui/icons-material/Save';
 import imageCompression from 'browser-image-compression';
 import { LoadingButton } from '@mui/lab';
@@ -34,8 +31,6 @@ import { SaveImage } from '../../components/save-media';
 import Iconify from '../../components/iconify';
 import positions from '../../_mock/positions';
 import palette from '../../theme/palette';
-import marqueeColors from '../../_mock/colors';
-import SingleColorPreview from '../../components/color-utils/SingleColorPreview';
 
 // ----------------------------------------------------------------------
 
@@ -61,10 +56,10 @@ export default function UploadImagePage() {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    description_position: 'bc',
-    description_size: 'm',
+    description_position: 'none',
+    description_size: 'none',
     qr_info: '',
-    qr_position: '',
+    qr_position: 'br',
     is_static: 1,
     duration: 5,
     screen_id: pscreen,
@@ -97,7 +92,7 @@ export default function UploadImagePage() {
   };
 
   const controlDescPosition = {
-    value: formData.description_position ? formData.description_position : 'bc',
+    value: formData.description_position ? formData.description_position : 'none',
     onChange: handleDescPositionChange,
     exclusive: true,
   };
@@ -235,6 +230,7 @@ export default function UploadImagePage() {
         description_position: response.data.description_position,
         description_size: response.data.description_size,
         qr_info: response.data.qr_info,
+        qr_position: response.data.qr_position,
         screen_id: pscreen,
         is_static: response.data.is_static,
         duration: response.data.duration,
@@ -310,6 +306,9 @@ export default function UploadImagePage() {
                         })}
                       >
                         <ToggleButtonGroup size="small" {...controlDescPosition} aria-label="Description Positions">
+                          <ToggleButton value={'none'} key={'none'}>
+                            Global
+                          </ToggleButton>
                           {positions.map((pos) => (
                             <ToggleButton value={pos.id} key={pos.id}>
                               <Iconify width="35px" icon={pos.icon} />
@@ -329,6 +328,9 @@ export default function UploadImagePage() {
                           onChange={handleChange}
                           variant="outlined"
                         >
+                          <MenuItem key={'none'} value={'none'}>
+                            {'Global'}
+                          </MenuItem>
                           <MenuItem key={'s'} value={'s'}>
                             {'Small'}
                           </MenuItem>

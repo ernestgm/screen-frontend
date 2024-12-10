@@ -25,11 +25,11 @@ import {
     FormControl,
     InputLabel,
     Select,
-    DialogActions, Button, Dialog, Divider, FormControlLabel,
+    DialogActions, Button, Dialog, Divider, FormControlLabel, ListItem, List, ListItemAvatar, ListItemText,
 } from '@mui/material';
 import {LoadingButton} from "@mui/lab";
 import SaveIcon from '@mui/icons-material/Save';
-import {Delete} from "@mui/icons-material";
+import { Android, Delete, DeveloperMode, PictureInPicture } from '@mui/icons-material';
 // table
 import Iconify from '../../components/iconify';
 import Scrollbar from '../../components/scrollbar';
@@ -89,6 +89,7 @@ export default function DevicePage() {
     const [filterQuery, setFilterQuery] = useState('');
     const [rowsPerPage, setRowsPerPage] = useState(PROJECT_CONFIG.TABLE_CONFIG.ROW_PER_PAGE);
     const [openNewDialog, setOpenNewDialog] = useState(false);
+    const [openDeviceInfoDialog, setOpenDeviceInfoDialog] = useState(false);
     const [update, setUpdate] = useState(null);
     const [validator, setValidator] = useState({});
     const [disabledUserField, setDisabledUserField] = useState(false);
@@ -114,6 +115,9 @@ export default function DevicePage() {
         qr_id: '',
         portrait: 0,
         slide: 0,
+        app_version:'',
+        overlay_permission:'',
+        android_version:''
     }
     const [formData, setFormData] = useState(initialFormData);
 
@@ -351,6 +355,23 @@ export default function DevicePage() {
         editRow(item.id)
     }
 
+    const handleDeviceInfoItemClick = async (item) => {
+        handleCloseMenu()
+
+        const response = await api.__get(`${DEVICE_URL_GET_DATA_UPDATE}${item.id}`,  (msg) => {
+            showMessageSnackbar(msg, 'error');
+        }, () => { handleDeviceInfoItemClick(item) });
+
+        if (response !== undefined && response.data) {
+            setFormData({
+                app_version: response.data.app_version ? response.data.app_version : '',
+                overlay_permission: response.data.overlay_permission ? response.data.overlay_permission : '',
+                android_version: response.data.android_version ? response.data.android_version : '',
+            })
+            setOpenDeviceInfoDialog(true);
+        }
+    }
+
     const editAction = async (id) => {
         setUpdate(id)
         const response = await api.__get(`${DEVICE_URL_GET_DATA_UPDATE}${id}`,  (msg) => {
@@ -405,6 +426,11 @@ export default function DevicePage() {
     }
     const handleCloseNew = () => {
         setOpenNewDialog(false);
+        setFormData(initialFormData);
+    };
+
+    const handleCloseDeviceInfo = () => {
+        setOpenDeviceInfoDialog(false);
         setFormData(initialFormData);
     };
 
@@ -859,6 +885,35 @@ export default function DevicePage() {
                 </DialogActions>
             </Dialog>
 
+            <Dialog open={openDeviceInfoDialog} onClose={handleCloseDeviceInfo}>
+                <DialogTitle>Device Info</DialogTitle>
+                <DialogContent>
+                    <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+                        <ListItem>
+                            <ListItemAvatar>
+                                <Android />
+                            </ListItemAvatar>
+                            <ListItemText primary="Android Version" secondary={formData.android_version} />
+                        </ListItem>
+                        <ListItem>
+                            <ListItemAvatar>
+                                <DeveloperMode />
+                            </ListItemAvatar>
+                            <ListItemText primary="App Version" secondary={formData.app_version} />
+                        </ListItem>
+                        <ListItem>
+                            <ListItemAvatar>
+                                <PictureInPicture />
+                            </ListItemAvatar>
+                            <ListItemText primary="Has Overlay Permission" secondary={formData.overlay_permission} />
+                        </ListItem>
+                    </List>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDeviceInfo}>Close</Button>
+                </DialogActions>
+            </Dialog>
+
             <Dialog open={openConfirmDelete} onClose={handleCloseConfirmDelete}>
                 <DialogTitle>
                     Delete
@@ -901,6 +956,12 @@ export default function DevicePage() {
                     },
                 }}
             >
+                { (currentUser && currentUser.user.role.tag === PROJECT_CONFIG.API_CONFIG.ROLES.ADMIN) && (
+                  <MenuItem onClick={() => handleDeviceInfoItemClick(open)}>
+                      <Iconify icon={'material-symbols:perm-device-information-outline-rounded'} sx={{mr: 2}}/>
+                      Device Info
+                  </MenuItem>
+                    ) }
                 <MenuItem onClick={() => handleEditItemClick(open)}>
                     <Iconify icon={'eva:edit-fill'} sx={{mr: 2}}/>
                     Edit

@@ -64,7 +64,7 @@ export default function UserPage() {
     const [selected, setSelected] = useState([]);
     const [rowsForDelete, setRowsForDelete] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [orderBy, setOrderBy] = useState('name');
+    const [orderBy, setOrderBy] = useState('created_at');
     const [filterQuery, setFilterQuery] = useState('');
     const [rowsPerPage, setRowsPerPage] = useState(PROJECT_CONFIG.TABLE_CONFIG.ROW_PER_PAGE);
     const showSnackbarMessage = useMessagesSnackbar();

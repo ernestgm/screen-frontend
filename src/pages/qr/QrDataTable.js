@@ -560,7 +560,16 @@ export default function QrDataTable() {
                 flexWrap: 'wrap',
               })}
             >
-              <ToggleButtonGroup size="small" {...control} aria-label="Small sizes">
+              <ToggleButtonGroup
+                size="small"
+                {...control}
+                aria-label="Small sizes"
+                sx={(theme) => ({
+                  display: 'flex',
+                  border: `0px solid ${theme.palette.divider}`,
+                  flexWrap: 'wrap',
+                })}
+              >
                 {positions.map((pos) => (
                   <ToggleButton value={pos.id} key={pos.id}>
                     <Iconify width="35px" icon={pos.icon} />

@@ -168,9 +168,9 @@ export default function DetailsSlidesPage() {
                 Image List
               </Typography>
               <Stack direction="row" spacing={1}>
-                <Button variant="outlined" color="primary" onClick={goToUploadVideo} startIcon={<Iconify icon="material-symbols:video-camera-back-add-outline" />}>
-                  Upload Video
-                </Button>
+                {/* <Button variant="outlined" color="primary" onClick={goToUploadVideo} startIcon={<Iconify icon="material-symbols:video-camera-back-add-outline" />}> */}
+                {/*  Upload Video */}
+                {/* </Button> */}
                 <Button variant="outlined" onClick={goToUploadImage} startIcon={<Iconify icon="material-symbols:add-photo-alternate-outline" />}>
                   Upload Images
                 </Button>

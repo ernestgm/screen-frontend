@@ -422,23 +422,13 @@ export default function UserPage() {
                 }}
             >
                 <MenuItem onClick={() => handleDetailsItemClick(open)}>
-                    <Iconify icon={'tabler:list-details'} sx={{mr: 2}}/>
-                    Details
-                </MenuItem>
-
-                <MenuItem onClick={() => handleViewAreasClick(open)}>
-                    <Iconify icon="fluent-mdl2:build-queue" sx={{mr: 2}}/>
-                    View Areas
-                </MenuItem>
-
-                <MenuItem onClick={() => handleCreateAreaClick(open)}>
-                    <Iconify icon="fluent-mdl2:build-queue" sx={{mr: 2}}/>
-                    Create Area
+                    <Iconify icon={'eva:edit-fill'} sx={{mr: 2}}/>
+                    Edit
                 </MenuItem>
 
                 <MenuItem onClick={() => handleEditItemClick(open)}>
-                    <Iconify icon={'eva:edit-fill'} sx={{mr: 2}}/>
-                    Edit
+                    <Iconify icon={'mdi:shop-settings'} sx={{mr: 2}}/>
+                    Settings
                 </MenuItem>
 
                 <MenuItem onClick={() => handleDeleteItemClick(open)} sx={{color: 'error.main'}}>

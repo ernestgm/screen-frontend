@@ -706,13 +706,13 @@ export default function SlidesDataTable({ business }) {
                 }}
             >
                 <MenuItem onClick={() => handleDetailsItemClick(open)}>
-                    <Iconify icon={'tabler:list-details'} sx={{mr: 2}}/>
-                    Details
+                    <Iconify icon={'eva:edit-fill'} sx={{mr: 2}}/>
+                    Edit
                 </MenuItem>
 
                 <MenuItem onClick={() => handleEditItemClick(open)}>
-                    <Iconify icon={'eva:edit-fill'} sx={{mr: 2}}/>
-                    Edit
+                    <Iconify icon={'uil:setting'} sx={{mr: 2}}/>
+                    Settings
                 </MenuItem>
 
                 <MenuItem onClick={() => handleDeleteItemClick(open)} sx={{color: 'error.main'}}>

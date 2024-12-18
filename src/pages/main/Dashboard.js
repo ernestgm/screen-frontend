@@ -38,6 +38,10 @@ export default function Dashboard() {
     const goToMarquee = () => {
         navigateTo('/dashboard/marquees')
     }
+
+  const goToQR = () => {
+    navigateTo('/dashboard/qr')
+  }
     const goToDevice = () => {
         navigateTo('/dashboard/devices')
     }
@@ -54,25 +58,33 @@ export default function Dashboard() {
         </Typography>
 
         <Grid container spacing={3}>
-            <Grid item xs={12} sm={3} md={3} sx={{display: isAdmin() ? 'block' : 'none' }}>
-                <AppWidgetSummary title="Business" total={0} icon={'ion:business-sharp'} onClicked={goToBusiness}/>
-            </Grid>
 
-            <Grid item xs={12} sm={3} md={3}>
-                <AppWidgetSummary title="Slides" total={0} color="info" icon={'simple-icons:slides'} onClicked={goToScreen}/>
-            </Grid>
 
             <Grid item xs={12} sm={3} md={3} sx={{display: isAdmin() ? 'block' : 'none' }}>
                 <AppWidgetSummary title="User" total={0} color="warning" icon={'material-symbols:supervised-user-circle'} onClicked={goToUser}/>
             </Grid>
 
+          <Grid item xs={12} sm={3} md={3} sx={{display: isAdmin() ? 'block' : 'none' }}>
+            <AppWidgetSummary title="Business" total={0} icon={'ion:business-sharp'} onClicked={goToBusiness}/>
+          </Grid>
+
+          <Grid item xs={12} sm={3} md={3}>
+            <AppWidgetSummary title="Slides" total={0} color="info" icon={'simple-icons:slides'} onClicked={goToScreen}/>
+          </Grid>
+
             <Grid item xs={12} sm={3} md={3}>
                 <AppWidgetSummary title="Marquees" total={0} icon={'material-symbols:rtt'} onClicked={goToMarquee}/>
             </Grid>
 
+
+          <Grid item xs={12} sm={3} md={3}>
+            <AppWidgetSummary title="QR Codes" total={0} icon={'material-symbols:qr-code-2'} onClicked={goToQR}/>
+          </Grid>
+
             <Grid item xs={12} sm={3} md={3}>
                 <AppWidgetSummary title="Devices" total={0} color="info" icon={'mdi:cast-variant'} onClicked={goToDevice}/>
             </Grid>
+
         </Grid>
       </Container>
     </>

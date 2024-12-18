@@ -64,7 +64,7 @@ const TABLE_HEAD = [
     {id: 'user', label: 'User', alignRight: false },
     {id: 'slide', label: 'Slide', alignRight: false },
     {id: 'marquee', label: 'Marquee', alignRight: false },
-    {id: 'qr', label: 'QR', alignRight: false },
+    {id: 'qr', label: 'General QR', alignRight: false },
     {id: 'device_id', label: 'Device ID', alignRight: false},
     {id: 'updated_at', label: 'Update At', alignRight: false},
     { id: 'actions', label: 'Actions' },
@@ -825,13 +825,13 @@ export default function DevicePage() {
                       sx={{mb: 3}}
                       defaultValue={''}
                     >
-                        <InputLabel id="marquee-select-label">Select QR</InputLabel>
+                        <InputLabel id="marquee-select-label">Select General QR</InputLabel>
                         <Select
                           name="qr_id"
                           labelId="qr-select-label"
                           id="qr-select"
                           value={formData.qr_id ?? ''}
-                          label="Select QR"
+                          label="Select General QR"
                           onChange={handleChange}
                           variant="standard">
                             <MenuItem key={0} value={0}>{'No'}</MenuItem>

@@ -24,13 +24,13 @@ import {
   TextField,
   ToggleButtonGroup,
   ToggleButton,
-  Typography,
+  Typography, InputBase, OutlinedInput, InputAdornment, FilledInput,
 } from '@mui/material';
 import { Delete } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
 import SaveIcon from '@mui/icons-material/Save';
 import { filter } from 'lodash';
-import { QRCodeSVG } from 'qrcode.react';
+import { QRCodeCanvas, QRCodeSVG } from 'qrcode.react';
 
 import { UserListHead, UserListToolbar } from '../../sections/@dashboard/user';
 import Scrollbar from '../../components/scrollbar/Scrollbar';
@@ -69,6 +69,8 @@ export default function QrDataTable() {
   const { navigateTo } = useNavigateTo();
   const [dataTable, setDataTable] = useState([]);
   const [open, setOpen] = useState(false);
+  const [qrPreview, setQrPreview] = useState("");
+  const [qrCanvaDownload, setQrCanvaDownload] = useState("");
   const [openNewDialog, setOpenNewDialog] = useState(false);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
@@ -281,6 +283,7 @@ export default function QrDataTable() {
     setFormData(initialFormData);
     setUpdate(null);
     setValidator([]);
+    setQrPreview("")
   };
 
   const createNewAction = async () => {
@@ -360,6 +363,22 @@ export default function QrDataTable() {
       });
       setOpenNewDialog(true);
     }
+  };
+
+  const handleClickQRPreview = () => {
+    setQrPreview(formData.info)
+  };
+
+  const handleClickQRPreviewDownload = () => {
+    const canvas = document.getElementById("qr-preview");
+    const link = document.createElement("a");
+
+    // Convert canvas content to a data URL
+    link.href = canvas.toDataURL("image/png");
+    link.download = "canvas-image.png";
+
+    // Trigger download
+    link.click();
   };
 
   useEffect(() => {
@@ -535,19 +554,47 @@ export default function QrDataTable() {
               })}
             </Select>
           </FormControl>
-          <TextField
-            margin="dense"
-            name="info"
-            label="Info"
-            value={formData.info ?? ''}
-            type="text"
-            fullWidth
-            variant="standard"
-            onChange={handleChange}
-            error={validator.info && true}
-            helperText={validator.info}
+          <FormControl
             sx={{ mb: 3 }}
-          />
+            fullWidth
+          >
+            <InputLabel htmlFor="outlined-adornment-password">Info</InputLabel>
+            <FilledInput
+              id="outlined-adornment-password"
+              type={'text'}
+              name="info"
+              label="Info"
+              value={formData.info ?? ''}
+              onChange={handleChange}
+              endAdornment={
+                <InputAdornment position="end">
+                  <Button
+                    variant="outlined"
+                    onClick={handleClickQRPreview}
+                    startIcon={<Iconify icon="clarity:qr-code-line" />}
+                    disabled={formData.info === ""}
+                  >
+                    Preview
+                  </Button>
+                </InputAdornment>
+              }
+              error={validator.info && true}
+              helperText={validator.info}
+            />
+          </FormControl>
+          { qrPreview !== "" && (
+            <Stack direction="column" spacing={1} alignItems="center">
+              <QRCodeCanvas
+                id="qr-preview"
+                value={qrPreview}
+                size={200}
+                bgColor="#ffffff"
+                fgColor="#000000"
+              />
+              <Button variant="outlined" color="primary" onClick={handleClickQRPreviewDownload}>Download</Button>
+            </Stack>
+            )
+          }
           <Stack direction="column" spacing={1}>
             <Typography variant="body2" gutterBottom>
               Position

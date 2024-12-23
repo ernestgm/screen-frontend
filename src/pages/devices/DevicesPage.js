@@ -131,6 +131,7 @@ export default function DevicePage() {
         if (name === 'user_id') {
             filterScreenByUser(value)
             filterMarqueByUser(value)
+            filterQrByUser(value)
         }
 
         if (name === "portrait") {
@@ -380,14 +381,14 @@ export default function DevicePage() {
 
         if (response !== undefined && response.data) {
             setFormData({
-                name: response.data.name,
-                user_id: response.data.user_id,
-                screen_id: response.data.screen_id,
-                marquee_id: response.data.marquee_id ? response.data.marquee_id : 0,
-                qr_id: response.data.qr_id ? response.data.qr_id : 0,
-                portrait: response.data.portrait ? response.data.portrait : 0,
-                slide: response.data.slide ? response.data.slide : 0,
-            })
+              name: response.data.name,
+              user_id: response.data.user_id,
+              screen_id: response.data.screen_id,
+              marquee_id: response.data.marquee_id ? response.data.marquee_id : 0,
+              qr_id: response.data.qr_id ? response.data.qr_id : 0,
+              portrait: response.data.portrait ? response.data.portrait : 0,
+              slide: response.data.slide ? response.data.slide : 0,
+            });
             filterScreenByUser(response.data.user_id)
             filterMarqueByUser(response.data.user_id)
             filterQrByUser(response.data.user_id)
@@ -396,12 +397,26 @@ export default function DevicePage() {
     }
 
     const createNewAction = async () => {
+        let screenId = null
+        let qrId = null
+        let marqueeId = null
+
+        if (filteredScreen.length > 0) {
+          screenId = formData.screen_id
+        }
+        if (filteredMarquees.length > 0) {
+            marqueeId = formData.marquee_id === 0 ? null : formData.marquee_id
+        }
+        if (filteredQrs.length > 0) {
+            qrId = formData.qr_id === 0 ? null : formData.qr_id
+        }
+        
         const editFormData = {
             name: formData.name,
             user_id: formData.user_id,
-            screen_id: formData.screen_id,
-            marquee_id: formData.marquee_id === 0 ? null : formData.marquee_id,
-            qr_id: formData.qr_id === 0 ? null : formData.qr_id,
+            screen_id: screenId,
+            marquee_id: marqueeId,
+            qr_id: qrId,
             portrait: formData.portrait,
             slide: formData.slide
         };

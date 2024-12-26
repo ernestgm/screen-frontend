@@ -121,17 +121,12 @@ export default function QrDataTable() {
   };
 
   const deleteRows = async () => {
-    setLoading(true);
     const data = { ids: rowsForDelete };
     const response = await api.__delete(
       QR_URL_DELETE_ROW,
       data,
-      (msg) => {
-        showMessageSnackbar(msg, 'error');
-      },
-      () => {
-        deleteRows();
-      }
+      (msg) => {showMessageSnackbar(msg, 'error')},
+      (_loading) => {setLoading(_loading)},
     );
 
     if (response) {
@@ -139,7 +134,6 @@ export default function QrDataTable() {
       getQrs();
       setSelected([]);
     }
-    setLoading(false);
     setOpenConfirmDelete(false);
   };
 

@@ -119,18 +119,19 @@ export default function MarqueeDataTable() {
     };
 
     const deleteRows = async () => {
-        setLoading(true)
         const data = {'ids': rowsForDelete};
-        const response = await api.__delete(MARQUEE_URL_DELETE_ROW, data, (msg) => {
-            showMessageSnackbar(msg, 'error');
-        }, () => { deleteRows() })
+        const response = await api.__delete(
+          MARQUEE_URL_DELETE_ROW,
+          data,
+          (msg) => {showMessageSnackbar(msg, 'error')},
+          (_loading) => {setLoading(_loading)},
+        )
 
         if (response) {
             showMessageAlert(response.message, 'success');
             getMarquees();
             setSelected([]);
         }
-        setLoading(false)
         setOpenConfirmDelete(false)
     }
 

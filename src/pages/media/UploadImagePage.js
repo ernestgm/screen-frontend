@@ -31,6 +31,7 @@ import { SaveImage } from '../../components/save-media';
 import Iconify from '../../components/iconify';
 import positions from '../../_mock/positions';
 import palette from '../../theme/palette';
+import LinearProgressWithLabel from '../../components/progress';
 
 // ----------------------------------------------------------------------
 
@@ -67,6 +68,7 @@ export default function UploadImagePage() {
     images: [],
   });
   const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -176,11 +178,11 @@ export default function UploadImagePage() {
         (msg) => {
           showSnackbarMessage(msg, 'error');
         },
-        () => {
-          handleSubmit(e);
-        },
         (isLoading) => {
           setLoading(isLoading);
+        },
+        (_progress) => {
+          setProgress(_progress)
         }
       );
     } else {
@@ -190,11 +192,11 @@ export default function UploadImagePage() {
         (msg) => {
           showSnackbarMessage(msg, 'error');
         },
-        () => {
-          handleSubmit(e);
-        },
         (isLoading) => {
           setLoading(isLoading);
+        },
+        (_progress) => {
+          setProgress(_progress)
         }
       );
     }
@@ -419,7 +421,8 @@ export default function UploadImagePage() {
             )}
           </Stack>
         </Card>
-        <Stack sx={{ m: 2 }}>
+        <Stack sx={{ m: 2 }} spacing={3}>
+          {loading && <LinearProgressWithLabel value={progress} />}
           <LoadingButton
             color="secondary"
             onClick={handleSubmit}

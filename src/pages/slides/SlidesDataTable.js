@@ -137,18 +137,19 @@ export default function SlidesDataTable({ business }) {
     };
 
     const deleteRows = async () => {
-        setLoading(true)
         const data = {'ids': rowsForDelete};
-        const response = await api.__delete(SCREEN_URL_DELETE_ROW, data, (msg) => {
-            showMessageSnackbar(msg, 'error');
-        }, () => { deleteRows() })
+        const response = await api.__delete(
+          SCREEN_URL_DELETE_ROW,
+          data,
+          (msg) => {showMessageSnackbar(msg, 'error')},
+          (_loading) => {setLoading(_loading)},
+        )
 
         if (response) {
             showMessageAlert(response.message, 'success');
             getScreens();
             setSelected([]);
         }
-        setLoading(false)
         setOpenConfirmDelete(false)
     }
 

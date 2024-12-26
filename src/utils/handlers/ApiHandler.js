@@ -88,7 +88,6 @@ class ApiHanler {
             headers: this.#__getHeaders(data),
             onUploadProgress: (progressEvent) => {
                 const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-                console.log(percentCompleted)
                 onUploadProgress(percentCompleted);
             },
         });
@@ -96,7 +95,7 @@ class ApiHanler {
         return this.#__then(result, errorCallback, onLoadingCallback)
     }
   
-    __delete(path, _data, errorCallback, refreshCallback, onLoadingCallback = () => {}) {
+    __delete(path, _data, errorCallback, onLoadingCallback = () => {}) {
         const result = axios.delete(this.#__getPath(path), {
             data: _data,
             headers: this.#__getHeaders(_data)

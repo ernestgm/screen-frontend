@@ -455,18 +455,19 @@ export default function DevicePage() {
     };
 
     const deleteDevices = async () => {
-        setLoading(true)
         const data = { 'ids': rowsForDelete };
-        const response = await api.__delete(`${DEVICE_URL_DELETE_ROW}`, data, (msg) => {
-            showMessageSnackbar(msg, 'error');
-        }, () => { deleteDevices() })
+        const response = await api.__delete(
+          `${DEVICE_URL_DELETE_ROW}`,
+          data,
+          (msg) => {showMessageSnackbar(msg, 'error')},
+        (_loading) => {setLoading(_loading)},
+        )
 
         if (response) {
             showMessageAlert(response.message, 'success');
             getDevices();
             setSelected([]);
         }
-        setLoading(false)
         setOpenConfirmDelete(false)
     }
 

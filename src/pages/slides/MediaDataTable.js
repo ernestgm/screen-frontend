@@ -141,18 +141,20 @@ export default function MediaDataTable({screen}) {
     }
 
     const deleteRows = async () => {
-        setLoading(true)
         const data = {'ids': rowsForDelete, 'screen_id': screen};
-        const response = await api.__delete(URL_DELETE_DATA, data, (msg) => {
-            showMessageSnackbar(msg, 'error');
-        }, () => { deleteRows() })
+        const response = await api.__delete(
+          URL_DELETE_DATA,
+          data,
+          (msg) => {showMessageSnackbar(msg, 'error')},
+          (_loading) => {setLoading(_loading)},
+
+        )
 
         if (response) {
             showMessageAlert(response.message, 'success');
             getData()
             setSelected([]);
         }
-        setLoading(false)
         setOpenConfirmDelete(false)
     }
 

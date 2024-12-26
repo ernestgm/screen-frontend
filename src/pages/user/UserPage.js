@@ -90,11 +90,13 @@ export default function UserPage() {
     };
 
     const deleteUsers = async () => {
-        setLoading(true)
         const data = { 'ids': rowsForDelete };
-        const response = await api.__delete('/users', data, (msg) => {
-            showMessageSnackbar(msg, 'error');
-        }, () => { deleteUsers() })
+        const response = await api.__delete(
+          '/users',
+          data,
+          (msg) => {showMessageSnackbar(msg, 'error')},
+          (_loading) => {setLoading(_loading)},
+        )
 
         if (response) {
             showMessageAlert(response.message, 'success');
@@ -102,7 +104,6 @@ export default function UserPage() {
             setSelected([]);
 
         }
-        setLoading(false)
         setOpenConfirmDelete(false)
     }
 

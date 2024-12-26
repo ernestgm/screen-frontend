@@ -70,18 +70,19 @@ export default function AdDataTable({ marquee }) {
     };
 
     const deleteRows = async () => {
-        setLoading(true)
         const data = {'ids': rowsForDelete};
-        const response = await api.__delete(AD_URL_DELETE_ROW, data, (msg) => {
-            showMessageSnackbar(msg, 'error');
-        }, () => { deleteRows() })
+        const response = await api.__delete(
+          AD_URL_DELETE_ROW,
+          data,
+          (msg) => {showMessageSnackbar(msg, 'error')},
+          (_loading) => {setLoading(_loading)},
+        )
 
         if (response) {
             showMessageAlert(response.message, 'success');
             getAds();
             setSelected([]);
         }
-        setLoading(false)
         setOpenConfirmDelete(false)
     }
 

@@ -88,18 +88,19 @@ export default function UserPage() {
     };
 
     const deleteRows = async () => {
-        setLoading(true)
         const data = { 'ids': rowsForDelete };
-        const response = await api.__delete(URL_DELETE_ROW, data, (msg) => {
-            showMessageSnackbar(msg, 'error');
-        }, () => { deleteRows() })
+        const response = await api.__delete(
+          URL_DELETE_ROW,
+          data,
+          (msg) => { showMessageSnackbar(msg, 'error')},
+          (_loading) => {setLoading(_loading)},
+        )
 
         if (response) {
             showMessageAlert(response.message, 'success');
             getDataTable();
             setSelected([]);
         }
-        setLoading(false)
         setOpenConfirmDelete(false)
     }
 

@@ -13,7 +13,6 @@ import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import PROJECT_CONFIG from "../../config/config";
 import TitlePageDetails from "../../sections/@dashboard/app/TitlePageDetails";
-import useNavigateTo from "../../hooks/navigateTo";
 import AdDataTable from "./AdDataTable";
 
 
@@ -22,12 +21,9 @@ import AdDataTable from "./AdDataTable";
 
 const NAME_PAGE = 'Marquee Details';
 const URL_GET_PAGE = PROJECT_CONFIG.API_CONFIG.MARQUEE.GET;
-const URL_TABLES_PAGE = '/dashboard/business/details/';
 const URL_MENU_MARQUEE_PAGE = '/dashboard/marquees';
-const URL_CREATE_IMAGE = '/dashboard/image/create/';
 
 export default function DetailsMarqueePage() {
-    const {navigateTo} = useNavigateTo();
     const showSnackbarMessage = useMessagesSnackbar();
     const {id} = useParams();
     const {api} = useApiHandlerStore((state) => state);
@@ -45,9 +41,11 @@ export default function DetailsMarqueePage() {
     })
 
     const getPageDetails = async () => {
-        const response = await api.__get(`${URL_GET_PAGE}${id}`, (msg) => {
-            showSnackbarMessage(msg, 'error');
-        }, () => { getPageDetails() });
+        const response = await api.__get(
+          `${URL_GET_PAGE}${id}`,
+          (msg) => {showSnackbarMessage(msg, 'error')}
+        );
+
         if (response !== undefined && response.data) {
             setMarquee(response.data);
         }
@@ -55,6 +53,7 @@ export default function DetailsMarqueePage() {
 
     useEffect(() => {
         getPageDetails();
+      // eslint-disable-next-line
     }, [])
 
     return (

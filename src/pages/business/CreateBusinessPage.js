@@ -49,7 +49,6 @@ export default function CreateBusinessPage() {
 
     const [loading, setLoading] = useState(false);
     const [owners, setOwners] = useState([]);
-    const [autocomplete, setAutocomplete] = useState(null);
 
 
     const handleChange = (event) => {
@@ -69,26 +68,24 @@ export default function CreateBusinessPage() {
         }));
     }
 
-    const chanceAutocomplete = (autocomplete) => {
-        setAutocomplete(autocomplete);
-    }
-
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         let response;
         if (id) {
-            response = await api.__update(`${URL_UPDATE}${id}`, formData, (msg) => {
-                showSnackbarMessage(msg, 'error');
-            },
-                () => { handleSubmit(e) },
-                ( isLoading ) => { setLoading(isLoading) }
+            response = await api.__update(
+              `${URL_UPDATE}${id}`,
+              formData,
+              (msg) => { showSnackbarMessage(msg, 'error') },
+              ( isLoading ) => { setLoading(isLoading) }
             );
         } else {
-            response = await api.__post(URL_CREATE, formData, (msg) => {
-                showSnackbarMessage(msg, 'error');
-            }, () => { handleSubmit(e) },
-                ( isLoading ) => { setLoading(isLoading) });
+            response = await api.__post(
+              URL_CREATE,
+              formData,
+              (msg) => { showSnackbarMessage(msg, 'error') },
+                ( isLoading ) => { setLoading(isLoading) }
+            );
         }
 
         if (response) {
@@ -103,9 +100,10 @@ export default function CreateBusinessPage() {
     };
 
     const getItemForUpdate = async () => {
-        const response = await api.__get(`${URL_GET_ITEM_FOR_UPDATE}${id}`, (msg) => {
-            showSnackbarMessage(msg, 'error');
-        }, () => { getItemForUpdate() });
+        const response = await api.__get(
+          `${URL_GET_ITEM_FOR_UPDATE}${id}`,
+          (msg) => {showSnackbarMessage(msg, 'error')}
+        );
 
         if (response.data) {
             setFormData({
@@ -123,9 +121,10 @@ export default function CreateBusinessPage() {
     }
 
     const getOwners = async () => {
-        const response = await api.__get(PROJECT_CONFIG.API_CONFIG.USERS.ALL, (msg) => {
-            showSnackbarMessage(msg, 'error');
-        }, () => { getOwners() });
+        const response = await api.__get(
+          PROJECT_CONFIG.API_CONFIG.USERS.ALL,
+          (msg) => {showSnackbarMessage(msg, 'error')}
+        );
 
         if (response.data) {
             setOwners(Object.values(response.data));
@@ -137,6 +136,7 @@ export default function CreateBusinessPage() {
         if (id) {
             getItemForUpdate();
         }
+        // eslint-disable-next-line
     }, [])
 
     return (
@@ -198,11 +198,9 @@ export default function CreateBusinessPage() {
                                 disabled={(currentUser && currentUser.user.role.tag !== ADMIN_TAG)}
                             >
                                 {
-                                    owners.map((user) => {
-                                        return (
+                                    owners.map((user) => (
                                             <MenuItem key={user.id} value={user.id}>{user.name} {user.lastname} - Role: {user.role.name}</MenuItem>
-                                        )
-                                    })
+                                        ))
                                 }
                             </Select>
                         </FormControl>

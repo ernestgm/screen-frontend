@@ -6,7 +6,6 @@ import {
     Table,
     Stack,
     Paper,
-    Avatar,
     Button,
     Popover,
     Checkbox,
@@ -18,7 +17,7 @@ import {
     Typography,
     IconButton,
     TableContainer,
-    TablePagination, Collapse, Alert, Box, DialogTitle, DialogContent, DialogActions, Dialog, Divider,
+    TablePagination, Box, DialogTitle, DialogContent, DialogActions, Dialog, Divider,
 } from '@mui/material';
 import {LoadingButton} from "@mui/lab";
 import {Delete} from "@mui/icons-material";
@@ -35,7 +34,6 @@ import PROJECT_CONFIG from "../../config/config";
 import {applySortFilter, getComparator} from "../../utils/table/tableFunctions";
 import useNavigateTo from "../../hooks/navigateTo";
 import useAuthStore from "../../zustand/useAuthStore";
-import AreaModalDialog from "./table/AreaModalDialog";
 
 
 
@@ -53,7 +51,6 @@ const NAME_PAGE = 'Business';
 const URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.BUSINESS.ALL;
 const URL_DELETE_ROW = PROJECT_CONFIG.API_CONFIG.BUSINESS.DELETE;
 const PATH_EDIT_ROW = `/dashboard/business/edit/`;
-const PATH_GO_AREAS_ROW = `/dashboard/business/areas/`;
 const PATH_NEW_ROW = '/dashboard/business/create';
 const PATH_DETAILS_ROW = '/dashboard/business/details/';
 const ADMIN_TAG = PROJECT_CONFIG.API_CONFIG.ROLES.ADMIN
@@ -70,14 +67,6 @@ export default function UserPage() {
     const [orderBy, setOrderBy] = useState('created_at');
     const [filterQuery, setFilterQuery] = useState('');
     const [rowsPerPage, setRowsPerPage] = useState(PROJECT_CONFIG.TABLE_CONFIG.ROW_PER_PAGE);
-    const [openNewAreaDialog, setOpenNewAreaDialog] = useState(false);
-    const [newAreaBussinesId, setNewAreaBussinesId] = useState(null);
-    const initialFormData = {
-        name: '',
-        business_id: ''
-    }
-    const [formData, setFormData] = useState(initialFormData);
-
     const { currentUser } = useAuthStore((state) => state);
     const {api} = useApiHandlerStore((state) => state);
     const showMessageAlert = useMessagesAlert();
@@ -88,9 +77,10 @@ export default function UserPage() {
 
     const getDataTable = async () => {
         const params = (currentUser && currentUser.user.role.tag !== ADMIN_TAG) ? `?userId=${currentUser.user.id}` : ''
-        const response = await api.__get(`${URL_GET_DATA}${params}`, (msg) => {
-            showMessageSnackbar(msg, 'error');
-        }, () => { getDataTable() })
+        const response = await api.__get(
+          `${URL_GET_DATA}${params}`,
+          (msg) => { showMessageSnackbar(msg, 'error') }
+        )
 
         if (response !== undefined && response.data) {
             setDataTable(Object.values(response.data));
@@ -214,34 +204,10 @@ export default function UserPage() {
         setRowsForDelete([])
     }
 
-    const handleCreateAreaClick = (item) => {
-        handleCloseMenu()
-        setNewAreaBussinesId(item.id)
-        setOpenNewAreaDialog(true)
-    }
-
-    const handleCloseCreateAreaDialog = () => {
-        handleCloseMenu()
-        setOpenNewAreaDialog(false)
-    }
-
-    const handleChange = (event) => {
-        const {name, value} = event.target;
-        setFormData((prevFormData) => ({
-            ...prevFormData,
-            [name]: value,
-            business_id: newAreaBussinesId
-        }));
-    };
-
     useEffect(() => {
         getDataTable()
+        // eslint-disable-next-line
     }, []);
-
-    const handleViewAreasClick = (item) => {
-        handleCloseMenu()
-        navigateTo(`${PATH_GO_AREAS_ROW}${item.id}`)
-    }
 
     return (
         <>
@@ -372,12 +338,6 @@ export default function UserPage() {
                     />
                 </Card>
             </Container>
-            <AreaModalDialog
-                areaFormData={formData}
-                openDialog={openNewAreaDialog}
-                handleClose={handleCloseCreateAreaDialog}
-                handleFormChange={handleChange}
-            />
 
             <Dialog open={openConfirmDelete} onClose={handleCloseConfirmDelete}>
                 <DialogTitle>

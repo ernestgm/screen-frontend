@@ -1,14 +1,15 @@
 import React, {useState} from 'react'
 import {Autocomplete, GoogleMap, LoadScript , Marker} from '@react-google-maps/api';
-import PROJECT_CONFIG from "../../config/config";
 
 const containerStyle = {
     width: '100%',
     height: '100%'
 };
 
+// eslint-disable-next-line react/prop-types
 export default function MapContainer({map, setAddress , geolocation , children}) {
-    const {address, latitude, longitude} = geolocation;
+    // eslint-disable-next-line react/prop-types
+    const {latitude, longitude} = geolocation;
     const [ libs ] = useState(['places']);
     const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 

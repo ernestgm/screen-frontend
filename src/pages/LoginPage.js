@@ -2,12 +2,9 @@ import { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Link, Container, Typography, Divider, Stack, Button, Box } from '@mui/material';
+import { Container, Typography, Divider, Stack, Box } from '@mui/material';
 // hooks
 import useResponsive from '../hooks/useResponsive';
-// table
-import Logo from '../components/logo';
-import Iconify from '../components/iconify';
 // sections
 import { LoginForm } from '../sections/auth/login';
 import useAuthStore from '../zustand/useAuthStore';
@@ -45,7 +42,7 @@ const StyledContent = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function LoginPage(props) {
+export default function LoginPage() {
   const {navigateTo} = useNavigateTo();
   const mdUp = useResponsive('up', 'md');
   const { currentUser } = useAuthStore((state) => state);
@@ -54,6 +51,7 @@ export default function LoginPage(props) {
     if (currentUser) {
       navigateTo('/');
     }
+    // eslint-disable-next-line
   }, []);
 
   return (

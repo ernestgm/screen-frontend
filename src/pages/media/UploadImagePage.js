@@ -151,8 +151,7 @@ export default function UploadImagePage() {
     }
   };
 
-  const convertToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
+  const convertToBase64 = (file) => new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onprogress = () => setLoading(true);
@@ -165,7 +164,6 @@ export default function UploadImagePage() {
         reject(error);
       };
     });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -244,6 +242,7 @@ export default function UploadImagePage() {
     if (pimage) {
       getItemForUpdate();
     }
+    // eslint-disable-next-line
   }, []);
 
   return (

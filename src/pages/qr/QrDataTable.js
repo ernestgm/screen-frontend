@@ -24,7 +24,7 @@ import {
   TextField,
   ToggleButtonGroup,
   ToggleButton,
-  Typography, InputBase, OutlinedInput, InputAdornment, FilledInput,
+  Typography, InputAdornment, FilledInput,
 } from '@mui/material';
 import { Delete } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
@@ -41,7 +41,6 @@ import useMessagesAlert from '../../hooks/messages/useMessagesAlert';
 import useMessagesSnackbar from '../../hooks/messages/useMessagesSnackbar';
 import { applySortFilter, getComparator } from '../../utils/table/tableFunctions';
 import palette from '../../theme/palette';
-import useNavigateTo from '../../hooks/navigateTo';
 import useAuthStore from '../../zustand/useAuthStore';
 import positions from '../../_mock/positions';
 import PROJECT_CONFIG from '../../config/config';
@@ -66,11 +65,9 @@ const TABLE_HEAD = [
 ];
 
 export default function QrDataTable() {
-  const { navigateTo } = useNavigateTo();
   const [dataTable, setDataTable] = useState([]);
   const [open, setOpen] = useState(false);
   const [qrPreview, setQrPreview] = useState("");
-  const [qrCanvaDownload, setQrCanvaDownload] = useState("");
   const [openNewDialog, setOpenNewDialog] = useState(false);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
@@ -79,7 +76,7 @@ export default function QrDataTable() {
   const [filterQuery, setFilterQuery] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(PROJECT_CONFIG.TABLE_CONFIG.ROW_PER_PAGE);
   const [businesses, setBusinesses] = useState([]);
-  const [disabledAreaField, setDisabledAreaField] = useState(false);
+  const [disabledAreaField] = useState(false);
   const [update, setUpdate] = useState(null);
   const [loading, setLoading] = useState(false);
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
@@ -95,9 +92,6 @@ export default function QrDataTable() {
       `${BUSINESS_URL_GET_DATA}`,
       (msg) => {
         showMessageSnackbar(msg, 'error');
-      },
-      () => {
-        getBusiness();
       }
     );
 
@@ -113,12 +107,7 @@ export default function QrDataTable() {
   const getQrs = async () => {
     const response = await api.__get(
       QR_URL_GET_ALL_DATA,
-      (msg) => {
-        showMessageSnackbar(msg, 'error');
-      },
-      () => {
-        getQrs();
-      }
+      (msg) => {showMessageSnackbar(msg, 'error')}
     );
 
     if (response !== undefined && response.data) {
@@ -300,29 +289,15 @@ export default function QrDataTable() {
       response = await api.__update(
         `${QR_URL_UPDATE_ROW}${update}`,
         editFormData,
-        (msg) => {
-          showMessageSnackbar(msg, 'error');
-        },
-        () => {
-          createNewAction();
-        },
-        (isLoading) => {
-          setLoading(isLoading);
-        }
+        (msg) => { showMessageSnackbar(msg, 'error') },
+        (isLoading) => { setLoading(isLoading) }
       );
     } else {
       response = await api.__post(
         QR_URL_CREATE_ROW,
         formData,
-        (msg) => {
-          showMessageSnackbar(msg, 'error');
-        },
-        () => {
-          createNewAction();
-        },
-        (isLoading) => {
-          setLoading(isLoading);
-        }
+        (msg) => { showMessageSnackbar(msg, 'error') },
+        (isLoading) => { setLoading(isLoading) }
       );
     }
 
@@ -345,12 +320,7 @@ export default function QrDataTable() {
     setUpdate(id);
     const response = await api.__get(
       `${QR_URL_GET_DATA_UPDATE}${id}`,
-      (msg) => {
-        showMessageSnackbar(msg, 'error');
-      },
-      () => {
-        editAction(id);
-      }
+      (msg) => {showMessageSnackbar(msg, 'error')}
     );
 
     if (response.data) {
@@ -384,6 +354,7 @@ export default function QrDataTable() {
   useEffect(() => {
     getBusiness();
     getQrs();
+    // eslint-disable-next-line
   }, []);
 
   return (
@@ -419,7 +390,7 @@ export default function QrDataTable() {
               />
               <TableBody>
                 {filteredDataTable.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                  const { id, name, business, message, info, devices } = row;
+                  const { id, name, business, info, devices } = row;
                   const selectedRow = selected.indexOf(id) !== -1;
                   const nameBusiness = business ? business.name : '';
                   let bgColorCell = palette.success.lighter;
@@ -545,13 +516,15 @@ export default function QrDataTable() {
               label="Select Business"
               onChange={handleChange}
             >
-              {businesses.map((item) => {
-                return (
-                  <MenuItem key={item.id} value={item.id}>
-                    {item.name}
-                  </MenuItem>
-                );
-              })}
+              {
+                businesses.map((item) =>
+                  (
+                    <MenuItem key={item.id} value={item.id}>
+                      {item.name}
+                    </MenuItem>
+                  )
+                )
+              }
             </Select>
           </FormControl>
           <FormControl

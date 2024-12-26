@@ -6,7 +6,7 @@ import { Box, Link } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
-const Logo = forwardRef(({ disabledLink = false, sx}, ref) => {
+const Logo = forwardRef(({ disabledLink = false}) => {
   const logo = (
     <Box component="img" alt="PlayAds" src="/assets/logo.png" sx={{ width: 150, borderRadius: 1.5, flexShrink: 0 }} />
   );
@@ -23,7 +23,6 @@ const Logo = forwardRef(({ disabledLink = false, sx}, ref) => {
 });
 
 Logo.propTypes = {
-  sx: PropTypes.object,
   disabledLink: PropTypes.bool,
 };
 

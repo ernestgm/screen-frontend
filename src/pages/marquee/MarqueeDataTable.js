@@ -76,7 +76,6 @@ export default function MarqueeDataTable() {
     const [filterQuery, setFilterQuery] = useState('');
     const [rowsPerPage, setRowsPerPage] = useState(PROJECT_CONFIG.TABLE_CONFIG.ROW_PER_PAGE);
     const [businesses, setBusinesses] = useState([]);
-    const [disabledAreaField, setDisabledAreaField] = useState(false);
     const [update, setUpdate] = useState(null);
     const [loading, setLoading] = useState(false);
     const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
@@ -89,9 +88,10 @@ export default function MarqueeDataTable() {
 
 
     const getBusiness = async () => {
-        const response = await api.__get(`${BUSINESS_URL_GET_DATA}`, (msg) => {
-            showMessageSnackbar(msg, 'error');
-        }, () => { getBusiness() })
+        const response = await api.__get(
+          `${BUSINESS_URL_GET_DATA}`,
+          (msg) => {showMessageSnackbar(msg, 'error')}
+        )
 
         if (response !== undefined && response.data) {
             if (currentUser && currentUser.user.role.tag === PROJECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
@@ -103,9 +103,10 @@ export default function MarqueeDataTable() {
         }
     };
     const getMarquees = async () => {
-        const response = await api.__get(MARQUEE_URL_GET_ALL_DATA, (msg) => {
-            showMessageSnackbar(msg, 'error');
-        }, () => { getMarquees() })
+        const response = await api.__get(
+          MARQUEE_URL_GET_ALL_DATA,
+          (msg) => {showMessageSnackbar(msg, 'error')}
+        )
 
         if (response !== undefined && response.data) {
             if (currentUser && currentUser.user.role.tag === PROJECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
@@ -218,11 +219,6 @@ export default function MarqueeDataTable() {
         editAction(item.id)
     }
 
-    const handleDetailsItemClick = (item) => {
-        handleCloseMenu()
-        navigateTo(`${ROUTE_DETAILS_ROW}${item.id}`)
-    }
-
     const handleDeleteItemClick = (item) => {
         handleCloseMenu()
         setRowsForDelete([item.id])
@@ -274,13 +270,19 @@ export default function MarqueeDataTable() {
             editFormData.text_color = formData.text_color
             editFormData.message = formData.message
 
-            response = await api.__update(`${MARQUEE_URL_UPDATE_ROW}${update}`, editFormData, (msg) => {
-                showMessageSnackbar(msg, 'error');
-            }, () => { createNewAction() }, ( isLoading ) => { setLoading(isLoading) });
+            response = await api.__update(
+              `${MARQUEE_URL_UPDATE_ROW}${update}`,
+              editFormData,
+              (msg) => { showMessageSnackbar(msg, 'error') },
+              ( isLoading ) => { setLoading(isLoading) }
+            );
         } else {
-            response = await api.__post(MARQUEE_URL_CREATE_ROW, formData, (msg) => {
-                showMessageSnackbar(msg, 'error');
-            }, () => { createNewAction() }, ( isLoading ) => { setLoading(isLoading) });
+            response = await api.__post(
+              MARQUEE_URL_CREATE_ROW,
+              formData,
+              (msg) => { showMessageSnackbar(msg, 'error') },
+              ( isLoading ) => { setLoading(isLoading) }
+            );
         }
 
 
@@ -301,9 +303,10 @@ export default function MarqueeDataTable() {
 
     const editAction = async (id) => {
         setUpdate(id);
-        const response = await api.__get(`${MARQUEE_URL_GET_DATA_UPDATE}${id}`,  (msg) => {
-            showMessageSnackbar(msg, 'error');
-        }, () => { editAction(id) });
+        const response = await api.__get(
+          `${MARQUEE_URL_GET_DATA_UPDATE}${id}`,
+          (msg) => {showMessageSnackbar(msg, 'error')}
+        );
 
         if (response.data) {
             setFormData({
@@ -320,6 +323,7 @@ export default function MarqueeDataTable() {
     useEffect(() => {
         getBusiness()
         getMarquees()
+      // eslint-disable-next-line
     }, []);
 
     return (
@@ -465,7 +469,6 @@ export default function MarqueeDataTable() {
             <FormControl
               variant="standard"
               fullWidth
-              disabled={disabledAreaField}
               defaultValue={''}
               sx={{ mb: 3 }}
               error={validator.business_id && true}
@@ -478,14 +481,16 @@ export default function MarqueeDataTable() {
                 value={formData.business_id ?? ''}
                 label="Select Business"
                 onChange={handleChange}
+                variant="standard"
               >
-                {businesses.map((item) => {
-                  return (
-                    <MenuItem key={item.id} value={item.id}>
-                      {item.name}
-                    </MenuItem>
-                  );
-                })}
+                {
+                  businesses.map((item) => (
+                      <MenuItem key={item.id} value={item.id}>
+                        {item.name}
+                      </MenuItem>
+                    )
+                  )
+                }
               </Select>
             </FormControl>
             <FormControl variant="standard" fullWidth defaultValue={''} sx={{ mb: 3 }}>
@@ -498,8 +503,7 @@ export default function MarqueeDataTable() {
                 label="Select Background Color"
                 onChange={handleChange}
               >
-                {marqueeColors.map((item) => {
-                  return (
+                {marqueeColors.map((item) => (
                     <MenuItem key={item.id} value={item.id}>
                       <Stack
                         sx={{ pl: 2 }}
@@ -511,8 +515,7 @@ export default function MarqueeDataTable() {
                         <SingleColorPreview color={item.id} sx={{ mr: 2 }} /> {item.name}
                       </Stack>
                     </MenuItem>
-                  );
-                })}
+                  ))}
               </Select>
             </FormControl>
             <FormControl variant="standard" fullWidth sx={{ mb: 3 }} defaultValue={''}>
@@ -525,8 +528,7 @@ export default function MarqueeDataTable() {
                 label="Select Text Color"
                 onChange={handleChange}
               >
-                {marqueeColors.map((item) => {
-                  return (
+                {marqueeColors.map((item) => (
                     <MenuItem key={item.id} value={item.id}>
                       <Stack
                         sx={{ pl: 2 }}
@@ -538,8 +540,7 @@ export default function MarqueeDataTable() {
                         <SingleColorPreview color={item.id} sx={{ mr: 2 }} /> {item.name}
                       </Stack>
                     </MenuItem>
-                  );
-                })}
+                  ))}
               </Select>
             </FormControl>
             <TextField

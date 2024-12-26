@@ -164,13 +164,11 @@ export default function DevicePage() {
             });
 
             // Devices Online
-            const sub = centrifugal.newSubscription("status:appOnline");
+            const sub = centrifugal.newSubscription('status:appOnline');
             sub.subscribe()
 
             sub.presence().then((ctx) => {
-                const devicesOnline = Object.entries(ctx.clients).map(([key, value]) => {
-                    return value.user
-                })
+                const devicesOnline = Object.entries(ctx.clients).map(([value]) => value.user)
                 setClientsOnline(devicesOnline)
                 console.log(devicesOnline);
             }, (err) => {
@@ -200,9 +198,7 @@ export default function DevicePage() {
 
             wdSub.presence().then((ctx) => {
                 console.log(ctx)
-                const wdDevices = Object.entries(ctx.clients).map(([key, value]) => {
-                    return value.user
-                })
+                const wdDevices = Object.entries(ctx.clients).map(([value]) => value.user)
                 setWdClientsOnline(wdDevices)
                 console.log(wdDevices);
             }, (err) => {
@@ -244,9 +240,10 @@ export default function DevicePage() {
     }
 
     const getScreens = async () => {
-        const response = await api.__get(SCREENS_URL_GET_DATA, (msg) => {
-            showMessageSnackbar(msg, 'error');
-        }, () => { getScreens() })
+        const response = await api.__get(
+          SCREENS_URL_GET_DATA,
+          (msg) => { showMessageSnackbar(msg, 'error') }
+        )
 
         if (response !== undefined && response.data) {
             setScreens(Object.values(response.data));
@@ -259,9 +256,10 @@ export default function DevicePage() {
     };
 
     const getMarquees = async () => {
-        const response = await api.__get(MARQUEES_URL_GET_DATA, (msg) => {
-            showMessageSnackbar(msg, 'error');
-        }, () => { getMarquees() })
+        const response = await api.__get(
+          MARQUEES_URL_GET_DATA,
+          (msg) => {showMessageSnackbar(msg, 'error')}
+        )
 
         if (response !== undefined && response.data) {
             setMarquees(Object.values(response.data));
@@ -274,9 +272,10 @@ export default function DevicePage() {
     };
 
     const getQrs = async () => {
-        const response = await api.__get(QR_URL_GET_DATA, (msg) => {
-            showMessageSnackbar(msg, 'error');
-        }, () => { getQrs() })
+        const response = await api.__get(
+          QR_URL_GET_DATA,
+          (msg) => {showMessageSnackbar(msg, 'error')}
+        )
 
         if (response !== undefined && response.data) {
             setQrs(Object.values(response.data));
@@ -289,9 +288,10 @@ export default function DevicePage() {
     };
 
     const getDevices = async () => {
-        const response = await api.__get(`${DEVICE_URL_GET_DATA}`, (msg) => {
-            showMessageSnackbar(msg, 'error');
-        }, () => { getDevices() })
+        const response = await api.__get(
+          `${DEVICE_URL_GET_DATA}`,
+          (msg) => {showMessageSnackbar(msg, 'error')}
+        )
 
         if (response !== undefined && response.data) {
             if (currentUser && currentUser.user.role.tag === PROJECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
@@ -306,9 +306,10 @@ export default function DevicePage() {
     };
 
     const getUsers = async () => {
-        const response = await api.__get(USERS_URL_GET_DATA, (msg) => {
-            showMessageSnackbar(msg, 'error');
-        }, () => { getUsers() })
+        const response = await api.__get(
+          USERS_URL_GET_DATA,
+          (msg) => {showMessageSnackbar(msg, 'error')}
+        )
 
         if (response !== undefined && response.data) {
             setUsers(Object.values(response.data));
@@ -359,9 +360,10 @@ export default function DevicePage() {
     const handleDeviceInfoItemClick = async (item) => {
         handleCloseMenu()
 
-        const response = await api.__get(`${DEVICE_URL_GET_DATA_UPDATE}${item.id}`,  (msg) => {
-            showMessageSnackbar(msg, 'error');
-        }, () => { handleDeviceInfoItemClick(item) });
+        const response = await api.__get(
+          `${DEVICE_URL_GET_DATA_UPDATE}${item.id}`,
+          (msg) => {showMessageSnackbar(msg, 'error')}
+        );
 
         if (response !== undefined && response.data) {
             setFormData({
@@ -375,9 +377,10 @@ export default function DevicePage() {
 
     const editAction = async (id) => {
         setUpdate(id)
-        const response = await api.__get(`${DEVICE_URL_GET_DATA_UPDATE}${id}`,  (msg) => {
-            showMessageSnackbar(msg, 'error');
-        }, () => { editAction(id) });
+        const response = await api.__get(
+          `${DEVICE_URL_GET_DATA_UPDATE}${id}`,
+          (msg) => {showMessageSnackbar(msg, 'error')}
+        );
 
         if (response !== undefined && response.data) {
             setFormData({
@@ -421,10 +424,12 @@ export default function DevicePage() {
             slide: formData.slide
         };
 
-        const response = await api.__update(`${DEVICE_URL_UPDATE_ROW}${update}`, editFormData, (msg) => {
-            showMessageSnackbar(msg, 'error');
-        }, () => { createNewAction() }, ( isLoading ) => { setLoading(isLoading) });
-
+        const response = await api.__update(
+          `${DEVICE_URL_UPDATE_ROW}${update}`,
+          editFormData,
+          (msg) => { showMessageSnackbar(msg, 'error') },
+          ( isLoading ) => { setLoading(isLoading) }
+        );
 
         if (response) {
             if (response.success) {
@@ -567,6 +572,7 @@ export default function DevicePage() {
                 centrifugal.disconnect();
             }
         };
+        // eslint-disable-next-line
     }, []);
 
     return (
@@ -774,12 +780,10 @@ export default function DevicePage() {
                             onChange={handleChange}
                             variant="standard">
                             {
-                                users.map((item) => {
-                                    return (
+                                users.map((item) => (
                                         <MenuItem key={item.id}
                                                   value={item.id}>{item.name}</MenuItem>
-                                    )
-                                })
+                                    ))
                             }
                         </Select>
                     </FormControl>
@@ -799,12 +803,10 @@ export default function DevicePage() {
                             onChange={handleChange}
                             variant="standard">
                             {
-                                filteredScreen.map((item) => {
-                                    return (
+                                filteredScreen.map((item) => (
                                         <MenuItem key={item.id}
                                                   value={item.id}>{item.name}</MenuItem>
-                                    )
-                                })
+                                    ))
                             }
                         </Select>
                     </FormControl>
@@ -825,12 +827,10 @@ export default function DevicePage() {
                             variant="standard">
                             <MenuItem key={0} value={0}>{'No'}</MenuItem>
                             {
-                                filteredMarquees.map((item) => {
-                                    return (
+                                filteredMarquees.map((item) => (
                                         <MenuItem key={item.id}
                                                   value={item.id}>{item.name}</MenuItem>
-                                    )
-                                })
+                                    ))
                             }
                         </Select>
                     </FormControl>
@@ -851,12 +851,10 @@ export default function DevicePage() {
                           variant="standard">
                             <MenuItem key={0} value={0}>{'No'}</MenuItem>
                             {
-                                filteredQrs.map((item) => {
-                                    return (
+                                filteredQrs.map((item) => (
                                       <MenuItem key={item.id}
                                                 value={item.id}>{item.name}</MenuItem>
-                                    )
-                                })
+                                    ))
                             }
                         </Select>
                     </FormControl>

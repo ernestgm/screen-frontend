@@ -1,5 +1,4 @@
 import { Helmet } from 'react-helmet-async';
-import {useEffect, useState} from "react";
 // @mui
 import { Grid, Container, Typography } from '@mui/material';
 import useNavigateTo from "../../hooks/navigateTo";
@@ -8,14 +7,8 @@ import useNavigateTo from "../../hooks/navigateTo";
 // sections
 import {AppWidgetSummary} from "../../sections/@dashboard/app";
 import useAccontHandlerStore from "../../zustand/useAccontHandlerStore";
-
 import PROJECT_CONFIG from "../../config/config";
 
-
-
-
-// ----------------------------------------------------------------------
-const URL_GET_BUSINESS_RESUME = PROJECT_CONFIG.API_CONFIG.BUSINESS.RESUME;
 
 export default function Dashboard() {
     const {navigateTo} = useNavigateTo();

@@ -33,6 +33,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
     },
   },
 }));
+// eslint-disable-next-line react/prop-types
 export default function MyAvatar({account}) {
   return (
     <Stack direction="row" spacing={2}>
@@ -41,6 +42,7 @@ export default function MyAvatar({account}) {
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         variant="dot"
       >
+        {/* eslint-disable-next-line react/prop-types */}
         <Avatar sx={{ bgcolor: palette.secondary.darker }}>{ account.sign }</Avatar>
       </StyledBadge>
     </Stack>

@@ -1,3 +1,4 @@
+import axios from 'axios';
 import PROJECT_CONFIG from '../../config/config';
 
 class ApiHanler {
@@ -17,30 +18,52 @@ class ApiHanler {
         this._saveParamsAfterRefreshToken = {};
     }
 
-    mRefreshToken = (successCallback, errorCallback) => {
-        const formData = {
-            'refresh_token': this._refreshToken
-        }
-        this.__post(`/refresh-token`, formData, errorCallback, null)
-            .then(response => {
-                successCallback(response.token)
-            })
-            .catch(error => {
-                console.log(error)
-                errorCallback(error.message)
-            })
+    // eslint-disable-next-line class-methods-use-this
+    #__getPath(path) {
+        return PROJECT_CONFIG.API_CONFIG.baseURL+path
     }
 
     // eslint-disable-next-line class-methods-use-this
-    #__base(path, _method, data, errorCallback, refreshCallBack, onLoadingCallBack) {
+    #__then(promise, errorCallback, onLoadingCallBack) {
+        onLoadingCallBack(true)
+        return promise.then(response => {
+                onLoadingCallBack(false)
+                if (response.status === 401){
+                    errorCallback(response.statusText)
+                } else if(response.status === 500){
+                    errorCallback(response.statusText)
+                } else if(response.status === 300){
+                    response.data().then((value) => {
+                        errorCallback(value.statusText)
+                    })
+                }
+
+                return response.data;
+            })
+            .catch(error => {
+                if (error.status === 401){
+                    errorCallback(error.response.statusText)
+                } else if(error.status === 500){
+                    errorCallback(error.response.statusText)
+                } else if(error.status === 300){
+                    error.response.data().then((value) => {
+                        errorCallback(value.statusText)
+                    })
+                } else {
+                    errorCallback(error.message)
+                }
+                onLoadingCallBack(false)
+                console.log(error)
+            })
+    }
+
+    #__getHeaders(data) {
         let _header = {
             "Content-Type": "application/json",
             "Accept": "application/json"
         }
 
-        let postData = data && JSON.stringify(data)
         if (data instanceof FormData) {
-            postData = data
             _header = {
                 "Accept": "application/json"
             }
@@ -50,62 +73,44 @@ class ApiHanler {
             _header.Authorization = `Bearer ${ this._token }`;
         }
 
-        onLoadingCallBack(true)
-        return fetch(PROJECT_CONFIG.API_CONFIG.baseURL+path, {
-              method: _method,
-              headers: _header,
-              body: postData
-            })
-            .then(response => {
-                onLoadingCallBack(false)
-                if (response.status === 401 && this._refreshToken) {
-                    this._saveParamsAfterRefreshToken.path = path
-                    this._saveParamsAfterRefreshToken.method = _method
-                    this._saveParamsAfterRefreshToken.data = data
-
-                    this.mRefreshToken((newToken) => {
-                        if (newToken) {
-                            this.setUserToken(newToken)
-                            const currentUser = JSON.parse(localStorage.getItem('current-user'))
-                            currentUser.state.currentUser.token = newToken
-                            localStorage.removeItem('current-user');
-                            localStorage.setItem('current-user', JSON.stringify(currentUser));
-                            refreshCallBack()
-                        }
-                    }, errorCallback )
-                } else if (response.status === 401){
-                    errorCallback(response.statusText)
-                } else if(response.status === 500){
-                    errorCallback(response.statusText)
-                } else if(response.status === 300){
-                    response.json().then((value) => {
-                        errorCallback(value.statusText)
-                    })
-                }
-
-                return response.json();
-            })
-            .catch(error => {
-                onLoadingCallBack(false)
-                console.log(error)
-                errorCallback(error.message)
-            })
+        return _header
     }
               
-    __get(path, errorCallback, refreshCallback, onLoadingCallback = () => {}) {
-        return this.#__base(path, 'GET', null, errorCallback, refreshCallback, onLoadingCallback)
+    __get(path, errorCallback, onLoadingCallback = () => {}) {
+        const result = axios.get(this.#__getPath(path), {
+            headers: this.#__getHeaders(null)
+        });
+        return this.#__then(result, errorCallback, onLoadingCallback)
     }
   
-    __post(path, data, errorCallback, refreshCallback, onLoadingCallback = () => {}) {
-        return this.#__base(path, 'POST', data, errorCallback, refreshCallback, onLoadingCallback)
+    __post(path, data, errorCallback, onLoadingCallback = () => {}, onUploadProgress = () => {}) {
+        const result = axios.post(this.#__getPath(path), data, {
+            headers: this.#__getHeaders(data),
+            onUploadProgress: (progressEvent) => {
+                const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                console.log(percentCompleted)
+                onUploadProgress(percentCompleted);
+            },
+        });
+
+        return this.#__then(result, errorCallback, onLoadingCallback)
     }
   
-    __delete(path, data, errorCallback, refreshCallback, onLoadingCallback = () => {}) {
-        return this.#__base(path, 'DELETE', data, errorCallback, refreshCallback, onLoadingCallback)
+    __delete(path, _data, errorCallback, refreshCallback, onLoadingCallback = () => {}) {
+        const result = axios.delete(this.#__getPath(path), {
+            data: _data,
+            headers: this.#__getHeaders(_data)
+        });
+
+        return this.#__then(result, errorCallback, onLoadingCallback)
     }
   
-    __update(path, data, errorCallback, refreshCallback, onLoadingCallback = () => {}) {
-        return this.#__base(path, 'PUT', data, errorCallback, refreshCallback, onLoadingCallback)
+    __update(path, data, errorCallback, onLoadingCallback = () => {}) {
+        const result = axios.put(this.#__getPath(path), data, {
+            headers: this.#__getHeaders(data)
+        });
+
+        return this.#__then(result, errorCallback, onLoadingCallback)
     }
 }
 

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {useParams} from "react-router-dom";
 import SaveIcon from '@mui/icons-material/Save';
 // @mui
@@ -70,7 +70,7 @@ export default function CreateUserPage() {
         }
     };
 
-    const handleChangePassword = (event) => {
+    const handleChangePassword = () => {
         setChangePassword(!changePassword)
     }
 
@@ -96,16 +96,17 @@ export default function CreateUserPage() {
                 (msg) => {
                     showSnackbarMessage(msg, 'error');
                 },
-                () => { handleSubmit(e)},
                 ( isLoading ) => { setLoading(isLoading) }
-
             );
         } else {
-            response = await api.__post('/user', formData, (msg) => {
-                showSnackbarMessage(msg, 'error');
-            }, () => { handleSubmit(e) },
-                ( isLoading ) => { setLoading(isLoading) }
-                )
+            response = await api.__post(
+              '/user',
+              formData,
+              (msg) => {
+                    showSnackbarMessage(msg, 'error');
+                },
+              ( isLoading ) => { setLoading(isLoading) }
+            )
         }
 
         if (response) {
@@ -119,6 +120,7 @@ export default function CreateUserPage() {
         }
     };
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const getUser = async () => {
         const response = await api.__get(
             `/user/${id}`, (msg) => {
@@ -139,9 +141,11 @@ export default function CreateUserPage() {
     };
 
     const getRoles = async () => {
-        const response = await api.__get(`/roles`, (msg) => {
-            showSnackbarMessage(msg, 'error');
-        }, () => { getRoles() });
+        const response = await api.__get(
+          `/roles`,
+          (msg) => {showSnackbarMessage(msg, 'error')}
+        );
+
         if (response !== undefined && response.data) {
             setRoles(response.data);
         }
@@ -154,6 +158,7 @@ export default function CreateUserPage() {
         }
         setEditing( id !== undefined )
         setChangePassword( id === undefined )
+        // eslint-disable-next-line
     }, []);
 
     return (
@@ -207,12 +212,11 @@ export default function CreateUserPage() {
                                 value={formData.role_id ?? ''}
                                 label="Role"
                                 onChange={handleChange}
-                            >
-                                {roles.map((rol) => {
-                                    return (
-                                        <MenuItem key={rol.id} value={rol.id}>{rol.name}</MenuItem>
-                                    )
-                                })}
+                                variant="standard"
+                                >
+                                {roles.map((rol) => (
+                                  <MenuItem key={rol.id} value={rol.id}>{rol.name}</MenuItem>
+                                ))}
                             </Select>
                         </FormControl>
                         <TextField

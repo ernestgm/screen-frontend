@@ -15,7 +15,6 @@ import PROJECT_CONFIG from "../../config/config";
 import MediaDataTable from "./MediaDataTable";
 import Iconify from "../../components/iconify";
 import useNavigateTo from '../../hooks/navigateTo';
-import palette from '../../theme/palette';
 
 
 
@@ -62,9 +61,11 @@ export default function DetailsSlidesPage() {
     })
 
     const getPageDetails = async () => {
-        const response = await api.__get(`${URL_GET_PAGE}${id}`, (msg) => {
-            showSnackbarMessage(msg, 'error');
-        }, () => { getPageDetails() });
+        const response = await api.__get(
+          `${URL_GET_PAGE}${id}`,
+          (msg) => {showSnackbarMessage(msg, 'error')}
+        );
+
         if (response !== undefined && response.data) {
             setScreen(response.data);
         }
@@ -72,6 +73,7 @@ export default function DetailsSlidesPage() {
 
     useEffect(() => {
         getPageDetails();
+      // eslint-disable-next-line
     }, [])
 
     const goToUploadVideo = () => {
@@ -168,9 +170,9 @@ export default function DetailsSlidesPage() {
                 Image List
               </Typography>
               <Stack direction="row" spacing={1}>
-                {/* <Button variant="outlined" color="primary" onClick={goToUploadVideo} startIcon={<Iconify icon="material-symbols:video-camera-back-add-outline" />}> */}
-                {/*  Upload Video */}
-                {/* </Button> */}
+                 <Button variant="outlined" color="primary" onClick={goToUploadVideo} startIcon={<Iconify icon="material-symbols:video-camera-back-add-outline" />}>
+                  Upload Video
+                 </Button>
                 <Button variant="outlined" onClick={goToUploadImage} startIcon={<Iconify icon="material-symbols:add-photo-alternate-outline" />}>
                   Upload Images
                 </Button>

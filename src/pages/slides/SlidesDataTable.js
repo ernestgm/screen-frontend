@@ -47,7 +47,6 @@ import positions from '../../_mock/positions';
 
 
 
-const AREA_URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.AREA.ALL;
 const BUSINESS_URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.BUSINESS.ALL;
 const SCREEN_URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.SCREEN.ALL;
 const SCREEN_URL_GET_DATA_UPDATE = PROJECT_CONFIG.API_CONFIG.SCREEN.GET;
@@ -67,6 +66,7 @@ const TABLE_HEAD = [
 ];
 
 
+// eslint-disable-next-line react/prop-types
 export default function SlidesDataTable({ business }) {
     const { navigateTo } = useNavigateTo();
     const [dataTable, setDataTable] = useState([]);
@@ -78,7 +78,6 @@ export default function SlidesDataTable({ business }) {
     const [orderBy, setOrderBy] = useState('created_at');
     const [filterQuery, setFilterQuery] = useState('');
     const [rowsPerPage, setRowsPerPage] = useState(PROJECT_CONFIG.TABLE_CONFIG.ROW_PER_PAGE);
-    const [areas, setAreas] = useState([]);
     const [businesses, setBusinesses] = useState([]);
     const [disabledAreaField, setDisabledAreaField] = useState(false);
 
@@ -102,45 +101,28 @@ export default function SlidesDataTable({ business }) {
     }
     const [formData, setFormData] = useState(initialFormData);
 
-    const getAreas = async (pBusiness) => {
-        const path = pBusiness ? `${AREA_URL_GET_DATA}?business_id=${pBusiness}` : `${AREA_URL_GET_DATA}`
-        const response = await api.__get(path, (msg) => {
-            showMessageSnackbar(msg, 'error');
-        }, () => { getAreas(pBusiness) })
+    const getBusiness = async () => {
+        const response = await api.__get(
+          `${BUSINESS_URL_GET_DATA}`,
+          (msg) => {showMessageSnackbar(msg, 'error')}
+        )
 
         if (response !== undefined && response.data) {
-            getBusiness(Object.values(response.data))
-        }
-    };
-
-    const getBusiness = async (_areas) => {
-        const response = await api.__get(`${BUSINESS_URL_GET_DATA}`, (msg) => {
-            showMessageSnackbar(msg, 'error');
-        }, () => { getBusiness() })
-
-        if (response !== undefined && response.data) {
-            if (business) {
-                setAreas(_areas)
-                setBusinesses(Object.values(response.data));
-            } else if (currentUser && currentUser.user.role.tag === PROJECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
-                setAreas(_areas)
+            if (currentUser && currentUser.user.role.tag === PROJECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
                 setBusinesses(Object.values(response.data));
             } else {
                 const filteredBusiness = filter(response.data, (_business) => _business.user_id === currentUser.user.id)
                 setBusinesses(filteredBusiness);
-                const businessIds = filteredBusiness.map(mBusiness => mBusiness.id);
-                const filteredAreas = filter(_areas, (_area) => businessIds.includes( _area.business_id))
-                setAreas(filteredAreas);
             }
         }
     };
 
-
     const getScreens = async () => {
         const urlApi = business ? `${SCREEN_URL_GET_DATA}?business_id=${business}` : SCREEN_URL_GET_DATA;
-        const response = await api.__get(urlApi, (msg) => {
-            showMessageSnackbar(msg, 'error');
-        }, () => { getScreens() })
+        const response = await api.__get(
+          urlApi,
+          (msg) => { showMessageSnackbar(msg, 'error') }
+        )
 
         if (response !== undefined && response.data) {
             if (business) {
@@ -307,10 +289,6 @@ export default function SlidesDataTable({ business }) {
                 "enabled": formData.enabled === 0 ? 1 : 0,
             }));
         }
-
-        if (name === "business_id") {
-            getAreas(value)
-        }
     };
     const handleClickNewScreen = () => {
         if (business) {
@@ -350,15 +328,19 @@ export default function SlidesDataTable({ business }) {
             editFormData.description_position = formData.description_position
             editFormData.description_size = formData.description_size
 
-            response = await api.__update(`${SCREEN_URL_UPDATE_ROW}${update}`, editFormData, (msg) => {
-                showMessageSnackbar(msg, 'error');
-            }, () => { createNewAction() },
-                ( isLoading ) => { setLoading(isLoading) });
+            response = await api.__update(
+              `${SCREEN_URL_UPDATE_ROW}${update}`,
+              editFormData,
+              (msg) => { showMessageSnackbar(msg, 'error'); },
+              ( isLoading ) => { setLoading(isLoading) }
+            );
         } else {
-            response = await api.__post(SCREEN_URL_CREATE_ROW, formData, (msg) => {
-                showMessageSnackbar(msg, 'error');
-            }, () => { createNewAction() },
-                ( isLoading ) => { setLoading(isLoading) });
+            response = await api.__post(
+              SCREEN_URL_CREATE_ROW,
+              formData,
+              (msg) => { showMessageSnackbar(msg, 'error') },
+              ( isLoading ) => { setLoading(isLoading) }
+            );
         }
 
 
@@ -380,9 +362,10 @@ export default function SlidesDataTable({ business }) {
 
     const editAction = async (id) => {
         setUpdate(id);
-        const response = await api.__get(`${SCREEN_URL_GET_DATA_UPDATE}${id}`,  (msg) => {
-            showMessageSnackbar(msg, 'error');
-        }, () => { editAction(id) });
+        const response = await api.__get(
+          `${SCREEN_URL_GET_DATA_UPDATE}${id}`,
+          (msg) => {showMessageSnackbar(msg, 'error')}
+        );
 
         if (response !== undefined && response.data) {
             setFormData({
@@ -394,36 +377,35 @@ export default function SlidesDataTable({ business }) {
                 description_position: response.data.description_position,
                 description_size: response.data.description_size
             })
-            getAreas(response.data.business_id)
             setOpenNewDialog(true);
         }
     }
 
     useEffect(() => {
-        getAreas(business)
+        getBusiness()
         getScreens();
+        // eslint-disable-next-line
     }, []);
 
     return (
-        <>
-            <Stack direction="row" alignItems="start" justifyContent="space-between" mb={5}>
-                <Typography variant="h4" gutterBottom>
-                    { business ?  'Slides' : '' }
-                </Typography>
-                <Button variant="outlined" onClick={handleClickNewScreen}
-                        startIcon={<Iconify icon="eva:plus-fill"/>}>
-                    New Slide
-                </Button>
-            </Stack>
-            <Card>
-                <UserListToolbar
-                    numSelected={selected.length}
-                    filterQuery={filterQuery}
-                    onFilterQuery={handleFilterByQuery}
-                    onDeleteSelect={handleDeleteSelected}
-                    onDetailsSelect={handleDetailsSelected}
-                    onEditSelect={handleEditSelected}
-                />
+      <>
+        <Stack direction="row" alignItems="start" justifyContent="space-between" mb={5}>
+          <Typography variant="h4" gutterBottom>
+            {business ? 'Slides' : ''}
+          </Typography>
+          <Button variant="outlined" onClick={handleClickNewScreen} startIcon={<Iconify icon="eva:plus-fill" />}>
+            New Slide
+          </Button>
+        </Stack>
+        <Card>
+          <UserListToolbar
+            numSelected={selected.length}
+            filterQuery={filterQuery}
+            onFilterQuery={handleFilterByQuery}
+            onDeleteSelect={handleDeleteSelected}
+            onDetailsSelect={handleDetailsSelected}
+            onEditSelect={handleEditSelected}
+          />
 
                 <Scrollbar>
                     <TableContainer sx={{minWidth: 800}}>
@@ -441,285 +423,284 @@ export default function SlidesDataTable({ business }) {
                                 {filteredDataTable.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                                     const {id, name, business, devices} = row;
                                     const selectedRow = selected.indexOf(id) !== -1;
+                                    // eslint-disable-next-line react/prop-types
                                     const nameUser = business ? business.user.name : ''
+                                    // eslint-disable-next-line react/prop-types
                                     const nameBusiness = business ? business.name : ''
                                     let bgColorCell = row.enabled === 1 ? palette.success.lighter : palette.error.lighter
                                     const ActiveOn = devices ? devices.length : 0
 
-                                    if (ActiveOn === 0) {
-                                        bgColorCell = palette.warning.lighter
-                                    }
+                    if (ActiveOn === 0) {
+                      bgColorCell = palette.warning.lighter;
+                    }
 
-                                    return (
-                                        <TableRow hover key={id} tabIndex={-1} role="checkbox"
-                                                  selected={selectedRow} sx={{background: bgColorCell}}>
-                                            <TableCell padding="checkbox">
-                                                <Checkbox checked={selectedRow}
-                                                          onChange={(event) => handleClick(event, id)}/>
-                                            </TableCell>
+                    return (
+                      <TableRow
+                        hover
+                        key={id}
+                        tabIndex={-1}
+                        role="checkbox"
+                        selected={selectedRow}
+                        sx={{ background: bgColorCell }}
+                      >
+                        <TableCell padding="checkbox">
+                          <Checkbox checked={selectedRow} onChange={(event) => handleClick(event, id)} />
+                        </TableCell>
 
-                                            <TableCell component="th" scope="row" padding="none">
-                                                <Stack direction="row" alignItems="center" spacing={2}>
-                                                    <Iconify icon="material-symbols:live-tv-outline-rounded" />
-                                                    <Typography variant="subtitle2" noWrap>
-                                                        {name}
-                                                    </Typography>
-                                                </Stack>
-                                            </TableCell>
+                        <TableCell component="th" scope="row" padding="none">
+                          <Stack direction="row" alignItems="center" spacing={2}>
+                            <Iconify icon="material-symbols:live-tv-outline-rounded" />
+                            <Typography variant="subtitle2" noWrap>
+                              {name}
+                            </Typography>
+                          </Stack>
+                        </TableCell>
 
-                                            <TableCell align="left">{nameUser}</TableCell>
+                        <TableCell align="left">{nameUser}</TableCell>
 
-                                            <TableCell align="left">{nameBusiness}</TableCell>
+                        <TableCell align="left">{nameBusiness}</TableCell>
 
-                                            <TableCell align="left">
-                                                { row.devices ? row.devices.length : 0 } Device(s)
-                                            </TableCell>
+                        <TableCell align="left">{row.devices ? row.devices.length : 0} Device(s)</TableCell>
 
-                                            <TableCell align="left">{formatDate(row.created_at)}</TableCell>
+                        <TableCell align="left">{formatDate(row.created_at)}</TableCell>
 
-                                            <TableCell align="left">{formatDate(row.updated_at)}</TableCell>
+                        <TableCell align="left">{formatDate(row.updated_at)}</TableCell>
 
-                                            <TableCell align="center">
-                                                <IconButton id={id} size="large" color="inherit"
-                                                            onClick={handleOpenMenu}>
-                                                    <Iconify icon={'eva:more-vertical-fill'}/>
-                                                </IconButton>
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                })}
-                                {emptyRows > 0 && (
-                                    <TableRow style={{height: 53 * emptyRows}}>
-                                        <TableCell colSpan={6}/>
-                                    </TableRow>
-                                )}
-                            </TableBody>
+                        <TableCell align="center">
+                          <IconButton id={id} size="large" color="inherit" onClick={handleOpenMenu}>
+                            <Iconify icon={'eva:more-vertical-fill'} />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                  {emptyRows > 0 && (
+                    <TableRow style={{ height: 53 * emptyRows }}>
+                      <TableCell colSpan={6} />
+                    </TableRow>
+                  )}
+                </TableBody>
 
-                            {isNotFound && (
-                                <TableBody>
-                                    <TableRow>
-                                        <TableCell align="center" colSpan={6} sx={{py: 3}}>
-                                            <Paper
-                                                sx={{
-                                                    textAlign: 'center',
-                                                }}
-                                            >
-                                                <Typography variant="h6" paragraph>
-                                                    Not found
-                                                </Typography>
-
-                                                <Typography variant="body2">
-                                                    No results found for &nbsp;
-                                                    <strong>&quot;{filterQuery}&quot;</strong>.
-                                                    <br/> Try checking for typos or using complete words.
-                                                </Typography>
-                                            </Paper>
-                                        </TableCell>
-                                    </TableRow>
-                                </TableBody>
-                            )}
-                        </Table>
-                    </TableContainer>
-                </Scrollbar>
-
-                <TablePagination
-                    rowsPerPageOptions={PROJECT_CONFIG.TABLE_CONFIG.ROWS_PER_PAGE_OPTIONS}
-                    component="div"
-                    count={filteredDataTable.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                />
-            </Card>
-            <Dialog open={openNewDialog} onClose={handleCloseNew}>
-                <DialogTitle>{update ? 'Edit' : 'Create a new'} Slide</DialogTitle>
-                <DialogContent>
-                    <TextField
-                        margin="dense"
-                        name="name"
-                        label="Name"
-                        value={formData.name ?? ''}
-                        type="text"
-                        fullWidth
-                        variant="standard"
-                        onChange={handleChange}
-                        error={validator.name && true}
-                        helperText={validator.name}
-                    />
-                    <TextField
-                        margin="dense"
-                        name="description"
-                        label="Description"
-                        value={formData.description ?? ''}
-                        type="text"
-                        fullWidth
-                        variant="standard"
-                        onChange={handleChange}
-                        sx={{pb: 2}}
-                    />
-                    <FormControl
-                        variant="standard"
-                        fullWidth
-                        disabled={disabledAreaField}
-                        defaultValue={''}
-                        sx={{mb: 3}}
-                        error={validator.business_id && true}
-                    >
-                        <InputLabel id="role-select-label">Select Business</InputLabel>
-                        <Select
-                            name="business_id"
-                            labelId="business-select-label"
-                            id="business-select"
-                            value={formData.business_id ?? ''}
-                            label="Select Business"
-                            onChange={handleChange}
+                {isNotFound && (
+                  <TableBody>
+                    <TableRow>
+                      <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
+                        <Paper
+                          sx={{
+                            textAlign: 'center',
+                          }}
                         >
-                            {
-                                businesses.map((item) => {
-                                    return (
-                                        <MenuItem key={item.id}
-                                                  value={item.id}>{item.name}</MenuItem>
-                                    )
-                                })
-                            }
-                        </Select>
-                        <Divider sx={{ mt: 0, mb: 2 }} />
-                        <Card sx={{ border: `1px solid ${palette.divider}` }}>
-                            <CardContent>
-                                <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 16 }}>
-                                    Images Description Settings
-                                </Typography>
-                                <Divider sx={{ mt: 0, mb: 2 }} />
-                                <Stack spacing={1}>
-                                    <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 14 }}>
-                                        Position
-                                    </Typography>
-                                    <Paper
-                                      elevation={0}
-                                      sx={(theme) => ({
-                                          display: 'flex',
-                                          border: `0px solid ${theme.palette.divider}`,
-                                          flexWrap: 'wrap',
-                                      })}
-                                    >
-                                        <ToggleButtonGroup
-                                          size="small"
-                                          {...controlDescPosition}
-                                          aria-label="Description Positions"
-                                          sx={(theme) => ({
-                                              display: 'flex',
-                                              border: `0px solid ${theme.palette.divider}`,
-                                              flexWrap: 'wrap',
-                                          })}
-                                        >
-                                            {positions.map((pos) => (
-                                              <ToggleButton value={pos.id} key={pos.id}>
-                                                  <Iconify width="35px" icon={pos.icon} />
-                                              </ToggleButton>
-                                            ))}
-                                        </ToggleButtonGroup>
-                                    </Paper>
-                                    <Divider sx={{ m: 1, p:1, border: '0px' }} />
-                                    <FormControl variant="outlined" defaultValue={''}>
-                                        <InputLabel id="text-color-select-label">Select Text Size</InputLabel>
-                                        <Select
-                                          name="description_size"
-                                          labelId="description-size-select-label"
-                                          id="description-size-select"
-                                          value={formData.description_size ?? ''}
-                                          label="Select Text Size"
-                                          onChange={handleChange}
-                                          variant="outlined"
-                                        >
-                                            <MenuItem key={'s'} value={'s'}>
-                                                {'Small'}
-                                            </MenuItem>
-                                            <MenuItem key={'m'} value={'m'}>
-                                                {'Medium'}
-                                            </MenuItem>
-                                            <MenuItem key={'l'} value={'l'}>
-                                                {'Large'}
-                                            </MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                </Stack>
-                            </CardContent>
-                        </Card>
-                    </FormControl>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseNew}>Cancel</Button>
-                    <LoadingButton
-                        color="secondary"
-                        onClick={createNewAction}
-                        loading={loading}
-                        loadingPosition="start"
-                        startIcon={<SaveIcon />}
-                        variant="contained"
-                    >
-                        <span>{update ? 'Save' : 'Create'}</span>
-                    </LoadingButton>
-                </DialogActions>
-            </Dialog>
+                          <Typography variant="h6" paragraph>
+                            Not found
+                          </Typography>
 
-            <Dialog open={openConfirmDelete} onClose={handleCloseConfirmDelete}>
-                <DialogTitle>
-                    Delete
-                </DialogTitle>
-                <DialogContent>
-                    <Typography variant="subtitle1" gutterBottom>
-                        Are you sure you want to delete the selected data?
-                    </Typography>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseConfirmDelete}>Cancel</Button>
-                    <LoadingButton
-                        color="error"
-                        onClick={deleteRows}
-                        loading={loading}
-                        loadingPosition="start"
-                        startIcon={<Delete />}
-                        variant="contained"
-                    >
-                        <span>OK</span>
-                    </LoadingButton>
-                </DialogActions>
-            </Dialog>
+                          <Typography variant="body2">
+                            No results found for &nbsp;
+                            <strong>&quot;{filterQuery}&quot;</strong>.
+                            <br /> Try checking for typos or using complete words.
+                          </Typography>
+                        </Paper>
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                )}
+              </Table>
+            </TableContainer>
+          </Scrollbar>
 
-            <Popover
-                open={Boolean(open)}
-                anchorEl={open}
-                onClose={handleCloseMenu}
-                anchorOrigin={{vertical: 'top', horizontal: 'left'}}
-                transformOrigin={{vertical: 'top', horizontal: 'right'}}
-                PaperProps={{
-                    sx: {
-                        p: 1,
-                        width: 140,
-                        '& .MuiMenuItem-root': {
-                            px: 1,
-                            typography: 'body2',
-                            borderRadius: 0.75,
-                        },
-                    },
-                }}
+          <TablePagination
+            rowsPerPageOptions={PROJECT_CONFIG.TABLE_CONFIG.ROWS_PER_PAGE_OPTIONS}
+            component="div"
+            count={filteredDataTable.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Card>
+        <Dialog open={openNewDialog} onClose={handleCloseNew}>
+          <DialogTitle>{update ? 'Edit' : 'Create a new'} Slide</DialogTitle>
+          <DialogContent>
+            <TextField
+              margin="dense"
+              name="name"
+              label="Name"
+              value={formData.name ?? ''}
+              type="text"
+              fullWidth
+              variant="standard"
+              onChange={handleChange}
+              error={validator.name && true}
+              helperText={validator.name}
+            />
+            <TextField
+              margin="dense"
+              name="description"
+              label="Description"
+              value={formData.description ?? ''}
+              type="text"
+              fullWidth
+              variant="standard"
+              onChange={handleChange}
+              sx={{ pb: 2 }}
+            />
+            <FormControl
+              variant="standard"
+              fullWidth
+              disabled={disabledAreaField}
+              defaultValue={''}
+              sx={{ mb: 3 }}
+              error={validator.business_id && true}
             >
-                <MenuItem onClick={() => handleDetailsItemClick(open)}>
-                    <Iconify icon={'eva:edit-fill'} sx={{mr: 2}}/>
-                    Edit
-                </MenuItem>
+              <InputLabel id="role-select-label">Select Business</InputLabel>
+              <Select
+                name="business_id"
+                labelId="business-select-label"
+                id="business-select"
+                value={formData.business_id ?? ''}
+                label="Select Business"
+                onChange={handleChange}
+              >
+                {businesses.map((item) => (
+                  <MenuItem key={item.id} value={item.id}>
+                    {item.name}
+                  </MenuItem>
+                ))}
+              </Select>
+              <Divider sx={{ mt: 0, mb: 2 }} />
+              <Card sx={{ border: `1px solid ${palette.divider}` }}>
+                <CardContent>
+                  <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 16 }}>
+                    Images Description Settings
+                  </Typography>
+                  <Divider sx={{ mt: 0, mb: 2 }} />
+                  <Stack spacing={1}>
+                    <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 14 }}>
+                      Position
+                    </Typography>
+                    <Paper
+                      elevation={0}
+                      sx={(theme) => ({
+                        display: 'flex',
+                        border: `0px solid ${theme.palette.divider}`,
+                        flexWrap: 'wrap',
+                      })}
+                    >
+                      <ToggleButtonGroup
+                        size="small"
+                        {...controlDescPosition}
+                        aria-label="Description Positions"
+                        sx={(theme) => ({
+                          display: 'flex',
+                          border: `0px solid ${theme.palette.divider}`,
+                          flexWrap: 'wrap',
+                        })}
+                      >
+                        {positions.map((pos) => (
+                          <ToggleButton value={pos.id} key={pos.id}>
+                            <Iconify width="35px" icon={pos.icon} />
+                          </ToggleButton>
+                        ))}
+                      </ToggleButtonGroup>
+                    </Paper>
+                    <Divider sx={{ m: 1, p: 1, border: '0px' }} />
+                    <FormControl variant="outlined" defaultValue={''}>
+                      <InputLabel id="text-color-select-label">Select Text Size</InputLabel>
+                      <Select
+                        name="description_size"
+                        labelId="description-size-select-label"
+                        id="description-size-select"
+                        value={formData.description_size ?? ''}
+                        label="Select Text Size"
+                        onChange={handleChange}
+                        variant="outlined"
+                      >
+                        <MenuItem key={'s'} value={'s'}>
+                          {'Small'}
+                        </MenuItem>
+                        <MenuItem key={'m'} value={'m'}>
+                          {'Medium'}
+                        </MenuItem>
+                        <MenuItem key={'l'} value={'l'}>
+                          {'Large'}
+                        </MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Stack>
+                </CardContent>
+              </Card>
+            </FormControl>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseNew}>Cancel</Button>
+            <LoadingButton
+              color="secondary"
+              onClick={createNewAction}
+              loading={loading}
+              loadingPosition="start"
+              startIcon={<SaveIcon />}
+              variant="contained"
+            >
+              <span>{update ? 'Save' : 'Create'}</span>
+            </LoadingButton>
+          </DialogActions>
+        </Dialog>
 
-                <MenuItem onClick={() => handleEditItemClick(open)}>
-                    <Iconify icon={'uil:setting'} sx={{mr: 2}}/>
-                    Settings
-                </MenuItem>
+        <Dialog open={openConfirmDelete} onClose={handleCloseConfirmDelete}>
+          <DialogTitle>Delete</DialogTitle>
+          <DialogContent>
+            <Typography variant="subtitle1" gutterBottom>
+              Are you sure you want to delete the selected data?
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseConfirmDelete}>Cancel</Button>
+            <LoadingButton
+              color="error"
+              onClick={deleteRows}
+              loading={loading}
+              loadingPosition="start"
+              startIcon={<Delete />}
+              variant="contained"
+            >
+              <span>OK</span>
+            </LoadingButton>
+          </DialogActions>
+        </Dialog>
 
-                <MenuItem onClick={() => handleDeleteItemClick(open)} sx={{color: 'error.main'}}>
-                    <Iconify icon={'eva:trash-2-outline'} sx={{mr: 2}}/>
-                    Delete
-                </MenuItem>
-            </Popover>
-        </>
+        <Popover
+          open={Boolean(open)}
+          anchorEl={open}
+          onClose={handleCloseMenu}
+          anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+          PaperProps={{
+            sx: {
+              p: 1,
+              width: 140,
+              '& .MuiMenuItem-root': {
+                px: 1,
+                typography: 'body2',
+                borderRadius: 0.75,
+              },
+            },
+          }}
+        >
+          <MenuItem onClick={() => handleDetailsItemClick(open)}>
+            <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
+            Edit
+          </MenuItem>
+
+          <MenuItem onClick={() => handleEditItemClick(open)}>
+            <Iconify icon={'uil:setting'} sx={{ mr: 2 }} />
+            Settings
+          </MenuItem>
+
+          <MenuItem onClick={() => handleDeleteItemClick(open)} sx={{ color: 'error.main' }}>
+            <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
+            Delete
+          </MenuItem>
+        </Popover>
+      </>
     );
 }

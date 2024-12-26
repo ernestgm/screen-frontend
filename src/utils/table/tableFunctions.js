@@ -1,4 +1,3 @@
-import {filter} from "lodash";
 
 // a, b, orderBy
 function descendingComparator(_a, _b, _orderBy) {
@@ -32,15 +31,13 @@ export function applySortFilter(props) {
         return a[1] - b[1];
     });
     if (query) {
-        return array.filter((item) => {
-            return Object.values(item).some(value => {
+        return array.filter((item) => Object.values(item).some(value => {
                 if (value != null) {
                     return value.toString().toLowerCase().includes(query.toString().toLowerCase())
                 }
 
                 return false
-            })
-        })
+            }))
     }
     return stabilizedThis.map((el) => el[0]);
 }

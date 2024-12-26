@@ -1,10 +1,6 @@
-import { useState } from 'react';
-
 // @mui
 import { Button } from '@mui/material';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled } from '@mui/material/styles';
-import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import Iconify from '../iconify';
 
 const VisuallyHiddenInput = styled('input')({
@@ -21,16 +17,13 @@ const VisuallyHiddenInput = styled('input')({
 
 
 
+// eslint-disable-next-line react/prop-types
 export default function SaveImage({ onChange, updatePreview, previewImage }) {
-    const showSnackbarMessage = useMessagesSnackbar();
-
-    const [image, setImage] = useState(null);
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
-                setImage(file);
                 onChange(file);
                 updatePreview(reader.result);
             };

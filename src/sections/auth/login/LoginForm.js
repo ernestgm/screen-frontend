@@ -1,7 +1,8 @@
-import {useState} from 'react';
+import React, {useState} from 'react';
 // @mui
 import {Stack, IconButton, InputAdornment, TextField, Divider} from '@mui/material';
 import {LoadingButton} from '@mui/lab';
+import { Login } from '@mui/icons-material';
 // table
 import Iconify from '../../../components/iconify';
 import useAuthStore from '../../../zustand/useAuthStore';
@@ -9,6 +10,7 @@ import useApiHandlerStore from "../../../zustand/useApiHandlerStore";
 import useMessagesSnackbar from "../../../hooks/messages/useMessagesSnackbar";
 import useNavigateTo from "../../../hooks/navigateTo";
 import useLocationStore from "../../../zustand/useLocationStore";
+
 // ----------------------------------------------------------------------
 
 export default function LoginForm() {
@@ -21,6 +23,7 @@ export default function LoginForm() {
     const showSnackbarMessage = useMessagesSnackbar();
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
+    const [loading, setLoading] = useState(false);
 
     const handleClick = async (e) => {
         e.preventDefault();
@@ -30,9 +33,13 @@ export default function LoginForm() {
             'password': password
         }
 
-        const userData = await api.__post('/login', formData, (msg) => {
+        const userData = await api.__post(
+          '/login',
+          formData,
+          (msg) => {
             showSnackbarMessage(msg, 'error');
-        }, () => { handleClick(e) });
+        },
+          ( isLoading ) => { setLoading(isLoading) });
 
         if (userData) {
             setCurrentUser(userData.success)
@@ -70,17 +77,17 @@ export default function LoginForm() {
                 />
             </Stack>
 
-            {/* <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{my: 2}}> */}
-            {/*    <Checkbox name="remember" label="Remember me"/> */}
-            {/*    <Link variant="subtitle2" underline="hover"> */}
-            {/*        Forgot password? */}
-            {/*    </Link> */}
-            {/* </Stack> */}
-
             <Divider sx={{ my: 3 }}/>
 
-            <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleClick}>
-                Login
+            <LoadingButton
+              color="secondary"
+              onClick={handleClick}
+              loading={loading}
+              loadingPosition="start"
+              startIcon={<Login />}
+              variant="contained"
+            >
+                <span>Login</span>
             </LoadingButton>
         </>
     );

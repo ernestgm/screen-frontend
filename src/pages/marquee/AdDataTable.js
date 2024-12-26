@@ -8,13 +8,12 @@ import {
     TableCell,
     TableContainer, TablePagination,
     TableRow, TextField,
-    Typography, FormControlLabel
+    Typography
 } from "@mui/material";
 import {LoadingButton} from "@mui/lab";
 import {Delete} from "@mui/icons-material";
 import SaveIcon from '@mui/icons-material/Save';
 import PROJECT_CONFIG from "../../config/config";
-import useNavigateTo from "../../hooks/navigateTo";
 import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import useMessagesAlert from "../../hooks/messages/useMessagesAlert";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
@@ -41,6 +40,7 @@ const AREA_TABLE_HEAD = [
     {id: 'actions', label: 'Actions'},
 ];
 
+// eslint-disable-next-line react/prop-types
 export default function AdDataTable({ marquee }) {
     const [dataTable, setDataTable] = useState([]);
     const [open, setOpen] = useState(false);
@@ -59,9 +59,10 @@ export default function AdDataTable({ marquee }) {
     const [rowsForDelete, setRowsForDelete] = useState([]);
 
     const getAds = async () => {
-        const response = await api.__get(`${AD_URL_GET_DATA}?marquee_id=${marquee}`, (msg) => {
-            showMessageSnackbar(msg, 'error');
-        }, () => { getAds() })
+        const response = await api.__get(
+          `${AD_URL_GET_DATA}?marquee_id=${marquee}`,
+          (msg) => {showMessageSnackbar(msg, 'error')}
+        )
 
         if (response !== undefined && response.data) {
             setDataTable(Object.values(response.data));
@@ -203,7 +204,7 @@ export default function AdDataTable({ marquee }) {
         setOpenNewAdDialog(true);
     };
 
-    const handleCloseNewAd = (updateTable) => {
+    const handleCloseNewAd = () => {
         setOpenNewAdDialog(false);
         setUpdate(null);
         setFormData(initialFormData);
@@ -211,9 +212,10 @@ export default function AdDataTable({ marquee }) {
 
     const editAdAction = async (id) => {
         setUpdate(id);
-        const response = await api.__get(`${AD_URL_GET_DATA_UPDATE}${id}`, (msg) => {
-            showMessageSnackbar(msg, 'error');
-        }, () => { editAdAction(id) });
+        const response = await api.__get(
+          `${AD_URL_GET_DATA_UPDATE}${id}`,
+          (msg) => {showMessageSnackbar(msg, 'error') }
+        );
 
         if (response !== undefined && response.data) {
             setFormData({
@@ -234,13 +236,19 @@ export default function AdDataTable({ marquee }) {
             editFormData.marquee_id = formData.marquee_id
             editFormData.enabled = formData.enabled
 
-            response = await api.__update(`${AD_URL_UPDATE_ROW}${update}`, editFormData, (msg) => {
-                showMessageSnackbar(msg, 'error');
-            }, () => { createNewAction() }, ( isLoading ) => { setLoading(isLoading) });
+            response = await api.__update(
+              `${AD_URL_UPDATE_ROW}${update}`,
+              editFormData,
+              (msg) => { showMessageSnackbar(msg, 'error') },
+              ( isLoading ) => { setLoading(isLoading) }
+            );
         } else {
-            response = await api.__post(AD_URL_CREATE_ROW, formData, (msg) => {
-                showMessageSnackbar(msg, 'error');
-            }, () => { createNewAction() }, ( isLoading ) => { setLoading(isLoading) });
+            response = await api.__post(
+              AD_URL_CREATE_ROW,
+              formData,
+              (msg) => { showMessageSnackbar(msg, 'error');},
+              ( isLoading ) => { setLoading(isLoading) }
+            );
         }
 
         if (response) {
@@ -260,6 +268,7 @@ export default function AdDataTable({ marquee }) {
 
     useEffect(() => {
         getAds()
+      // eslint-disable-next-line
     }, []);
 
     return (

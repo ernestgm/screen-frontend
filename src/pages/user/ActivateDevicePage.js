@@ -1,6 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import {useParams} from "react-router-dom";
-import SaveIcon from '@mui/icons-material/Save';
 // @mui
 import {Helmet} from 'react-helmet-async';
 import {Card, Container, Grid, Stack, TextField, Typography,} from '@mui/material';
@@ -9,7 +7,6 @@ import {LoadingButton} from "@mui/lab";
 import useApiHandlerStore from "../../zustand/useApiHandlerStore";
 import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import PROJECT_CONFIG from "../../config/config";
-import useNavigateTo from "../../hooks/navigateTo";
 
 
 
@@ -19,19 +16,12 @@ const NAME_PAGE = 'Link Device';
 const LINK_DEVICE_URL = PROJECT_CONFIG.API_CONFIG.USERS.ACTIVATE;
 export default function ActivateDevicePage() {
     const showSnackbarMessage = useMessagesSnackbar();
-    const {id} = useParams();
-    const {navigateTo} = useNavigateTo();
     const {api} = useApiHandlerStore((state) => state);
-    const [validator, setValidator] = useState({});
-    const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
         code: '',
     });
 
     const [loading, setLoading] = useState(false);
-    const [roles, setRoles] = useState([]);
-    const [editing, setEditing] = useState(false);
-    const [changePassword, setChangePassword] = useState(false);
 
     const handleChange = (event) => {
         const {name, value} = event.target;
@@ -44,10 +34,12 @@ export default function ActivateDevicePage() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const response = await api.__post(LINK_DEVICE_URL, formData, (msg) => {
-                showSnackbarMessage(msg, 'error');
-            }, () => { handleSubmit(e) },
-            ( isLoading ) => { setLoading(isLoading) });
+        const response = await api.__post(
+          LINK_DEVICE_URL,
+          formData,
+          (msg) => { showSnackbarMessage(msg, 'error') },
+            ( isLoading ) => { setLoading(isLoading) }
+        );
 
         if (response) {
             if (response.success) {

@@ -37,12 +37,10 @@ const POSITION_ICON = [
 
 // ----------------------------------------------------------------------
 
-const positions = [...Array(9)].map((_, index) => {
-  return {
+const positions = [...Array(9)].map((_, index) => ({
     id: POSITION_VALUE[index],
     name: POSITION_NAME[index],
     icon: POSITION_ICON[index],
-  };
-});
+  }));
 
 export default positions;

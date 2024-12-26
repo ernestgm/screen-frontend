@@ -1,10 +1,6 @@
-import { useState } from 'react';
-
 // @mui
 import { Button } from '@mui/material';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled } from '@mui/material/styles';
-import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import Iconify from '../iconify';
 
 const VisuallyHiddenInput = styled('input')({
@@ -21,6 +17,7 @@ const VisuallyHiddenInput = styled('input')({
 
 
 
+// eslint-disable-next-line react/prop-types
 export default function UploadVideo({ onChange }) {
     const handleImageChange = (e) => {
         const file = e.target.files[0];

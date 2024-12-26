@@ -49,6 +49,7 @@ const TABLE_HEAD = [
     {id: 'actions', label: 'Actions'},
 ];
 
+// eslint-disable-next-line react/prop-types
 export default function MediaDataTable({screen}) {
     const {navigateTo} = useNavigateTo();
     const [open, setOpen] = useState(false);
@@ -181,9 +182,10 @@ export default function MediaDataTable({screen}) {
     }
 
     const getData = async () => {
-        const response = await api.__get(`${URL_GET_DATA}?screen_id=${screen}`, (msg) => {
-            showMessageSnackbar(msg, 'error');
-        }, () => { getData() })
+        const response = await api.__get(
+          `${URL_GET_DATA}?screen_id=${screen}`,
+          (msg) => {showMessageSnackbar(msg, 'error')}
+        )
 
         if (response !== undefined && response.data) {
             setDataTable(Object.values(response.data))
@@ -192,6 +194,7 @@ export default function MediaDataTable({screen}) {
 
     useEffect(() => {
         getData();
+        // eslint-disable-next-line
     }, []);
 
     return (

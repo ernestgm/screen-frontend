@@ -1,10 +1,10 @@
 import React from 'react';
 import ImageUploading from 'react-images-uploading';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { Box, Button, Card, Grid, IconButton, Stack } from '@mui/material';
 import { DeleteOutline } from '@mui/icons-material';
 import Iconify from '../iconify';
 
+// eslint-disable-next-line react/prop-types
 export function UploadImages({ onChange }) {
   const [images, setImages] = React.useState([]);
   const maxNumber = 50;

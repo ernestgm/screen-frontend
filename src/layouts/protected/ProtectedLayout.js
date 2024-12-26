@@ -8,7 +8,7 @@ import navConfig from '../dashboard/nav/config';
 import useNavigateTo from '../../hooks/navigateTo';
 import useLocationStore from "../../zustand/useLocationStore";
 
-export default function ProtectedLayout(props) {
+export default function ProtectedLayout() {
   const { navigateTo } = useNavigateTo();
   const { pathname } = useLocation();
   const { currentUser } = useAuthStore((state) => state);
@@ -22,6 +22,7 @@ export default function ProtectedLayout(props) {
     if (!pathWithAccess.some((item) => pathname.includes(item.path))) {
       navigateTo('/401');
     }
+    // eslint-disable-next-line
   }, [pathname, currentUser && currentUser.user.role.tag, navigateTo]);
 
   useEffect(() => {
@@ -34,6 +35,7 @@ export default function ProtectedLayout(props) {
 
       redirectUser();
     }
+    // eslint-disable-next-line
   }, []);
 
   return (

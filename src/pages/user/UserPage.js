@@ -1,5 +1,4 @@
 import {Helmet} from 'react-helmet-async';
-import {filter} from 'lodash';
 import React, {useEffect, useState} from 'react';
 // @mui
 import {
@@ -82,12 +81,7 @@ export default function UserPage() {
     const getUsers = async () => {
         const response = await api.__get(
             '/users',
-            (msg) => {
-            showMessageSnackbar(msg, 'error');
-            },
-            () => {
-                getUsers()
-            }
+            (msg) => {showMessageSnackbar(msg, 'error')}
         )
 
         if (response !== undefined && response.data) {
@@ -228,34 +222,33 @@ export default function UserPage() {
         setOpenLinkDeviceDialog(true)
     }
     const handleSubmitLinkDevice = async () => {
-        const response = await api.__post(`${LINK_DEVICE_URL}?user_id=${linkUserId}`, formData, (msg) => {
-                showSnackbarMessage(msg, 'error');
-            }, () => {
-                handleSubmitLinkDevice()
-            },
-            (isLoading) => {
-                setLoading(isLoading)
-            });
+        const response = await api.__post(
+          `${LINK_DEVICE_URL}?user_id=${linkUserId}`,
+          formData,
+          (msg) => { showSnackbarMessage(msg, 'error') },
+            (isLoading) => { setLoading(isLoading) }
+        );
 
         if (response) {
             if (response.success) {
-                const msg = `The device has been linked!`;
-                showSnackbarMessage(msg, 'success');
-                setFormData({
-                    code: '',
-                });
-                setOpenLinkDeviceDialog(false)
+              const msg = `The device has been linked!`;
+              showSnackbarMessage(msg, 'success');
+              setFormData({
+                code: '',
+              });
+              setOpenLinkDeviceDialog(false);
             } else {
-                setFormData({
-                    code: '',
-                });
-                showSnackbarMessage(response.message, 'error');
+              setFormData({
+                code: '',
+              });
+              showSnackbarMessage(response.message, 'error');
             }
         }
     }
 
     useEffect(() => {
         getUsers()
+        // eslint-disable-next-line
     }, []);
 
     return (

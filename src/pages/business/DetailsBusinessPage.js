@@ -15,7 +15,6 @@ import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import PROJECT_CONFIG from "../../config/config";
 import BusinessDetailsCard from "../../sections/@dashboard/business/BusinessDetailsCard";
 import {MapContainer} from "../../components/map";
-import AreasDataTable from "./table/AreasDataTable";
 import SlidesDataTable from "../slides/SlidesDataTable";
 
 
@@ -23,9 +22,7 @@ import SlidesDataTable from "../slides/SlidesDataTable";
 
 const NAME_PAGE = 'Business Details';
 const URL_GET_BUSINESS = PROJECT_CONFIG.API_CONFIG.BUSINESS.GET;
-const URL_CREATE = '/business';
 const URL_TABLES_PAGE = '/dashboard/business';
-const URL_GET_ITEM_FOR_UPDATE = '/business/';
 
 export default function DetailsBusinessPage() {
     const showSnackbarMessage = useMessagesSnackbar();
@@ -54,11 +51,13 @@ export default function DetailsBusinessPage() {
     });
 
     const getBusinessDetails = async () => {
-        const response = await api.__get(`${URL_GET_BUSINESS}${id}`, (msg) => {
-            showSnackbarMessage(msg, 'error');
-        }, () => { getBusinessDetails() });
+        const response = await api.__get(
+          `${URL_GET_BUSINESS}${id}`,
+          (msg) => { showSnackbarMessage(msg, 'error') }
+        );
+
         if (response !== undefined && response.data) {
-            const data = response.data;
+            const {data} = response;
             setBusiness((oldData) => (
                 {
                     ...oldData,
@@ -82,6 +81,7 @@ export default function DetailsBusinessPage() {
 
     useEffect(() => {
         getBusinessDetails();
+        // eslint-disable-next-line
     }, [])
 
     return (

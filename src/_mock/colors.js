@@ -11,11 +11,9 @@ const COLOR_VALUE = ['#FFFFFF', '#000000', '#860000', '#010183' , '#017301'];
 
 // ----------------------------------------------------------------------
 
-const marqueeColors = [...Array(5)].map((_, index) => {
-  return {
+const marqueeColors = [...Array(5)].map((_, index) => ({
     id: COLOR_VALUE[index],
     name: COLOR_NAME[index],
-  };
-});
+  }));
 
 export default marqueeColors;

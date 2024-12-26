@@ -1,7 +1,7 @@
 import { useState, } from 'react';
 // @mui
 import { alpha } from '@mui/material/styles';
-import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton, Popover } from '@mui/material';
+import { Box, Divider, Typography, Stack, MenuItem, IconButton, Popover } from '@mui/material';
 // mocks_
 import useAuthStore from '../../../zustand/useAuthStore';
 import useApiHandlerStore from "../../../zustand/useApiHandlerStore";
@@ -25,7 +25,7 @@ const MENU_OPTIONS = [
 export default function AccountPopover() {
   const { navigateTo } = useNavigateTo();
   const [open, setOpen] = useState(null);
-  const { resetCurrentUser, userAccount } = useAuthStore((state) => state);
+  const { resetCurrentUser } = useAuthStore((state) => state);
   const { account } = useAccontHandlerStore((state) => state);
   const {api, setApiToken} = useApiHandlerStore((state) => state)
   const showSnackbarMessage = useMessagesSnackbar();
@@ -35,7 +35,7 @@ export default function AccountPopover() {
     setOpen(event.currentTarget);
   };
 
-  const handleClose = (e) => {
+  const handleClose = () => {
     setOpen(null);
   };
 
@@ -43,9 +43,13 @@ export default function AccountPopover() {
 
   const handleLogout = async (e) => {
     e.preventDefault()
-    const response = await api.__post('/logout', null, (msg) => {
-      showSnackbarMessage(msg, 'error');
-    }, () => { handleLogout(e) });
+
+    const response = await api.__post(
+      '/logout',
+      null,
+      (msg) => { showSnackbarMessage(msg, 'error') }
+    );
+
     if (response) {
       setOpen(null);
       resetCurrentUser();

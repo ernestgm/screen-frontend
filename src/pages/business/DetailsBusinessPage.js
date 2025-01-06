@@ -113,7 +113,7 @@ export default function DetailsBusinessPage() {
                             </Grid>
                             <Grid item xs={12} md={12} lg={12} sx={{
                                 width: '100%',
-                                height: '85%',
+                                height: '270px',
                             }}>
                                 <Card sx={{
                                     width: '100%',

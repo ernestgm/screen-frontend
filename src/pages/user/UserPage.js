@@ -105,7 +105,6 @@ export default function UserPage() {
             showMessageAlert(response.message, 'success');
             getUsers();
             setSelected([]);
-
         }
         setOpenConfirmDelete(false)
     }

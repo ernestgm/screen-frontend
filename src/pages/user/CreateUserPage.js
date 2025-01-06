@@ -125,7 +125,7 @@ export default function CreateUserPage() {
         const response = await api.__get(
             `/user/${id}`, (msg) => {
             showSnackbarMessage(msg, 'error')
-        }, () => { getUser() });
+        });
         if (response !== undefined && response.data) {
             setFormData({
                 name: response.data.name,

@@ -18,10 +18,10 @@ import {
     Typography,
     IconButton,
     TableContainer,
-    TablePagination, DialogTitle, DialogContent, DialogActions, Dialog, TextField, Divider,
+    TablePagination, DialogTitle, DialogContent, DialogActions, Dialog, TextField, Divider
 } from '@mui/material';
 import {Delete, Phonelink} from "@mui/icons-material";
-import {LoadingButton} from "@mui/lab";
+import { LoadingButton } from '@mui/lab';
 // table
 import Iconify from '../../components/iconify';
 import Scrollbar from '../../components/scrollbar';
@@ -35,6 +35,7 @@ import PROJECT_CONFIG from "../../config/config";
 import palette from "../../theme/palette";
 import useNavigateTo from "../../hooks/navigateTo";
 import {applySortFilter, getComparator} from "../../utils/table/tableFunctions";
+import TableSkeleton from '../../components/table-skeleton';
 
 
 
@@ -63,6 +64,7 @@ export default function UserPage() {
     const [selected, setSelected] = useState([]);
     const [rowsForDelete, setRowsForDelete] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [showSkeleton, setShowSkeleton] = useState(false);
     const [orderBy, setOrderBy] = useState('created_at');
     const [filterQuery, setFilterQuery] = useState('');
     const [rowsPerPage, setRowsPerPage] = useState(PROJECT_CONFIG.TABLE_CONFIG.ROW_PER_PAGE);
@@ -79,11 +81,12 @@ export default function UserPage() {
     const showMessageSnackbar = useMessagesSnackbar()
 
     const getUsers = async () => {
+        setShowSkeleton(true);
         const response = await api.__get(
             '/users',
             (msg) => {showMessageSnackbar(msg, 'error')}
         )
-
+        setShowSkeleton(false);
         if (response !== undefined && response.data) {
             setUsers(Object.values(response.data));
         }
@@ -279,108 +282,117 @@ export default function UserPage() {
                 </Stack>
 
                 <Card>
-                    <UserListToolbar
-                        numSelected={selected.length}
-                        filterQuery={filterQuery}
-                        onFilterQuery={handleFilterByQuery}
-                        onDeleteSelect={handleDeleteSelected}
-                        onEditSelect={handleEditSelected}
-                        onlyEdit
-                    />
+                    {
+                        showSkeleton ? (
+                            <TableSkeleton/>
+                        ) : (
+                          <>
+                              <UserListToolbar
+                                numSelected={selected.length}
+                                filterQuery={filterQuery}
+                                onFilterQuery={handleFilterByQuery}
+                                onDeleteSelect={handleDeleteSelected}
+                                onEditSelect={handleEditSelected}
+                                onlyEdit
+                              />
 
-                    <Scrollbar>
-                        <TableContainer sx={{minWidth: 800}}>
-                            <Table>
-                                <UserListHead
-                                    order={order}
-                                    orderBy={orderBy}
-                                    headLabel={TABLE_HEAD}
-                                    rowCount={filteredUsers.length}
-                                    numSelected={selected.length}
-                                    onRequestSort={handleRequestSort}
-                                    onSelectAllClick={handleSelectAllClick}
-                                />
-                                <TableBody>
-                                    {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                        const {id, name, lastname, email, role} = row;
-                                        const selectedUser = selected.indexOf(id) !== -1;
-                                        const bgColorCell = row.enabled === 1 ? palette.success.lighter : palette.error.lighter
-                                        return (
-                                            <TableRow hover key={id} tabIndex={-1} role="checkbox"
-                                                      selected={selectedUser} sx={{ background: bgColorCell }}>
-                                                <TableCell padding="checkbox">
-                                                    <Checkbox checked={selectedUser}
-                                                              onChange={(event) => handleClick(event, id)}/>
-                                                </TableCell>
+                              <Scrollbar>
+                                  <TableContainer sx={{minWidth: 800}}>
+                                      <Table>
+                                          <UserListHead
+                                            order={order}
+                                            orderBy={orderBy}
+                                            headLabel={TABLE_HEAD}
+                                            rowCount={filteredUsers.length}
+                                            numSelected={selected.length}
+                                            onRequestSort={handleRequestSort}
+                                            onSelectAllClick={handleSelectAllClick}
+                                          />
+                                          <TableBody>
+                                              {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                                                  const {id, name, lastname, email, role} = row;
+                                                  const selectedUser = selected.indexOf(id) !== -1;
+                                                  const bgColorCell = row.enabled === 1 ? palette.success.lighter : palette.error.lighter
+                                                  return (
+                                                    <TableRow hover key={id} tabIndex={-1} role="checkbox"
+                                                              selected={selectedUser} sx={{ background: bgColorCell }}>
+                                                        <TableCell padding="checkbox">
+                                                            <Checkbox checked={selectedUser}
+                                                                      onChange={(event) => handleClick(event, id)}/>
+                                                        </TableCell>
 
-                                                <TableCell component="th" scope="row" padding="none">
-                                                    <Stack direction="row" alignItems="center" spacing={2}>
-                                                        <Avatar alt={name} src='/assets/images/avatars/avatar_1.jpg'/>
-                                                        <Typography variant="subtitle2" noWrap>
-                                                            {name} {lastname}
-                                                        </Typography>
-                                                    </Stack>
-                                                </TableCell>
+                                                        <TableCell component="th" scope="row" padding="none">
+                                                            <Stack direction="row" alignItems="center" spacing={2}>
+                                                                <Avatar alt={name} src='/assets/images/avatars/avatar_1.jpg'/>
+                                                                <Typography variant="subtitle2" noWrap>
+                                                                    {name} {lastname}
+                                                                </Typography>
+                                                            </Stack>
+                                                        </TableCell>
 
-                                                <TableCell align="left">{email}</TableCell>
+                                                        <TableCell align="left">{email}</TableCell>
 
-                                                <TableCell align="left">{role && role.name}</TableCell>
+                                                        <TableCell align="left">{role && role.name}</TableCell>
 
-                                                <TableCell align="left">{formatDate(row.created_at)}</TableCell>
+                                                        <TableCell align="left">{formatDate(row.created_at)}</TableCell>
 
-                                                <TableCell align="left">{formatDate(row.updated_at)}</TableCell>
+                                                        <TableCell align="left">{formatDate(row.updated_at)}</TableCell>
 
-                                                <TableCell align="right">
-                                                    <IconButton id={id} size="large" color="inherit" onClick={handleOpenMenu}>
-                                                        <Iconify icon={'eva:more-vertical-fill'}/>
-                                                    </IconButton>
-                                                </TableCell>
-                                            </TableRow>
-                                        );
-                                    })}
-                                    {emptyRows > 0 && (
-                                        <TableRow style={{height: 53 * emptyRows}}>
-                                            <TableCell colSpan={6}/>
-                                        </TableRow>
-                                    )}
-                                </TableBody>
+                                                        <TableCell align="right">
+                                                            <IconButton id={id} size="large" color="inherit" onClick={handleOpenMenu}>
+                                                                <Iconify icon={'eva:more-vertical-fill'}/>
+                                                            </IconButton>
+                                                        </TableCell>
+                                                    </TableRow>
+                                                  );
+                                              })}
+                                              {emptyRows > 0 && (
+                                                <TableRow style={{height: 53 * emptyRows}}>
+                                                    <TableCell colSpan={6}/>
+                                                </TableRow>
+                                              )}
+                                          </TableBody>
 
-                                {isNotFound && (
-                                    <TableBody>
-                                        <TableRow>
-                                            <TableCell align="center" colSpan={6} sx={{py: 3}}>
-                                                <Paper
-                                                    sx={{
-                                                        textAlign: 'center',
-                                                    }}
-                                                >
-                                                    <Typography variant="h6" paragraph>
-                                                        Not found
-                                                    </Typography>
+                                          {isNotFound && (
+                                            <TableBody>
+                                                <TableRow>
+                                                    <TableCell align="center" colSpan={6} sx={{py: 3}}>
+                                                        <Paper
+                                                          sx={{
+                                                              textAlign: 'center',
+                                                          }}
+                                                        >
+                                                            <Typography variant="h6" paragraph>
+                                                                Not found
+                                                            </Typography>
 
-                                                    <Typography variant="body2">
-                                                        No results found for &nbsp;
-                                                        <strong>&quot;{filterQuery}&quot;</strong>.
-                                                        <br/> Try checking for typos or using complete words.
-                                                    </Typography>
-                                                </Paper>
-                                            </TableCell>
-                                        </TableRow>
-                                    </TableBody>
-                                )}
-                            </Table>
-                        </TableContainer>
-                    </Scrollbar>
+                                                            <Typography variant="body2">
+                                                                No results found for &nbsp;
+                                                                <strong>&quot;{filterQuery}&quot;</strong>.
+                                                                <br/> Try checking for typos or using complete words.
+                                                            </Typography>
+                                                        </Paper>
+                                                    </TableCell>
+                                                </TableRow>
+                                            </TableBody>
+                                          )}
+                                      </Table>
+                                  </TableContainer>
+                              </Scrollbar>
 
-                    <TablePagination
-                        rowsPerPageOptions={PROJECT_CONFIG.TABLE_CONFIG.ROWS_PER_PAGE_OPTIONS}
-                        component="div"
-                        count={filteredUsers.length}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        onPageChange={handleChangePage}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
-                    />
+                              <TablePagination
+                                rowsPerPageOptions={PROJECT_CONFIG.TABLE_CONFIG.ROWS_PER_PAGE_OPTIONS}
+                                component="div"
+                                count={filteredUsers.length}
+                                rowsPerPage={rowsPerPage}
+                                page={page}
+                                onPageChange={handleChangePage}
+                                onRowsPerPageChange={handleChangeRowsPerPage}
+                              />
+                          </>
+                        )
+                    }
+
                 </Card>
             </Container>
 

@@ -44,6 +44,7 @@ import palette from "../../theme/palette";
 import useNavigateTo from "../../hooks/navigateTo";
 import useAuthStore from "../../zustand/useAuthStore";
 import positions from '../../_mock/positions';
+import TableSkeleton from '../../components/table-skeleton';
 
 
 
@@ -86,6 +87,7 @@ export default function SlidesDataTable({ business }) {
     const showMessageAlert = useMessagesAlert();
     const showMessageSnackbar = useMessagesSnackbar();
     const [loading, setLoading] = useState(false);
+    const [showSkeleton, setShowSkeleton] = useState(false);
     const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
     const [rowsForDelete, setRowsForDelete] = useState([]);
 
@@ -118,12 +120,14 @@ export default function SlidesDataTable({ business }) {
     };
 
     const getScreens = async () => {
+        setShowSkeleton(true)
         const urlApi = business ? `${SCREEN_URL_GET_DATA}?business_id=${business}` : SCREEN_URL_GET_DATA;
         const response = await api.__get(
           urlApi,
           (msg) => { showMessageSnackbar(msg, 'error') }
         )
 
+        setShowSkeleton(false)
         if (response !== undefined && response.data) {
             if (business) {
                 setDataTable(Object.values(response.data));
@@ -399,125 +403,133 @@ export default function SlidesDataTable({ business }) {
           </Button>
         </Stack>
         <Card>
-          <UserListToolbar
-            numSelected={selected.length}
-            filterQuery={filterQuery}
-            onFilterQuery={handleFilterByQuery}
-            onDeleteSelect={handleDeleteSelected}
-            onDetailsSelect={handleDetailsSelected}
-            onEditSelect={handleEditSelected}
-          />
+            {
+                showSkeleton ? (
+                  <TableSkeleton/>
+                ) : (
+                  <>
+                      <UserListToolbar
+                        numSelected={selected.length}
+                        filterQuery={filterQuery}
+                        onFilterQuery={handleFilterByQuery}
+                        onDeleteSelect={handleDeleteSelected}
+                        onDetailsSelect={handleDetailsSelected}
+                        onEditSelect={handleEditSelected}
+                      />
 
-                <Scrollbar>
-                    <TableContainer sx={{minWidth: 800}}>
-                        <Table>
-                            <UserListHead
-                                order={order}
-                                orderBy={orderBy}
-                                headLabel={TABLE_HEAD}
-                                rowCount={filteredDataTable.length}
-                                numSelected={selected.length}
-                                onRequestSort={handleRequestSort}
-                                onSelectAllClick={handleSelectAllClick}
-                            />
-                            <TableBody>
-                                {filteredDataTable.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                    const {id, name, business, devices} = row;
-                                    const selectedRow = selected.indexOf(id) !== -1;
-                                    // eslint-disable-next-line react/prop-types
-                                    const nameUser = business ? business.user.name : ''
-                                    // eslint-disable-next-line react/prop-types
-                                    const nameBusiness = business ? business.name : ''
-                                    let bgColorCell = row.enabled === 1 ? palette.success.lighter : palette.error.lighter
-                                    const ActiveOn = devices ? devices.length : 0
+                      <Scrollbar>
+                          <TableContainer sx={{minWidth: 800}}>
+                              <Table>
+                                  <UserListHead
+                                    order={order}
+                                    orderBy={orderBy}
+                                    headLabel={TABLE_HEAD}
+                                    rowCount={filteredDataTable.length}
+                                    numSelected={selected.length}
+                                    onRequestSort={handleRequestSort}
+                                    onSelectAllClick={handleSelectAllClick}
+                                  />
+                                  <TableBody>
+                                      {filteredDataTable.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                                          const {id, name, business, devices} = row;
+                                          const selectedRow = selected.indexOf(id) !== -1;
+                                          // eslint-disable-next-line react/prop-types
+                                          const nameUser = business ? business.user.name : ''
+                                          // eslint-disable-next-line react/prop-types
+                                          const nameBusiness = business ? business.name : ''
+                                          let bgColorCell = row.enabled === 1 ? palette.success.lighter : palette.error.lighter
+                                          const ActiveOn = devices ? devices.length : 0
 
-                    if (ActiveOn === 0) {
-                      bgColorCell = palette.warning.lighter;
-                    }
+                                          if (ActiveOn === 0) {
+                                              bgColorCell = palette.warning.lighter;
+                                          }
 
-                    return (
-                      <TableRow
-                        hover
-                        key={id}
-                        tabIndex={-1}
-                        role="checkbox"
-                        selected={selectedRow}
-                        sx={{ background: bgColorCell }}
-                      >
-                        <TableCell padding="checkbox">
-                          <Checkbox checked={selectedRow} onChange={(event) => handleClick(event, id)} />
-                        </TableCell>
+                                          return (
+                                            <TableRow
+                                              hover
+                                              key={id}
+                                              tabIndex={-1}
+                                              role="checkbox"
+                                              selected={selectedRow}
+                                              sx={{ background: bgColorCell }}
+                                            >
+                                                <TableCell padding="checkbox">
+                                                    <Checkbox checked={selectedRow} onChange={(event) => handleClick(event, id)} />
+                                                </TableCell>
 
-                        <TableCell component="th" scope="row" padding="none">
-                          <Stack direction="row" alignItems="center" spacing={2}>
-                            <Iconify icon="material-symbols:live-tv-outline-rounded" />
-                            <Typography variant="subtitle2" noWrap>
-                              {name}
-                            </Typography>
-                          </Stack>
-                        </TableCell>
+                                                <TableCell component="th" scope="row" padding="none">
+                                                    <Stack direction="row" alignItems="center" spacing={2}>
+                                                        <Iconify icon="material-symbols:live-tv-outline-rounded" />
+                                                        <Typography variant="subtitle2" noWrap>
+                                                            {name}
+                                                        </Typography>
+                                                    </Stack>
+                                                </TableCell>
 
-                        <TableCell align="left">{nameUser}</TableCell>
+                                                <TableCell align="left">{nameUser}</TableCell>
 
-                        <TableCell align="left">{nameBusiness}</TableCell>
+                                                <TableCell align="left">{nameBusiness}</TableCell>
 
-                        <TableCell align="left">{row.devices ? row.devices.length : 0} Device(s)</TableCell>
+                                                <TableCell align="left">{row.devices ? row.devices.length : 0} Device(s)</TableCell>
 
-                        <TableCell align="left">{formatDate(row.created_at)}</TableCell>
+                                                <TableCell align="left">{formatDate(row.created_at)}</TableCell>
 
-                        <TableCell align="left">{formatDate(row.updated_at)}</TableCell>
+                                                <TableCell align="left">{formatDate(row.updated_at)}</TableCell>
 
-                        <TableCell align="center">
-                          <IconButton id={id} size="large" color="inherit" onClick={handleOpenMenu}>
-                            <Iconify icon={'eva:more-vertical-fill'} />
-                          </IconButton>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                  {emptyRows > 0 && (
-                    <TableRow style={{ height: 53 * emptyRows }}>
-                      <TableCell colSpan={6} />
-                    </TableRow>
-                  )}
-                </TableBody>
+                                                <TableCell align="center">
+                                                    <IconButton id={id} size="large" color="inherit" onClick={handleOpenMenu}>
+                                                        <Iconify icon={'eva:more-vertical-fill'} />
+                                                    </IconButton>
+                                                </TableCell>
+                                            </TableRow>
+                                          );
+                                      })}
+                                      {emptyRows > 0 && (
+                                        <TableRow style={{ height: 53 * emptyRows }}>
+                                            <TableCell colSpan={6} />
+                                        </TableRow>
+                                      )}
+                                  </TableBody>
 
-                {isNotFound && (
-                  <TableBody>
-                    <TableRow>
-                      <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-                        <Paper
-                          sx={{
-                            textAlign: 'center',
-                          }}
-                        >
-                          <Typography variant="h6" paragraph>
-                            Not found
-                          </Typography>
+                                  {isNotFound && (
+                                    <TableBody>
+                                        <TableRow>
+                                            <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
+                                                <Paper
+                                                  sx={{
+                                                      textAlign: 'center',
+                                                  }}
+                                                >
+                                                    <Typography variant="h6" paragraph>
+                                                        Not found
+                                                    </Typography>
 
-                          <Typography variant="body2">
-                            No results found for &nbsp;
-                            <strong>&quot;{filterQuery}&quot;</strong>.
-                            <br /> Try checking for typos or using complete words.
-                          </Typography>
-                        </Paper>
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                )}
-              </Table>
-            </TableContainer>
-          </Scrollbar>
+                                                    <Typography variant="body2">
+                                                        No results found for &nbsp;
+                                                        <strong>&quot;{filterQuery}&quot;</strong>.
+                                                        <br /> Try checking for typos or using complete words.
+                                                    </Typography>
+                                                </Paper>
+                                            </TableCell>
+                                        </TableRow>
+                                    </TableBody>
+                                  )}
+                              </Table>
+                          </TableContainer>
+                      </Scrollbar>
 
-          <TablePagination
-            rowsPerPageOptions={PROJECT_CONFIG.TABLE_CONFIG.ROWS_PER_PAGE_OPTIONS}
-            component="div"
-            count={filteredDataTable.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
+                      <TablePagination
+                        rowsPerPageOptions={PROJECT_CONFIG.TABLE_CONFIG.ROWS_PER_PAGE_OPTIONS}
+                        component="div"
+                        count={filteredDataTable.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                      />
+                  </>
+                )
+            }
         </Card>
         <Dialog open={openNewDialog} onClose={handleCloseNew}>
           <DialogTitle>{update ? 'Edit' : 'Create a new'} Slide</DialogTitle>

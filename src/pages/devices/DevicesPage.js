@@ -44,6 +44,7 @@ import useMessagesSnackbar from "../../hooks/messages/useMessagesSnackbar";
 import PROJECT_CONFIG from "../../config/config";
 import useAuthStore from "../../zustand/useAuthStore";
 import palette from "../../theme/palette";
+import TableSkeleton from '../../components/table-skeleton';
 
 
 
@@ -94,6 +95,7 @@ export default function DevicePage() {
     const [validator, setValidator] = useState({});
     const [disabledUserField, setDisabledUserField] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [showSkeleton, setShowSkeleton] = useState(false);
     const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
     const [rowsForDelete, setRowsForDelete] = useState([]);
     const [clientsOnline, setClientsOnline] = useState([]);
@@ -288,11 +290,13 @@ export default function DevicePage() {
     };
 
     const getDevices = async () => {
+        setShowSkeleton(true)
         const response = await api.__get(
           `${DEVICE_URL_GET_DATA}`,
           (msg) => {showMessageSnackbar(msg, 'error')}
         )
 
+        setShowSkeleton(false)
         if (response !== undefined && response.data) {
             if (currentUser && currentUser.user.role.tag === PROJECT_CONFIG.API_CONFIG.ROLES.ADMIN) {
                 console.log(Object.values(response.data))
@@ -597,156 +601,164 @@ export default function DevicePage() {
                 </Stack>
 
                 <Card>
-                    <UserListToolbar
-                        numSelected={selected.length}
-                        filterQuery={filterQuery}
-                        onFilterQuery={handleFilterByQuery}
-                        onDeleteSelect={handleDeleteSelected}
-                        onEditSelect={handleEditSelected}
-                        onlyEdit
-                    />
+                    {
+                        showSkeleton ? (
+                          <TableSkeleton/>
+                        ) : (
+                          <>
+                              <UserListToolbar
+                                numSelected={selected.length}
+                                filterQuery={filterQuery}
+                                onFilterQuery={handleFilterByQuery}
+                                onDeleteSelect={handleDeleteSelected}
+                                onEditSelect={handleEditSelected}
+                                onlyEdit
+                              />
 
-                    <Scrollbar>
-                        <TableContainer sx={{minWidth: 800}}>
-                            <Table>
-                                <UserListHead
-                                    order={order}
-                                    orderBy={orderBy}
-                                    headLabel={TABLE_HEAD}
-                                    rowCount={filteredDevices.length}
-                                    numSelected={selected.length}
-                                    onRequestSort={handleRequestSort}
-                                    onSelectAllClick={handleSelectAllClick}
-                                />
-                                <TableBody>
-                                    {filteredDevices.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                        const {id, code, name} = row;
-                                        const selectedDevices = selected.indexOf(id) !== -1;
-                                        const user = (users.find((n) => n.id === row.user_id))
+                              <Scrollbar>
+                                  <TableContainer sx={{minWidth: 800}}>
+                                      <Table>
+                                          <UserListHead
+                                            order={order}
+                                            orderBy={orderBy}
+                                            headLabel={TABLE_HEAD}
+                                            rowCount={filteredDevices.length}
+                                            numSelected={selected.length}
+                                            onRequestSort={handleRequestSort}
+                                            onSelectAllClick={handleSelectAllClick}
+                                          />
+                                          <TableBody>
+                                              {filteredDevices.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                                                  const {id, code, name} = row;
+                                                  const selectedDevices = selected.indexOf(id) !== -1;
+                                                  const user = (users.find((n) => n.id === row.user_id))
 
-                                        const isDeviceOnline = clientsOnline.some((value) => value === row.device_id)
-                                        const isWDOnline = wdClientsOnline.some((value) => value === row.device_id)
-                                        const showInitAppBtn = (!isDeviceOnline && isWDOnline)
+                                                  const isDeviceOnline = clientsOnline.some((value) => value === row.device_id)
+                                                  const isWDOnline = wdClientsOnline.some((value) => value === row.device_id)
+                                                  const showInitAppBtn = (!isDeviceOnline && isWDOnline)
 
-                                        const onlineColor = isDeviceOnline ? palette.success.dark : palette.error.dark
+                                                  const onlineColor = isDeviceOnline ? palette.success.dark : palette.error.dark
 
-                                        let wdOnlineColor = palette.success.dark;
-                                        let animateClassOnline = "rotationAnimate";
-                                        if (!isWDOnline) {
-                                            wdOnlineColor = palette.error.dark
-                                            animateClassOnline = "";
-                                        }
+                                                  let wdOnlineColor = palette.success.dark;
+                                                  let animateClassOnline = "rotationAnimate";
+                                                  if (!isWDOnline) {
+                                                      wdOnlineColor = palette.error.dark
+                                                      animateClassOnline = "";
+                                                  }
 
-                                        return (
-                                            <TableRow hover key={id} tabIndex={-1} role="checkbox"
-                                                      selected={selectedDevices}>
-                                                <TableCell padding="checkbox">
-                                                    <Checkbox checked={selectedDevices}
-                                                              onChange={(event) => handleClick(event, id)}/>
-                                                </TableCell>
+                                                  return (
+                                                    <TableRow hover key={id} tabIndex={-1} role="checkbox"
+                                                              selected={selectedDevices}>
+                                                        <TableCell padding="checkbox">
+                                                            <Checkbox checked={selectedDevices}
+                                                                      onChange={(event) => handleClick(event, id)}/>
+                                                        </TableCell>
 
-                                                <TableCell component="th" scope="row" padding="none">
-                                                    <Stack direction="row" alignItems="center" spacing={2}>
-                                                        <Iconify icon="mdi:cast-variant" sx={{color: onlineColor}}/>
-                                                        <Stack className={animateClassOnline}>
-                                                            <Iconify icon="mdi:radar" sx={{color: wdOnlineColor}}/>
-                                                        </Stack>
-                                                        { showInitAppBtn && (
-                                                            <Button
-                                                                color="warning"
-                                                                size="small"
-                                                                variant="contained"
-                                                                onClick={() => startAppClick(row.device_id)}
-                                                            >
-                                                                Start
-                                                            </Button>
-                                                        ) }
-                                                        <Typography variant="subtitle2" noWrap>
-                                                            {code}
-                                                        </Typography>
-                                                    </Stack>
-                                                </TableCell>
+                                                        <TableCell component="th" scope="row" padding="none">
+                                                            <Stack direction="row" alignItems="center" spacing={2}>
+                                                                <Iconify icon="mdi:cast-variant" sx={{color: onlineColor}}/>
+                                                                <Stack className={animateClassOnline}>
+                                                                    <Iconify icon="mdi:radar" sx={{color: wdOnlineColor}}/>
+                                                                </Stack>
+                                                                { showInitAppBtn && (
+                                                                  <Button
+                                                                    color="warning"
+                                                                    size="small"
+                                                                    variant="contained"
+                                                                    onClick={() => startAppClick(row.device_id)}
+                                                                  >
+                                                                      Start
+                                                                  </Button>
+                                                                ) }
+                                                                <Typography variant="subtitle2" noWrap>
+                                                                    {code}
+                                                                </Typography>
+                                                            </Stack>
+                                                        </TableCell>
 
-                                                <TableCell align="left">{ name }</TableCell>
+                                                        <TableCell align="left">{ name }</TableCell>
 
-                                                <TableCell align="left">
-                                                    {
-                                                        user && user.name
-                                                    }
-                                                </TableCell>
+                                                        <TableCell align="left">
+                                                            {
+                                                              user && user.name
+                                                            }
+                                                        </TableCell>
 
-                                                <TableCell align="center">
-                                                    {
-                                                        row.screen ? row.screen.name : '------'
-                                                    }
-                                                </TableCell>
+                                                        <TableCell align="center">
+                                                            {
+                                                                row.screen ? row.screen.name : '------'
+                                                            }
+                                                        </TableCell>
 
-                                                <TableCell align="center">
-                                                    {
-                                                        row.marquee ? row.marquee.name : 'No'
-                                                    }
-                                                </TableCell>
+                                                        <TableCell align="center">
+                                                            {
+                                                                row.marquee ? row.marquee.name : 'No'
+                                                            }
+                                                        </TableCell>
 
-                                                <TableCell align="center">
-                                                    {
-                                                        row.qr ? row.qr.name : 'No'
-                                                    }
-                                                </TableCell>
+                                                        <TableCell align="center">
+                                                            {
+                                                                row.qr ? row.qr.name : 'No'
+                                                            }
+                                                        </TableCell>
 
-                                                <TableCell align="left">{row.device_id}</TableCell>
-                                                <TableCell align="left">{formatDate(row.updated_at)}</TableCell>
+                                                        <TableCell align="left">{row.device_id}</TableCell>
+                                                        <TableCell align="left">{formatDate(row.updated_at)}</TableCell>
 
-                                                <TableCell align="right">
-                                                    <IconButton id={id} size="large" color="inherit" onClick={handleOpenMenu}>
-                                                        <Iconify icon={'eva:more-vertical-fill'}/>
-                                                    </IconButton>
-                                                </TableCell>
-                                            </TableRow>
-                                        );
-                                    })}
-                                    {emptyRows > 0 && (
-                                        <TableRow style={{height: 53 * emptyRows}}>
-                                            <TableCell colSpan={6}/>
-                                        </TableRow>
-                                    )}
-                                </TableBody>
+                                                        <TableCell align="right">
+                                                            <IconButton id={id} size="large" color="inherit" onClick={handleOpenMenu}>
+                                                                <Iconify icon={'eva:more-vertical-fill'}/>
+                                                            </IconButton>
+                                                        </TableCell>
+                                                    </TableRow>
+                                                  );
+                                              })}
+                                              {emptyRows > 0 && (
+                                                <TableRow style={{height: 53 * emptyRows}}>
+                                                    <TableCell colSpan={6}/>
+                                                </TableRow>
+                                              )}
+                                          </TableBody>
 
-                                {isNotFound && (
-                                    <TableBody>
-                                        <TableRow>
-                                            <TableCell align="center" colSpan={6} sx={{py: 3}}>
-                                                <Paper
-                                                    sx={{
-                                                        textAlign: 'center',
-                                                    }}
-                                                >
-                                                    <Typography variant="h6" paragraph>
-                                                        Not found
-                                                    </Typography>
+                                          {isNotFound && (
+                                            <TableBody>
+                                                <TableRow>
+                                                    <TableCell align="center" colSpan={6} sx={{py: 3}}>
+                                                        <Paper
+                                                          sx={{
+                                                              textAlign: 'center',
+                                                          }}
+                                                        >
+                                                            <Typography variant="h6" paragraph>
+                                                                Not found
+                                                            </Typography>
 
-                                                    <Typography variant="body2">
-                                                        No results found for &nbsp;
-                                                        <strong>&quot;{filterQuery}&quot;</strong>.
-                                                        <br/> Try checking for typos or using complete words.
-                                                    </Typography>
-                                                </Paper>
-                                            </TableCell>
-                                        </TableRow>
-                                    </TableBody>
-                                )}
-                            </Table>
-                        </TableContainer>
-                    </Scrollbar>
+                                                            <Typography variant="body2">
+                                                                No results found for &nbsp;
+                                                                <strong>&quot;{filterQuery}&quot;</strong>.
+                                                                <br/> Try checking for typos or using complete words.
+                                                            </Typography>
+                                                        </Paper>
+                                                    </TableCell>
+                                                </TableRow>
+                                            </TableBody>
+                                          )}
+                                      </Table>
+                                  </TableContainer>
+                              </Scrollbar>
 
-                    <TablePagination
-                        rowsPerPageOptions={PROJECT_CONFIG.TABLE_CONFIG.ROWS_PER_PAGE_OPTIONS}
-                        component="div"
-                        count={filteredDevices.length}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        onPageChange={handleChangePage}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
-                    />
+                              <TablePagination
+                                rowsPerPageOptions={PROJECT_CONFIG.TABLE_CONFIG.ROWS_PER_PAGE_OPTIONS}
+                                component="div"
+                                count={filteredDevices.length}
+                                rowsPerPage={rowsPerPage}
+                                page={page}
+                                onPageChange={handleChangePage}
+                                onRowsPerPageChange={handleChangeRowsPerPage}
+                              />
+                          </>
+                        )
+                    }
                 </Card>
             </Container>
             <Dialog open={openNewDialog} onClose={handleCloseNew}>

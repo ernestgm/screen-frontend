@@ -33,6 +33,7 @@ import {UserListHead, UserListToolbar} from "../../sections/@dashboard/user";
 import Scrollbar from "../../components/scrollbar/Scrollbar";
 import {applySortFilter, getComparator} from "../../utils/table/tableFunctions";
 import palette from '../../theme/palette';
+import TableSkeleton from '../../components/table-skeleton';
 
 
 const URL_GET_DATA = PROJECT_CONFIG.API_CONFIG.IMAGE.ALL;
@@ -64,6 +65,7 @@ export default function MediaDataTable({screen}) {
     const [filterQuery, setFilterQuery] = useState('');
     const [rowsPerPage, setRowsPerPage] = useState(PROJECT_CONFIG.TABLE_CONFIG.ROW_PER_PAGE);
     const [loading, setLoading] = useState(false);
+    const [showSkeleton, setShowSkeleton] = useState(false);
     const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
     const [rowsForDelete, setRowsForDelete] = useState([]);
 
@@ -184,11 +186,12 @@ export default function MediaDataTable({screen}) {
     }
 
     const getData = async () => {
+        setShowSkeleton(true);
         const response = await api.__get(
           `${URL_GET_DATA}?screen_id=${screen}`,
           (msg) => {showMessageSnackbar(msg, 'error')}
         )
-
+        setShowSkeleton(false);
         if (response !== undefined && response.data) {
             setDataTable(Object.values(response.data))
         }
@@ -202,119 +205,127 @@ export default function MediaDataTable({screen}) {
     return (
         <>
             <Card>
-                <UserListToolbar
-                    numSelected={selected.length}
-                    filterQuery={filterQuery}
-                    onFilterQuery={handleFilterByQuery}
-                    onDeleteSelect={handleDeleteSelected}
-                    onEditSelect={handleEditSelected}
-                    onlyEdit
-                />
+                {
+                    showSkeleton ? (
+                      <TableSkeleton/>
+                    ) : (
+                      <>
+                          <UserListToolbar
+                            numSelected={selected.length}
+                            filterQuery={filterQuery}
+                            onFilterQuery={handleFilterByQuery}
+                            onDeleteSelect={handleDeleteSelected}
+                            onEditSelect={handleEditSelected}
+                            onlyEdit
+                          />
 
-                <Scrollbar>
-                    <TableContainer sx={{minWidth: 800}}>
-                        <Table>
-                            <UserListHead
-                                order={order}
-                                orderBy={orderBy}
-                                headLabel={TABLE_HEAD}
-                                rowCount={filteredDataTable.length}
-                                numSelected={selected.length}
-                                onRequestSort={handleRequestSort}
-                                onSelectAllClick={handleSelectAllClick}
-                            />
-                            <TableBody>
-                                {filteredDataTable.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                    const {id, name, duration} = row;
-                                    const selectedRow = selected.indexOf(id) !== -1;
-                                    const isVideo = row.image === "";
+                          <Scrollbar>
+                              <TableContainer sx={{minWidth: 800}}>
+                                  <Table>
+                                      <UserListHead
+                                        order={order}
+                                        orderBy={orderBy}
+                                        headLabel={TABLE_HEAD}
+                                        rowCount={filteredDataTable.length}
+                                        numSelected={selected.length}
+                                        onRequestSort={handleRequestSort}
+                                        onSelectAllClick={handleSelectAllClick}
+                                      />
+                                      <TableBody>
+                                          {filteredDataTable.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                                              const {id, name, duration} = row;
+                                              const selectedRow = selected.indexOf(id) !== -1;
+                                              const isVideo = row.image === "";
 
-                                    return (
-                                        <TableRow hover key={id} tabIndex={-1} role="checkbox"
-                                                  selected={selectedRow}>
-                                            <TableCell padding="checkbox">
-                                                <Checkbox checked={selectedRow}
-                                                          onChange={(event) => handleClick(event, id)}/>
-                                            </TableCell>
-                                            <TableCell component="th" scope="row" padding="none">
-                                                <Stack direction="row" alignItems="center" spacing={2}>
-                                                    {
-                                                        isVideo ? (
-                                                          <Card sx={{p:2}}>
-                                                              <Iconify sx={{color: palette.secondary.darker}} width={45} icon={'mdi:video-vintage'}/>
-                                                          </Card>
+                                              return (
+                                                <TableRow hover key={id} tabIndex={-1} role="checkbox"
+                                                          selected={selectedRow}>
+                                                    <TableCell padding="checkbox">
+                                                        <Checkbox checked={selectedRow}
+                                                                  onChange={(event) => handleClick(event, id)}/>
+                                                    </TableCell>
+                                                    <TableCell component="th" scope="row" padding="none">
+                                                        <Stack direction="row" alignItems="center" spacing={2}>
+                                                            {
+                                                                isVideo ? (
+                                                                  <Card sx={{p:2}}>
+                                                                      <Iconify sx={{color: palette.secondary.darker}} width={45} icon={'mdi:video-vintage'}/>
+                                                                  </Card>
 
-                                                        ) : (
-                                                          <img src={row.image} alt={row.description} width="70px" />
-                                                        )
-                                                    }
+                                                                ) : (
+                                                                  <img src={row.image} alt={row.description} width="70px" />
+                                                                )
+                                                            }
 
-                                                    <Typography variant="subtitle2" noWrap>
-                                                        {name}
-                                                    </Typography>
-                                                </Stack>
-                                            </TableCell>
-                                            <TableCell align="center">{duration}s</TableCell>
-                                            <TableCell align="center">
-                                                { row.qr_info && (
-                                                  <Iconify width="25px" icon="material-symbols:qr-code-2"/>
-                                                ) }
-                                            </TableCell>
-                                            <TableCell align="center">{formatDate(row.created_at)}</TableCell>
-                                            <TableCell align="center">{formatDate(row.updated_at)}</TableCell>
+                                                            <Typography variant="subtitle2" noWrap>
+                                                                {name}
+                                                            </Typography>
+                                                        </Stack>
+                                                    </TableCell>
+                                                    <TableCell align="center">{duration}s</TableCell>
+                                                    <TableCell align="center">
+                                                        { row.qr_info && (
+                                                          <Iconify width="25px" icon="material-symbols:qr-code-2"/>
+                                                        ) }
+                                                    </TableCell>
+                                                    <TableCell align="center">{formatDate(row.created_at)}</TableCell>
+                                                    <TableCell align="center">{formatDate(row.updated_at)}</TableCell>
 
-                                            <TableCell align="center">
-                                                <IconButton id={id} data-type={isVideo ? "video" : "image"} size="large" color="inherit"
-                                                            onClick={handleOpenMenu}>
-                                                    <Iconify icon={'eva:more-vertical-fill'}/>
-                                                </IconButton>
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                })}
-                                {emptyRows > 0 && (
-                                    <TableRow style={{height: 53 * emptyRows}}>
-                                        <TableCell colSpan={6}/>
-                                    </TableRow>
-                                )}
-                            </TableBody>
+                                                    <TableCell align="center">
+                                                        <IconButton id={id} data-type={isVideo ? "video" : "image"} size="large" color="inherit"
+                                                                    onClick={handleOpenMenu}>
+                                                            <Iconify icon={'eva:more-vertical-fill'}/>
+                                                        </IconButton>
+                                                    </TableCell>
+                                                </TableRow>
+                                              );
+                                          })}
+                                          {emptyRows > 0 && (
+                                            <TableRow style={{height: 53 * emptyRows}}>
+                                                <TableCell colSpan={6}/>
+                                            </TableRow>
+                                          )}
+                                      </TableBody>
 
-                            {isNotFound && (
-                                <TableBody>
-                                    <TableRow>
-                                        <TableCell align="center" colSpan={6} sx={{py: 3}}>
-                                            <Paper
-                                                sx={{
-                                                    textAlign: 'center',
-                                                }}
-                                            >
-                                                <Typography variant="h6" paragraph>
-                                                    Not found
-                                                </Typography>
+                                      {isNotFound && (
+                                        <TableBody>
+                                            <TableRow>
+                                                <TableCell align="center" colSpan={6} sx={{py: 3}}>
+                                                    <Paper
+                                                      sx={{
+                                                          textAlign: 'center',
+                                                      }}
+                                                    >
+                                                        <Typography variant="h6" paragraph>
+                                                            Not found
+                                                        </Typography>
 
-                                                <Typography variant="body2">
-                                                    No results found for &nbsp;
-                                                    <strong>&quot;{filterQuery}&quot;</strong>.
-                                                    <br/> Try checking for typos or using complete words.
-                                                </Typography>
-                                            </Paper>
-                                        </TableCell>
-                                    </TableRow>
-                                </TableBody>
-                            )}
-                        </Table>
-                    </TableContainer>
-                </Scrollbar>
+                                                        <Typography variant="body2">
+                                                            No results found for &nbsp;
+                                                            <strong>&quot;{filterQuery}&quot;</strong>.
+                                                            <br/> Try checking for typos or using complete words.
+                                                        </Typography>
+                                                    </Paper>
+                                                </TableCell>
+                                            </TableRow>
+                                        </TableBody>
+                                      )}
+                                  </Table>
+                              </TableContainer>
+                          </Scrollbar>
 
-                <TablePagination
-                    rowsPerPageOptions={PROJECT_CONFIG.TABLE_CONFIG.ROWS_PER_PAGE_OPTIONS}
-                    component="div"
-                    count={filteredDataTable.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                />
+                          <TablePagination
+                            rowsPerPageOptions={PROJECT_CONFIG.TABLE_CONFIG.ROWS_PER_PAGE_OPTIONS}
+                            component="div"
+                            count={filteredDataTable.length}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            onPageChange={handleChangePage}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                          />
+                      </>
+                    )
+                }
             </Card>
 
             <Dialog open={openConfirmDelete} onClose={handleCloseConfirmDelete}>

@@ -27,6 +27,7 @@ import {
     Select,
     DialogActions, Button, Dialog, Divider, FormControlLabel, ListItem, List, ListItemAvatar, ListItemText,
 } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import {LoadingButton} from "@mui/lab";
 import SaveIcon from '@mui/icons-material/Save';
 import { Android, Delete, DeveloperMode, PictureInPicture } from '@mui/icons-material';
@@ -73,6 +74,17 @@ const TABLE_HEAD = [
 
 const NAME_PAGE = 'Devices';
 
+const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: '#fff',
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+    ...theme.applyStyles('dark', {
+        backgroundColor: '#1A2027',
+    }),
+}));
+
 export default function DevicePage() {
     const [devices, setDevices] = useState([]);
     const [users, setUsers] = useState([]);
@@ -98,6 +110,7 @@ export default function DevicePage() {
     const [showSkeleton, setShowSkeleton] = useState(false);
     const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
     const [rowsForDelete, setRowsForDelete] = useState([]);
+    const [countClientsOnline, setCountClientsOnline] = useState(0);
     const [clientsOnline, setClientsOnline] = useState([]);
     const [wdClientsOnline, setWdClientsOnline] = useState([]);
     const [centrifuge, setCentrifuge] = useState(null);
@@ -170,7 +183,10 @@ export default function DevicePage() {
             sub.subscribe()
 
             sub.presence().then((ctx) => {
-                const devicesOnline = Object.entries(ctx.clients).map(([value]) => value.user)
+                const devicesOnline = Object.entries(ctx.clients).map(([value, info]) => {
+                    console.log(value)
+                    return info.user
+                })
                 setClientsOnline(devicesOnline)
                 console.log(devicesOnline);
             }, (err) => {
@@ -186,6 +202,7 @@ export default function DevicePage() {
                     ]
                 )
                 console.log(clientsOnline)
+
             });
 
             sub.on('leave', (ctx)=> {
@@ -200,7 +217,10 @@ export default function DevicePage() {
 
             wdSub.presence().then((ctx) => {
                 console.log(ctx)
-                const wdDevices = Object.entries(ctx.clients).map(([value]) => value.user)
+                const wdDevices = Object.entries(ctx.clients).map(([value, info]) => {
+                    console.log(value)
+                    return info.user
+                })
                 setWdClientsOnline(wdDevices)
                 console.log(wdDevices);
             }, (err) => {
@@ -229,6 +249,10 @@ export default function DevicePage() {
         }
     }
 
+    function refreshClientOnlineCount() {
+        const onlineCount = filteredDevices.filter((item) => clientsOnline.some((value) => value === item.device_id))
+        setCountClientsOnline(onlineCount.length)
+    }
     function startAppClick(deviceID) {
         console.log(deviceID);
         console.log(centrifuge);
@@ -561,15 +585,19 @@ export default function DevicePage() {
 
     const isNotFound = !filteredDevices.length && !!filterQuery;
 
-
+    useEffect(() => {
+        refreshClientOnlineCount()
+        // eslint-disable-next-line
+    },[clientsOnline])
 
     useEffect(() => {
-        initWS()
         getUsers()
         getScreens()
         getMarquees()
         getQrs()
-        getDevices()
+        getDevices().then(() => {
+            initWS()
+        })
 
 
         return () => {
@@ -606,6 +634,25 @@ export default function DevicePage() {
                           <TableSkeleton/>
                         ) : (
                           <>
+                              <Stack
+                                direction="row"
+                                divider={<Divider orientation="vertical" flexItem />}
+                                spacing={2}
+                                sx={{p:2}}
+                              >
+                                  <Item sx={{color: palette.success.dark}}>
+                                      <Iconify width="25px" icon="mdi:cast-variant" />
+                                      <Typography variant="h6" gutterBottom>
+                                          Online {countClientsOnline}
+                                      </Typography>
+                                  </Item>
+                                  <Item sx={{color: palette.error.dark}}>
+                                      <Iconify width="25px" icon="mdi:cast-variant" />
+                                      <Typography variant="h6" gutterBottom>
+                                          Offline {filteredDevices.length - countClientsOnline}
+                                      </Typography>
+                                  </Item>
+                              </Stack>
                               <UserListToolbar
                                 numSelected={selected.length}
                                 filterQuery={filterQuery}

@@ -18,6 +18,7 @@ const URL_GET_PAGE = PROJECT_CONFIG.API_CONFIG.SCREEN.GET;
 const URL_TABLES_PAGE = '/dashboard/business/details/';
 const URL_MENU_SCREEN_PAGE = '/dashboard/slides';
 const URL_UPLOAD_IMAGE = '/dashboard/image/upload/';
+// eslint-disable-next-line
 const URL_UPLOAD_VIDEO = '/dashboard/video/upload/';
 
 export default function DetailsSlidesPage() {

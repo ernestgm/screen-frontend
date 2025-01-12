@@ -17,9 +17,9 @@ import {
     Typography,
     IconButton,
     TableContainer,
-    TablePagination, Box, DialogTitle, DialogContent, DialogActions, Dialog, Divider, Grid,
+    TablePagination, Box, DialogTitle, DialogContent, DialogActions, Dialog, Divider,
 } from '@mui/material';
-import { LoadingButton, Skeleton } from '@mui/lab';
+import { LoadingButton } from '@mui/lab';
 import {Delete} from "@mui/icons-material";
 // table
 import Iconify from '../../components/iconify';

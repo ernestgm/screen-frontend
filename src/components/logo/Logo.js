@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types';
-import { forwardRef } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { Box, Link } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
-const Logo = forwardRef(({ disabledLink = false}) => {
+// eslint-disable-next-line
+const Logo = (({disabledLink = false}) => {
   const logo = (
     <Box component="img" alt="PlayAds" src="/assets/logo.png" sx={{ width: 150, borderRadius: 1.5, flexShrink: 0 }} />
   );

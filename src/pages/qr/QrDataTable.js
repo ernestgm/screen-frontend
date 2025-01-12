@@ -536,6 +536,7 @@ export default function QrDataTable() {
           <FormControl
             sx={{ mb: 3 }}
             fullWidth
+            error={validator.info && true}
           >
             <InputLabel htmlFor="outlined-adornment-password">Info</InputLabel>
             <FilledInput
@@ -558,7 +559,6 @@ export default function QrDataTable() {
                 </InputAdornment>
               }
               error={validator.info && true}
-              helperText={validator.info}
             />
           </FormControl>
           { qrPreview !== "" && (

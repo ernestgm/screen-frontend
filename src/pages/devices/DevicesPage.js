@@ -925,7 +925,7 @@ export default function DevicePage() {
                       defaultValue={''}
                     >
                         <FormControlLabel
-                          control={<Checkbox name="slide" checked={formData.slide} onChange={handleChange} />}
+                          control={<Checkbox name="slide" checked={formData.slide === 1} onChange={handleChange} />}
                           label="Show as Presentation"
                           sx={{ flexGrow: 1, m: 0 }}
                         />
@@ -937,7 +937,7 @@ export default function DevicePage() {
                       defaultValue={''}
                     >
                         <FormControlLabel
-                          control={<Checkbox name="portrait" checked={formData.portrait} onChange={handleChange} />}
+                          control={<Checkbox name="portrait" checked={formData.portrait === 1} onChange={handleChange} />}
                           label="Portrait Mode"
                           sx={{ flexGrow: 1, m: 0 }}
                         />

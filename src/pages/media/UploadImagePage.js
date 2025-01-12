@@ -153,7 +153,8 @@ export default function UploadImagePage() {
     }
   };
 
-  const convertToBase64 = (file) => new Promise((resolve, reject) => {
+  const convertToBase64 = (file) =>
+    new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onprogress = () => setLoading(true);
@@ -182,7 +183,7 @@ export default function UploadImagePage() {
           setLoading(isLoading);
         },
         (_progress) => {
-          setProgress(_progress)
+          setProgress(_progress);
         }
       );
     } else {
@@ -196,7 +197,7 @@ export default function UploadImagePage() {
           setLoading(isLoading);
         },
         (_progress) => {
-          setProgress(_progress)
+          setProgress(_progress);
         }
       );
     }
@@ -213,15 +214,9 @@ export default function UploadImagePage() {
   };
 
   const getItemForUpdate = async () => {
-    const response = await api.__get(
-      `${URL_GET_ITEM_FOR_UPDATE}${pimage}`,
-      (msg) => {
-        showSnackbarMessage(msg, 'error');
-      },
-      () => {
-        getItemForUpdate();
-      }
-    );
+    const response = await api.__get(`${URL_GET_ITEM_FOR_UPDATE}${pimage}`, (msg) => {
+      showSnackbarMessage(msg, 'error');
+    });
 
     if (response !== undefined && response.data) {
       setFormData({
@@ -326,7 +321,7 @@ export default function UploadImagePage() {
                           ))}
                         </ToggleButtonGroup>
                       </Paper>
-                      <Divider sx={{ m: 1, p:1, border: '0px' }} />
+                      <Divider sx={{ m: 1, p: 1, border: '0px' }} />
                       <FormControl variant="outlined" defaultValue={''}>
                         <InputLabel id="text-color-select-label">Select Text Size</InputLabel>
                         <Select
@@ -384,7 +379,8 @@ export default function UploadImagePage() {
                         })}
                       >
                         <ToggleButtonGroup
-                          size="small" {...controlQrPosition}
+                          size="small"
+                          {...controlQrPosition}
                           aria-label="QR position"
                           sx={(theme) => ({
                             display: 'flex',

@@ -209,7 +209,7 @@ export default function CreateUserPage() {
                                 name="role_id"
                                 labelId="role-select-label"
                                 id="role-select"
-                                value={formData.role_id ?? ''}
+                                value={formData.role_id ?? 0}
                                 label="Role"
                                 onChange={handleChange}
                                 variant="standard"

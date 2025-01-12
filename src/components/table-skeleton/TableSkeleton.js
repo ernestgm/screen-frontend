@@ -1,5 +1,4 @@
-import { Grid, Paper, Stack } from '@mui/material';
-import { Skeleton } from '@mui/lab';
+import { Grid, Paper, Stack, Skeleton } from '@mui/material';
 import React from 'react';
 
 export default function TableSkeleton() {

@@ -80,17 +80,21 @@ export default function UploadImagePage() {
   };
 
   const handleDescPositionChange = (event, newAlignment) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      description_position: newAlignment,
-    }));
+    if (newAlignment != null) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        description_position: newAlignment,
+      }));
+    }
   };
 
   const handleQrPositionChange = (event, newAlignment) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      qr_position: newAlignment,
-    }));
+    if (newAlignment != null) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        qr_position: newAlignment,
+      }));
+    }
   };
 
   const controlDescPosition = {

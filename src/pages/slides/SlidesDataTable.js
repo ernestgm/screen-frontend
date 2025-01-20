@@ -267,10 +267,12 @@ export default function SlidesDataTable({ business }) {
     }
 
     const handleDescPositionChange = (event, newAlignment) => {
+      if (newAlignment != null) {
         setFormData((prevFormData) => ({
-            ...prevFormData,
-            description_position: newAlignment,
+          ...prevFormData,
+          description_position: newAlignment,
         }));
+      }
     };
 
     const controlDescPosition = {

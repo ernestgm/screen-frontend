@@ -241,10 +241,12 @@ export default function QrDataTable() {
   const [formData, setFormData] = useState(initialFormData);
 
   const handlePositionChange = (event, newAlignment) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      position: newAlignment
-    }));
+    if ( newAlignment !== null ) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        position: newAlignment
+      }));
+    }
   };
 
   const control = {
